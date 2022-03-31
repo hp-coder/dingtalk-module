@@ -15,9 +15,9 @@ mvn install
 ### maven项目引入
 ```xml
 <dependency>
-    <groupId>com.luban</groupId>
-    <artifactId>luban-dingding</artifactId>
-    <version>1.0</version>
+    <groupId>com.hp</groupId>
+    <artifactId>dingding-module</artifactId>
+    <version>1.0.0</version>
 </dependency>
 ```
 
