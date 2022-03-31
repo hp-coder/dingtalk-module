@@ -7,8 +7,6 @@
 ### 下载安装
 ```shell
 git clone #{url}
-# make sure that you're on the right branch
-git checkout prod
 # install it in your local maven repository
 mvn install
 ```
