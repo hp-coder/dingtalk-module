@@ -47,4 +47,67 @@ public class DingConstant {
 
     public static final String LOGIN_WITHOUT_OP = "https://oapi.dingtalk.com/connect/oauth2/sns_authorize?appid=APPID&response_type=code&scope=snsapi_auth&state=STATE&redirect_uri=REDIRECT_URI";
 
+    /**
+     * 获取部门列表
+     */
+    public static final String GET_DEPT_LIST = "https://oapi.dingtalk.com/topapi/v2/department/listsub";
+
+    /**
+     * 获取群会话
+     */
+    public static final String GET_CHAT_INFO = "https://oapi.dingtalk.com/chat/get";
+
+    /**
+     * 获取外部联系人
+     */
+    public static final String GET_EXTCONTACT_INFO = "https://oapi.dingtalk.com/topapi/extcontact/get";
+
+    /**
+     * 添加外部联系人
+     */
+    public static final String ADD_EXTCONTACT = "https://oapi.dingtalk.com/topapi/extcontact/create";
+
+    /**
+     * 删除外部联系人
+     */
+    public static final String DELETE_EXTCONTACT = "https://oapi.dingtalk.com/topapi/extcontact/delete";
+
+    /**
+     * 更新外部联系人
+     */
+    public static final String UPDATE_EXTCONTACT = "https://oapi.dingtalk.com/topapi/extcontact/update";
+
+    /**
+     * 获取外部联系人列表
+     */
+    public static final String GET_EXTCONTACTS = "https://oapi.dingtalk.com/topapi/extcontact/list";
+
+    /**
+     * 获取外部联系人标签列表
+     */
+    public static final String GET_EXTCONTACT_TAGS = "https://oapi.dingtalk.com/topapi/extcontact/listlabelgroups";
+    /**
+     * 角色列表
+     */
+    public static final String GET_ROLE_LIST = "https://oapi.dingtalk.com/topapi/role/list";
+    /**
+     * 根据角色id获取用户列表
+     */
+    public static final String GET_USERS_BY_ROLE_ID = "https://oapi.dingtalk.com/topapi/role/simplelist";
+    /**
+     * 获取用户可见的审批模版
+     */
+    public static final String GET_PROCESS_TEMPLATE_LIST = "https://oapi.dingtalk.com/topapi/process/template/manage/get";
+    /**
+     * 根据审批模版名称获取模版编号
+     */
+    public static final String GET_PROCESS_TEMPLATE_CODE_BY_NAME = "https://oapi.dingtalk.com/topapi/process/get_by_name";
+    /**
+     * 根据审批模版编号获取审批实例id列表
+     */
+    public static final String GET_PROCESS_INSTANCE_IDS = "https://oapi.dingtalk.com/topapi/processinstance/listids";
+    /**
+     * 获取审批实例信息
+     */
+    public static final String GET_PROCESS_INSTANCE = "https://oapi.dingtalk.com/topapi/processinstance/get";
 }

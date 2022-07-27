@@ -16,10 +16,6 @@ public interface IDingInteractiveMsg extends IDingMsg {
      */
     String GLOBAL_SALT = "dfaen23djf461nJ51FHDowie17hf1";
 
-    /**
-     *
-     * @return
-     */
     default Map<String, String> getMap() {
         final BeanMap beanMap = BeanMap.create(this);
         final Map<String, String> map = new HashMap<>();
