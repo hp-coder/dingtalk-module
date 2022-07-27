@@ -8,19 +8,12 @@
 - 2022-06-27：增加OA审批接口
 - 2022-07-01：bug fixed, 钉钉应用的accesstoken过期时间为7200s，原提前60s过期，实际发现在调用时，钉钉服务还是容易发生超时问题，增加提前过期时间至600s
 - 2022-07-27：钉钉机器人单聊文字消息回调及自定义处理器, 分支处理
-## 开发
-`请在test开发测试，禁止在prod直接修改代码`
-```shell
-git clone -b test http://47.106.251.114:3000/hup/luban-dingding.git
-#或已拉代码
-git checkout test
-```
 
 ## 使用
 ### 下载安装
 ```shell
 # make sure that you're on the right branch
-git clone -b prod http://47.106.251.114:3000/hup/luban-dingding.git
+git clone -b prod https://github.com/hp-coder/dingtalk-module.git
 # install it in your local maven repository
 mvn install
 ```
