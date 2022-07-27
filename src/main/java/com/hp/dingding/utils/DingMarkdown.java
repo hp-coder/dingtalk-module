@@ -13,6 +13,10 @@ public class DingMarkdown {
         fullContent = builder.fullContent;
     }
 
+    public static Builder builder(){
+        return new Builder();
+    }
+
     public static final class Builder {
         List<String> fullContent = new ArrayList<>();
 

@@ -5,7 +5,7 @@ package com.hp.dingding.component.application;
  *
  * @Author: HP
  */
-public interface IDingApp {
+public interface IDingApp{
 
     String getAppName();
 

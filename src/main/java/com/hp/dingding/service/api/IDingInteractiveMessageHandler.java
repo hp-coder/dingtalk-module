@@ -3,10 +3,10 @@ package com.hp.dingding.service.api;
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiImChatScencegroupInteractivecardCallbackRegisterRequest;
-import com.hp.dingding.component.callback.IDingCallBack;
 import com.hp.dingding.component.factory.DingAccessTokenFactory;
-import com.hp.dingding.component.application.IDingApp;
 import com.hp.dingding.constant.DingConstant;
+import com.hp.dingding.component.application.IDingApp;
+import com.hp.dingding.component.callback.IDingCallBack;
 import com.hp.dingding.pojo.message.interactive.IDingInteractiveMsg;
 import com.taobao.api.ApiException;
 import org.slf4j.Logger;
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public interface IDingInteractiveMessageHandler extends IDingMessageHandler {
+public interface IDingInteractiveMessageHandler extends com.hp.dingding.service.api.IDingMessageHandler {
     Logger logger = LoggerFactory.getLogger(IDingInteractiveMessageHandler.class);
     /**
      * 发送互动卡片至单聊

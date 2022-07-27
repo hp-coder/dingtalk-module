@@ -4,36 +4,38 @@ import com.aliyun.dingtalkoauth2_1_0.models.GetAccessTokenRequest;
 import com.aliyun.dingtalkoauth2_1_0.models.GetAccessTokenResponse;
 import com.aliyun.dingtalkoauth2_1_0.models.GetAccessTokenResponseBody;
 import com.aliyun.tea.TeaException;
-import com.hp.dingding.utils.SpringContextHolderAware;
 import com.hp.dingding.component.IDingToken;
 import com.hp.dingding.component.application.IDingApp;
-import lombok.RequiredArgsConstructor;
+import com.hp.dingding.component.IDingToken;
+import com.hp.dingding.component.application.IDingApp;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.data.redis.core.RedisOperations;
-import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
-@Component
-@ConditionalOnClass({RedisOperations.class})
-@RequiredArgsConstructor
 public class DingAccessTokenFactory implements IDingToken {
 
-    private static final String R_KEY = "ding:token:";
-    private final StringRedisTemplate redisTemplate;
+    private DingAccessTokenFactory() {
+    }
+
+    private static class SingletonHolder {
+        private static final DingAccessTokenFactory INSTANCE = new DingAccessTokenFactory();
+    }
+
+    private static final ConcurrentHashMap<String, DingToken> TOKEN_CACHE = new ConcurrentHashMap<>(16);
 
     public static String accessToken(IDingApp dingApp) {
         return accessToken(dingApp, false);
     }
 
     public static String accessToken(IDingApp dingApp, boolean forceRefresh) {
-        final DingAccessTokenFactory bean = SpringContextHolderAware.getBean(DingAccessTokenFactory.class);
+        log.info("GETTING ACCESS TOKEN WITH：{}",dingApp.getAppName());
+        final DingAccessTokenFactory bean = SingletonHolder.INSTANCE;
         return bean.accessToken(dingApp.getAppKey(), dingApp.getAppSecret(), forceRefresh).orElse(null);
     }
 
@@ -63,6 +65,7 @@ public class DingAccessTokenFactory implements IDingToken {
             }
             throw new RuntimeException(err.message);
         } catch (Exception _err) {
+            _err.printStackTrace();
             TeaException err = new TeaException(_err.getMessage(), _err);
             if (!com.aliyun.teautil.Common.empty(err.code) && !com.aliyun.teautil.Common.empty(err.message)) {
                 log.info("AccessToken Ding异常码: {},Ding异常信息: {}", err.code, err.message);
@@ -72,29 +75,29 @@ public class DingAccessTokenFactory implements IDingToken {
     }
 
     private Optional<String> checkCache(String appKey) {
-        String token = null;
-        try {
-            token = redisTemplate.opsForValue().get(getCacheKey(appKey));
-        } catch (Exception e) {
-            log.error("缓存异常：获取Ding token失败, errMsg: {}, errCause: {}", e.getMessage(), e.getCause());
+        final DingToken token = TOKEN_CACHE.get(appKey);
+        if (token == null) {
+            log.error("TOKEN_CACHE appKey:{}, TOKEN NOT EXSITS", appKey);
+            return Optional.empty();
         }
-        return Optional.ofNullable(token);
+        if (token.isExpired()) {
+            TOKEN_CACHE.remove(appKey);
+            log.error("TOKEN_CACHE appKey:{}, TOKEN HAS EXPIRED", appKey);
+            return Optional.empty();
+        }
+        return Optional.ofNullable(token.getAccessToken());
     }
 
     private void storeCache(String appKey, String accessToken, Long expireIn, boolean forceRefresh) {
-        final String cacheKey = getCacheKey(appKey);
         if (StringUtils.isEmpty(accessToken)) {
+            log.error("ding accessToken is empty");
             return;
         }
+        Assert.isTrue(expireIn != null && expireIn > 600L, "DING TOKEN EXPRIRATION IS INVALID");
         if (forceRefresh) {
-            redisTemplate.opsForValue().set(cacheKey, accessToken, expireIn - 100L, TimeUnit.SECONDS);
+            TOKEN_CACHE.put(appKey, new DingToken(accessToken, LocalDateTime.now().plusSeconds(expireIn - 600)));
         } else {
-            redisTemplate.opsForValue().setIfAbsent(cacheKey, accessToken, expireIn - 100L, TimeUnit.SECONDS);
+            TOKEN_CACHE.putIfAbsent(appKey, new DingToken(accessToken, LocalDateTime.now().plusSeconds(expireIn - 600)));
         }
     }
-
-    private String getCacheKey(String appKey) {
-        return R_KEY + appKey;
-    }
-
 }
