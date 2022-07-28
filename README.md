@@ -104,6 +104,11 @@ IDingBotMsgCallBackHandler
     - 实现该接口完成对消息的自定义处理
 - 默认集成测试模版 DefaultBotMsgCallbackHandler
 
+#### 使用方式
+- 利用class实现IDingBot接口配置机器人信息
+- 实现IDingBotMsgCallBackHandler并实现其方法配置正则规则
+- 启动增加包扫描即可
+
 
 
 ## 期望
