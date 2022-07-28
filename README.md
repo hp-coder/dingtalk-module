@@ -29,8 +29,7 @@ mvn install
 ### 依赖
 请确保项目中包含相关配置信息
 - springboot
-- redis
-
+- 
 ### 接口/扩展
 - IDingMsg 基本常用消息等模版已经实现,无需再次实现;
 - IDingApp 钉钉应用对象接口,接口配置相关appid,key等信息, 推荐使用enum实现该接口;
