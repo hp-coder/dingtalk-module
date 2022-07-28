@@ -94,7 +94,7 @@ DingOAHandler
 ### 机器人消息回调接口（目前只针对文字内容单聊）
 DingBotMsgCallbackController
 - 统一机器人消息回调
-    - 启动类增加componentScan注解，扫描"com.luban"即可
+    - 启动类增加componentScan注解，扫描"com.hp"即可
     - 如果有拦截器，请释放/ding/bot/msg/callback拦截
 
 ### 机器人回调消息处理器
