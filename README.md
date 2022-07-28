@@ -41,7 +41,7 @@ mvn install
 ## 集成
 ### AccessToken
 DingAccessTokenFactory
-- 使用静态工厂获取,使用redis缓存
+- 使用静态工厂获取,本地cache减少依赖性
 
 ### 用户
 DingUserHandler
