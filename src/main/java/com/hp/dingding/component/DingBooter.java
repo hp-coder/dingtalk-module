@@ -1,5 +1,6 @@
 package com.hp.dingding.component;
 
+import com.hp.dingding.component.application.IDingApp;
 import com.hp.dingding.component.callback.IDingCallBack;
 import com.hp.dingding.service.api.IDingInteractiveMessageHandler;
 import com.taobao.api.ApiException;
@@ -7,6 +8,9 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,12 +21,14 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class DingBooter implements ApplicationRunner {
+public class DingBooter implements ApplicationListener<ApplicationReadyEvent> {
 
-    @SneakyThrows
     @Override
-    public void run(ApplicationArguments args) {
-        IDingCallBack.registry.forEach(callBack -> callBack.getDingApps().forEach(app -> {
+    public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
+        final ConfigurableApplicationContext applicationContext = applicationReadyEvent.getApplicationContext();
+
+        IDingCallBack.registry.forEach(callBack -> callBack.getDingApps().forEach(clazz -> {
+            final IDingApp app = applicationContext.getBean(clazz);
             try {
                 IDingInteractiveMessageHandler.registerCallBackUrl(app, callBack);
             } catch (ApiException e) {

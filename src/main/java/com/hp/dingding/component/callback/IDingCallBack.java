@@ -19,7 +19,7 @@ public interface IDingCallBack {
 
     String getCallbackUrlKey();
 
-    List<IDingApp> getDingApps();
+    List<Class<? extends IDingApp>> getDingApps();
 
     static void register(IDingCallBack callBack) {
         registry.add(callBack);
