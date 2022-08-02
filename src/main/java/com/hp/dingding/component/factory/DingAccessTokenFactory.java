@@ -6,8 +6,6 @@ import com.aliyun.dingtalkoauth2_1_0.models.GetAccessTokenResponseBody;
 import com.aliyun.tea.TeaException;
 import com.hp.dingding.component.IDingToken;
 import com.hp.dingding.component.application.IDingApp;
-import com.hp.dingding.component.IDingToken;
-import com.hp.dingding.component.application.IDingApp;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;

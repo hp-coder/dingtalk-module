@@ -14,8 +14,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public interface IDingInteractiveMessageHandler extends com.hp.dingding.service.api.IDingMessageHandler {
+/**
+ * @author hp
+ */
+public interface IDingInteractiveMessageHandler extends IDingMessageHandler {
     Logger logger = LoggerFactory.getLogger(IDingInteractiveMessageHandler.class);
+
     /**
      * 发送互动卡片至单聊
      *
@@ -41,9 +45,9 @@ public interface IDingInteractiveMessageHandler extends com.hp.dingding.service.
     /**
      * 更新互动卡片
      *
-     * @param app
-     * @param openConversationId
-     * @param interactiveMsg
+     * @param app                调用应用
+     * @param openConversationId 场景群id
+     * @param interactiveMsg     卡片消息：包含必要配置信息：卡片id，callbackUrl等
      * @return
      */
     String updateInteractiveMsg(IDingApp app, String openConversationId, IDingInteractiveMsg interactiveMsg);
@@ -51,17 +55,20 @@ public interface IDingInteractiveMessageHandler extends com.hp.dingding.service.
     /**
      * 注册互动卡片回调api
      *
-     * @param app         调用应用
+     * @param app      调用应用
      * @param callBack 回调url配置
      */
     static void registerCallBackUrl(IDingApp app, IDingCallBack callBack) throws ApiException {
+        if (app == null || callBack == null) {
+            return;
+        }
         DingTalkClient client = new DefaultDingTalkClient(DingConstant.REGISTER_CALLBACK);
         OapiImChatScencegroupInteractivecardCallbackRegisterRequest req = new OapiImChatScencegroupInteractivecardCallbackRegisterRequest();
         req.setCallbackUrl(callBack.getCallbackUrl());
         req.setApiSecret(app.getAppSecret());
         req.setCallbackRouteKey(callBack.getCallbackUrlKey());
         req.setForceUpdate(true);
-        logger.info("应用：{}, 注册回调地址：路由地址：{}， 路由键：{}",app.getAppName(), callBack.getCallbackUrl(),callBack.getCallbackUrlKey());
+        logger.info("应用：{}, 注册回调地址：路由地址：{}， 路由键：{}", app.getAppName(), callBack.getCallbackUrl(), callBack.getCallbackUrlKey());
         client.execute(req, DingAccessTokenFactory.accessToken(app));
     }
 }

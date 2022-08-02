@@ -32,7 +32,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      * 自动回复的消息
      *
      * @param app     机器人应用
-     * @param payload
+     * @param payload 机器人消息回调请求体
      * @param data    前置处理结果
      * @return 钉钉消息
      */
@@ -84,7 +84,6 @@ public interface IDingBotMsgCallBackHandler<T> {
      *
      * @param app     机器人应用
      * @param payload 机器人消息回调请求体
-     * @return 返回
      */
     default void notifyBeforeSend(IDingBot app, BotInteractiveMsgPayload payload) {
         //do nothing
