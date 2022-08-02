@@ -31,11 +31,11 @@ public class DingBotMsgCallbackController {
     @RequestMapping("/bot/msg/callback")
     public void msg(@RequestBody BotInteractiveMsgPayload payload) {
         log.info("content: {}", new Gson().toJson(payload));
-        IDingBot bot =  DingAppFactory.app(payload.getRobotCode());
+        IDingBot bot = DingAppFactory.app(payload.getRobotCode());
         if (bot == null) {
             log.error("未找到对应的钉钉应用: APP_KEY: {}", payload.getRobotCode());
         }
-        IDingBotMsgCallBackHandler.handlers(payload)
+        IDingBotMsgCallBackHandler.handlers(bot, payload)
                 .ifPresent(handlers -> {
                     handlers.parallelStream().forEach(handler -> handler.handle(bot, payload));
                 });

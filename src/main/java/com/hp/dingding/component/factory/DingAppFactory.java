@@ -53,7 +53,7 @@ public class DingAppFactory implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        log.info("DingAppFactory APP_CACHE: {}", new Gson().toJson(DingAppFactory.APP_CACHE));
+        log.info("DingAppFactory APP_CACHE SIZE: ", DingAppFactory.APP_CACHE.size());
         KEY_CACHE = APP_CACHE.stream().collect(Collectors.toMap(IDingApp::getAppKey, v -> v));
         ID_CACHE = APP_CACHE.stream().collect(Collectors.toMap(IDingApp::getAppId, v -> v));
     }

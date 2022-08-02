@@ -5,6 +5,7 @@ import com.hp.dingding.pojo.bot.BotInteractiveMsgPayload;
 import com.hp.dingding.pojo.message.IDingMsg;
 import com.hp.dingding.service.message.DingBotMessageHandler;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.LinkedMultiValueMap;
 
 import javax.annotation.PostConstruct;
@@ -41,10 +42,11 @@ public interface IDingBotMsgCallBackHandler<T> {
     /**
      * 获取处理器
      *
+     * @param app     机器人应用
      * @param payload 机器人消息回调请求体
      * @return 处理器集合
      */
-    static Optional<List<IDingBotMsgCallBackHandler>> handlers(BotInteractiveMsgPayload payload) {
+    static Optional<List<IDingBotMsgCallBackHandler>> handlers(IDingBot app, BotInteractiveMsgPayload payload) {
         if (payload == null || StringUtils.isEmpty(payload.getText().getContent())) {
             return Optional.empty();
         }
@@ -52,6 +54,7 @@ public interface IDingBotMsgCallBackHandler<T> {
                 .filter(i -> i.getKey().matcher(payload.getText().getContent()).matches())
                 .map(Map.Entry::getValue)
                 .flatMap(Collection::stream)
+                .filter(handler -> !handler.ignoredApps().contains(app.getClass()))
                 .collect(Collectors.toList()));
     }
 
@@ -114,6 +117,15 @@ public interface IDingBotMsgCallBackHandler<T> {
      * @param payload 机器人消息回调请求体
      */
     default void afterMessageSent(IDingBot app, BotInteractiveMsgPayload payload) {
+    }
+
+    /**
+     * 忽略该功能的App集合
+     * 默认匹配就执行
+     * @return 忽略该功能的App集合
+     */
+    default Set<Class<? extends IDingBot>> ignoredApps() {
+        return Collections.emptySet();
     }
 
     /**
