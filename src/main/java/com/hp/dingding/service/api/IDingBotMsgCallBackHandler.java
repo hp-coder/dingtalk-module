@@ -20,10 +20,13 @@ import java.util.stream.Collectors;
  */
 public interface IDingBotMsgCallBackHandler<T> {
 
-    LinkedMultiValueMap<Pattern, IDingBotMsgCallBackHandler> REGISTRY = new LinkedMultiValueMap<>();
+    LinkedMultiValueMap<Pattern, IDingBotMsgCallBackHandler> REGISTRY = new LinkedMultiValueMap<>(16);
+    Map<Pattern, Integer> PATTERN_ORDER = new HashMap<>(16);
 
     /**
      * 词根
+     * <p>
+     * 当返回null时作为fallback处理器使用
      *
      * @return 正则匹配
      */
@@ -33,11 +36,33 @@ public interface IDingBotMsgCallBackHandler<T> {
      * 自动回复的消息
      *
      * @param app     机器人应用
-     * @param payload 机器人消息回调请求体
+     * @param payload 请求体
      * @param data    前置处理结果
      * @return 钉钉消息
      */
     IDingMsg message(IDingBot app, BotInteractiveMsgPayload payload, T data);
+
+    /**
+     * 处理器功能说明
+     *
+     * @return string
+     */
+    default String description() {
+        return StringUtils.EMPTY;
+    }
+
+    /**
+     * 表达式遍历顺序
+     * <p>
+     * 注意：是pattern在遍历匹配正则的顺序，而非对应正则下处理器执行顺序
+     * <p>
+     * 该值仅在Pattern不为空时作为匹配顺序进行排序
+     *
+     * @return 排序值
+     */
+    default Integer order() {
+        return 1;
+    }
 
     /**
      * 获取处理器
@@ -50,12 +75,16 @@ public interface IDingBotMsgCallBackHandler<T> {
         if (payload == null || StringUtils.isEmpty(payload.getText().getContent())) {
             return Optional.empty();
         }
-        return Optional.of(REGISTRY.entrySet().stream()
+        final List<IDingBotMsgCallBackHandler> handlers = PATTERN_ORDER.entrySet()
+                .stream()
+                .filter(i -> i.getKey() != null)
+                .sorted(Map.Entry.comparingByValue())
                 .filter(i -> i.getKey().matcher(payload.getText().getContent()).matches())
-                .map(Map.Entry::getValue)
+                .map(i -> REGISTRY.getOrDefault(i.getKey(), Collections.emptyList()))
                 .flatMap(Collection::stream)
                 .filter(handler -> !handler.ignoredApps().contains(app.getClass()))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+        return CollectionUtils.isEmpty(handlers) ? Optional.ofNullable(REGISTRY.get(null)) : Optional.of(handlers);
     }
 
     /**
@@ -87,6 +116,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      *
      * @param app     机器人应用
      * @param payload 机器人消息回调请求体
+     * @return 返回
      */
     default void notifyBeforeSend(IDingBot app, BotInteractiveMsgPayload payload) {
         //do nothing
@@ -122,20 +152,25 @@ public interface IDingBotMsgCallBackHandler<T> {
     /**
      * 忽略该功能的App集合
      * 默认匹配就执行
+     *
      * @return 忽略该功能的App集合
      */
     default Set<Class<? extends IDingBot>> ignoredApps() {
         return Collections.emptySet();
     }
 
+
     /**
      * 自动注册
      */
     @PostConstruct
     default void postConstruct() {
-        final List<IDingBotMsgCallBackHandler> set = IDingBotMsgCallBackHandler.REGISTRY.getOrDefault(keyWord(), new ArrayList<>());
-        set.add(this);
-        REGISTRY.put(keyWord(), set);
+        REGISTRY.add(keyWord(), this);
+        if (PATTERN_ORDER.containsKey(keyWord())) {
+            PATTERN_ORDER.computeIfPresent(keyWord(), (k, v) -> order() < v ? order() : v);
+        } else {
+            PATTERN_ORDER.put(keyWord(), order());
+        }
     }
 
 }

@@ -5,16 +5,53 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author hp
+ */
 public class DingMarkdown {
-    private final List<String> fullContent;
 
+    /*
+            标题
+        # 一级标题
+        ## 二级标题
+        ### 三级标题
+        #### 四级标题
+        ##### 五级标题
+        ###### 六级标题
+
+        引用
+        > A man who stands for nothing will fall for anything.
+
+        文字加粗、斜体
+        **bold**
+        *italic*
+
+        链接
+        [this is a link](https://www.dingtalk.com/)
+
+        图片
+        ![](http://name.com/pic.jpg)
+
+        无序列表
+        - item1
+        - item2
+
+        有序列表
+        1. item1
+        2. item2
+
+        换行(建议\n前后各添加两个空格)
+          \n
+     */
+
+    private final List<String> fullContent;
 
     public DingMarkdown(Builder builder) {
         fullContent = builder.fullContent;
     }
 
-    public static Builder builder(){
-        return new Builder();
+    public static DingMarkdown.Builder builder(){
+        return new DingMarkdown.Builder();
     }
 
     public static final class Builder {
@@ -56,7 +93,7 @@ public class DingMarkdown {
         }
 
         public Builder reference(String reference) {
-            fullContent.add("> " + reference+"\n");
+            fullContent.add("> " + reference);
             return this;
         }
 
@@ -76,18 +113,18 @@ public class DingMarkdown {
         }
 
         public Builder link(String name,String url) {
-            fullContent.add("["+name+"](" + url + ")\n");
+            fullContent.add("["+name+"](" + url + ")");
             return this;
         }
 
         public Builder image(String url) {
-            fullContent.add("![](" + url + ")\n");
+            fullContent.add("![](" + url + ")");
             return this;
         }
 
         public Builder disorderedList(String... element) {
             if (element.length > 0) {
-                final String elements = Arrays.stream(element).map(i -> "- " + i).collect(Collectors.joining("\n "));
+                final String elements = Arrays.stream(element).map(i -> "- " + i).collect(Collectors.joining("  \n  "));
                 fullContent.add(elements);
             }
             return this;
@@ -97,7 +134,7 @@ public class DingMarkdown {
             if (element.length > 0) {
                 StringBuilder strBuilder = new StringBuilder();
                 for (int i = 0; i < element.length; i++) {
-                    strBuilder.append(i).append(1).append(". ").append(element[i]).append("\n ");
+                    strBuilder.append(i).append(1).append(". ").append(element[i]).append("  \n  ");
                 }
                 fullContent.add(strBuilder.toString());
             }
@@ -106,7 +143,7 @@ public class DingMarkdown {
 
         public String build() {
             final DingMarkdown dingMarkdown = new DingMarkdown(this);
-            return String.join("\n ", dingMarkdown.fullContent);
+            return String.join("  \n  ", dingMarkdown.fullContent);
         }
     }
 }

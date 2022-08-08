@@ -9,6 +9,9 @@ import com.hp.dingding.service.api.IDingBotMsgCallBackHandler;
 import com.hp.dingding.utils.DingMarkdown;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.regex.Pattern;
 
 /**
@@ -17,29 +20,27 @@ import java.util.regex.Pattern;
 @Component
 public final class DefaultBotMsgCallbackHandler implements IDingBotMsgCallBackHandler<String> {
 
-    private static final Pattern pattern = Pattern.compile("^(?i)test$|^测试$");
+    private static final Pattern PATTERN = Pattern.compile("^(?i)test$|^测试$");
 
     @Override
     public Pattern keyWord() {
-        return pattern;
+        return PATTERN;
     }
 
     @Override
     public String beforeMessageSend(IDingBot app, BotInteractiveMsgPayload payload) {
-        return "beforeMessageSend done";
+        return "前置处理完成：返回测试数据";
     }
 
     @Override
     public IDingMsg message(IDingBot bot, BotInteractiveMsgPayload payload, String data) {
         final String content = DingMarkdown.builder()
-                .level1Title("测试自动回复消息")
-                .level2Title("机器人")
-                .boldText(bot.getAppName())
-                .level2Title("AppId")
-                .italicText(bot.getAppId() + "")
-                .level2Title("前置处理接口")
-                .boldText(data)
+                .level3Title("测试回复")
+                .text("AppName：" + bot.getAppName())
+                .text("AppId：" + bot.getAppId())
+                .text("Data：" + data)
+                .reference(LocalDateTime.now().atZone(ZoneId.of("Asia/Shanghai")).format(DateTimeFormatter.ofPattern("MM-dd HH:mm")))
                 .build();
-        return new DingMarkdownMsg(new DingMarkdownMsg.SampleMarkdown("测试", content));
+        return new DingMarkdownMsg(new DingMarkdownMsg.OfficialMarkdownMsg("测试", content));
     }
 }

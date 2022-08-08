@@ -32,6 +32,7 @@ public class DingMarkdownMsg implements IDingMsg {
     }
 
     @Data
+    @Deprecated
     @AllArgsConstructor
     public static class Markdown implements MarkdownCat{
         private String title;
