@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
  * @Author: HP
  */
 @Component
-public class DefaultBotMsgCallbackHandler implements IDingBotMsgCallBackHandler<String> {
+public final class DefaultBotMsgCallbackHandler implements IDingBotMsgCallBackHandler<String> {
 
     private static final Pattern pattern = Pattern.compile("^(?i)test$|^测试$");
 
