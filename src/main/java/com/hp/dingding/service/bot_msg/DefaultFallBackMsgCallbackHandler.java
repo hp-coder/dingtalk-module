@@ -36,10 +36,10 @@ public class DefaultFallBackMsgCallbackHandler implements IDingBotMsgCallBackHan
         final String fallbackMsg = DingMarkdown.builder()
                 .level2Title("说明")
                 .text("未找到对应处理器，请检查发送内容（关键字，格式，长度等）或联系开发人员处理！")
-                .level6Title("*")
+                .newLine()
                 .level3Title("请求原文")
-                .text("'" + payload.getText().getContent() + "'")
-                .level6Title("*")
+                .textWithFont("'" + payload.getText().getContent() + "'").color("#99FFFF").builder()
+                .newLine()
                 .level3Title("已有处理器")
                 .orderedList(this.getHandlerDescriptions().toArray(new String[0]))
                 .build();

@@ -1,13 +1,12 @@
 package com.hp.dingding.utils;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @author hp
- */
 public class DingMarkdown {
 
     /*
@@ -44,13 +43,15 @@ public class DingMarkdown {
           \n
      */
 
+    //    private static final String DING_MSG_BACKGROUND_COLOR = "#202329";
+    private static final String DING_MSG_BACKGROUND_COLOR = "#202328";
     private final List<String> fullContent;
 
     public DingMarkdown(Builder builder) {
         fullContent = builder.fullContent;
     }
 
-    public static DingMarkdown.Builder builder(){
+    public static DingMarkdown.Builder builder() {
         return new DingMarkdown.Builder();
     }
 
@@ -102,6 +103,12 @@ public class DingMarkdown {
             return this;
         }
 
+        public Font textWithFont(String text) {
+            Font font = new Font(this, text);
+            fullContent.add(text);
+            return font;
+        }
+
         public Builder boldText(String boldText) {
             fullContent.add("**" + boldText + "**");
             return this;
@@ -112,8 +119,8 @@ public class DingMarkdown {
             return this;
         }
 
-        public Builder link(String name,String url) {
-            fullContent.add("["+name+"](" + url + ")");
+        public Builder link(String name, String url) {
+            fullContent.add("[" + name + "](" + url + ")");
             return this;
         }
 
@@ -124,7 +131,7 @@ public class DingMarkdown {
 
         public Builder disorderedList(String... element) {
             if (element.length > 0) {
-                final String elements = Arrays.stream(element).map(i -> "- " + i).collect(Collectors.joining("  \n  "));
+                final String elements = Arrays.stream(element).map(i -> "- " + i).collect(Collectors.joining("\n\n"));
                 fullContent.add(elements);
             }
             return this;
@@ -134,16 +141,67 @@ public class DingMarkdown {
             if (element.length > 0) {
                 StringBuilder strBuilder = new StringBuilder();
                 for (int i = 0; i < element.length; i++) {
-                    strBuilder.append(i).append(1).append(". ").append(element[i]).append("  \n  ");
+                    strBuilder.append(i).append(1).append(". ").append(element[i]).append("\n\n");
                 }
                 fullContent.add(strBuilder.toString());
             }
             return this;
         }
 
+        public Builder newLine() {
+            return this
+                    .textWithFont("new-line")
+                    .color(DING_MSG_BACKGROUND_COLOR)
+                    .face("monospace")
+                    .builder();
+        }
+
         public String build() {
             final DingMarkdown dingMarkdown = new DingMarkdown(this);
-            return String.join("  \n  ", dingMarkdown.fullContent);
+            return String.join("\n\n", dingMarkdown.fullContent);
+        }
+    }
+
+
+    public static class Font {
+
+        private String temp = "<font face=\"{face}\" color=\"{color}\">{text}</font>";
+        private final Builder builder;
+
+
+        public Font(Builder builder, String text) {
+            this.builder = builder;
+            format("text", text);
+        }
+
+        public Font color(String hexColor) {
+            format("color", StringUtils.isEmpty(hexColor) ? "#FFFFFF" : hexColor);
+            return this;
+        }
+
+        public Font face(String fontFace) {
+            format("face", StringUtils.isNotEmpty(fontFace) ? fontFace : "monospace");
+            return this;
+        }
+
+        public Builder builder() {
+            correctTemp();
+            return replaceElement();
+        }
+
+        private void correctTemp() {
+            temp = temp.replace("{face}", "monospace")
+                    .replace("{color}", "#FFFFFF");
+        }
+
+        private Builder replaceElement() {
+            builder.fullContent.remove(builder.fullContent.size() - 1);
+            builder.fullContent.add(temp);
+            return builder;
+        }
+
+        private void format(String mark, String replacement) {
+            temp = temp.replace("{" + mark + "}", replacement);
         }
     }
 }
