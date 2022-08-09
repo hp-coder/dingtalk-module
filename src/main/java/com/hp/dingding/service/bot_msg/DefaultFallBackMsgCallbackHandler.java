@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @Author: HP
  */
 @Component
-public final class DefaultFallBackMsgCallbackHandler implements IDingBotMsgCallBackHandler<String> {
+public class DefaultFallBackMsgCallbackHandler implements IDingBotMsgCallBackHandler<String> {
 
     @Override
     public Pattern keyWord() {
