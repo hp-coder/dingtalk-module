@@ -104,9 +104,7 @@ public class DingMarkdown {
         }
 
         public Font textWithFont(String text) {
-            Font font = new Font(this, text);
-            fullContent.add(text);
-            return font;
+            return new Font(this, text);
         }
 
         public Builder boldText(String boldText) {
@@ -186,18 +184,13 @@ public class DingMarkdown {
 
         public Builder builder() {
             correctTemp();
-            return replaceElement();
+            builder.fullContent.add(temp);
+            return builder;
         }
 
         private void correctTemp() {
             temp = temp.replace("{face}", "monospace")
                     .replace("{color}", "#FFFFFF");
-        }
-
-        private Builder replaceElement() {
-            builder.fullContent.remove(builder.fullContent.size() - 1);
-            builder.fullContent.add(temp);
-            return builder;
         }
 
         private void format(String mark, String replacement) {
