@@ -79,7 +79,7 @@ public interface IDingBotMsgCallBackHandler<T> {
                 .stream()
                 .filter(i -> i.getKey() != null)
                 .sorted(Map.Entry.comparingByValue())
-                .filter(i -> i.getKey().matcher(payload.getText().getContent()).matches())
+                .filter(i -> i.getKey().asPredicate().test(payload.getText().getContent()))
                 .map(i -> REGISTRY.getOrDefault(i.getKey(), Collections.emptyList()))
                 .flatMap(Collection::stream)
                 .filter(handler -> !handler.ignoredApps().contains(app.getClass()))
