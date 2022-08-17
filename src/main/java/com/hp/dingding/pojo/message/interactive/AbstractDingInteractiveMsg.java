@@ -13,7 +13,7 @@ public abstract class AbstractDingInteractiveMsg implements IDingInteractiveMsg 
     public String sign;
     public Integer state = 0;
 
-    AbstractDingInteractiveMsg(String callbackUrl,String outTrackId,String templateId){
+    public AbstractDingInteractiveMsg(String callbackUrl, String outTrackId, String templateId) {
         this.callbackUrl = callbackUrl;
         this.outTrackId = outTrackId;
         this.templateId = templateId;
