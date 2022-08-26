@@ -3,9 +3,6 @@ package com.hp.dingding.component.application;
 import com.hp.dingding.component.factory.DingAppFactory;
 import org.springframework.beans.factory.InitializingBean;
 
-import java.util.HashSet;
-import java.util.Set;
-
 /**
  * 钉钉应用
  *
