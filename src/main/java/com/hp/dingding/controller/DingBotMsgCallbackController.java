@@ -8,14 +8,9 @@ import com.hp.dingding.pojo.bot.BotInteractiveMsgPayload;
 import com.hp.dingding.service.api.IDingBotMsgCallBackHandler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.reflections.Reflections;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.annotation.PostConstruct;
-import java.lang.reflect.Constructor;
-import java.util.Set;
 
 /**
  * 钉钉机器人消息互动
