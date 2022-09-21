@@ -75,6 +75,8 @@ public interface IDingBotMsgCallBackHandler<T> {
         if (payload == null || StringUtils.isEmpty(payload.getText().getContent())) {
             return Optional.empty();
         }
+        final String content = payload.getText().getContent();
+        payload.getText().setContent(StringUtils.strip(content, StringUtils.SPACE));
         final List<IDingBotMsgCallBackHandler> handlers = PATTERN_ORDER.entrySet()
                 .stream()
                 .filter(i -> i.getKey() != null)
