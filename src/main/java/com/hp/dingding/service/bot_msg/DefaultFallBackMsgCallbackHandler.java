@@ -38,7 +38,7 @@ public class DefaultFallBackMsgCallbackHandler implements IDingBotMsgCallBackHan
                 .text("未找到对应处理器，请检查发送内容（关键字，格式，长度等）或联系开发人员处理！")
                 .newLine()
                 .level3Title("请求原文")
-                .textWithFont("'" + payload.getText().getContent() + "'").color("#99FFFF").builder()
+                .textWithFont("'" + payload.getText().getContent() + "'").color("#67C23A").builder()
                 .newLine()
                 .level3Title("已有处理器")
                 .orderedList(this.getHandlerDescriptions().toArray(new String[0]))

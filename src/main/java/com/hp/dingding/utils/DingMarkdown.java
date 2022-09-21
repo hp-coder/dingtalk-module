@@ -43,7 +43,7 @@ public class DingMarkdown {
           \n
      */
 
-    private static final String DING_MSG_BACKGROUND_COLOR = "#202328";
+    private static final String DING_MSG_BACKGROUND_COLOR = "#FFFFFF";
     private final List<String> fullContent;
 
     public DingMarkdown(Builder builder) {
