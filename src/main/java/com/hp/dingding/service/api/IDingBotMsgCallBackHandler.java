@@ -6,11 +6,10 @@ import com.hp.dingding.pojo.message.IDingMsg;
 import com.hp.dingding.service.message.DingBotMessageHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.LinkedMultiValueMap;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
-import java.util.regex.Pattern;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -19,18 +18,17 @@ import java.util.stream.Collectors;
  * @Author: HP
  */
 public interface IDingBotMsgCallBackHandler<T> {
-
-    LinkedMultiValueMap<Pattern, IDingBotMsgCallBackHandler> REGISTRY = new LinkedMultiValueMap<>(16);
-    Map<Pattern, Integer> PATTERN_ORDER = new HashMap<>(16);
+    /**
+     * 注册容器*
+     */
+    List<IDingBotMsgCallBackHandler> REGISTRY = new ArrayList<>(16);
 
     /**
-     * 词根
-     * <p>
-     * 当返回null时作为fallback处理器使用
+     * 将判断是否合法的方法继续抽象为一个Predicate方便多种校验方式*
      *
-     * @return 正则匹配
+     * @return
      */
-    Pattern keyWord();
+    Predicate<BotInteractiveMsgPayload> predication();
 
     /**
      * 自动回复的消息
@@ -61,7 +59,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      * @return 排序值
      */
     default Integer order() {
-        return 1;
+        return 0;
     }
 
     /**
@@ -77,16 +75,15 @@ public interface IDingBotMsgCallBackHandler<T> {
         }
         final String content = payload.getText().getContent();
         payload.getText().setContent(StringUtils.strip(content, StringUtils.SPACE));
-        final List<IDingBotMsgCallBackHandler> handlers = PATTERN_ORDER.entrySet()
-                .stream()
-                .filter(i -> i.getKey() != null)
-                .sorted(Map.Entry.comparingByValue())
-                .filter(i -> i.getKey().asPredicate().test(payload.getText().getContent()))
-                .map(i -> REGISTRY.getOrDefault(i.getKey(), Collections.emptyList()))
-                .flatMap(Collection::stream)
+        final List<IDingBotMsgCallBackHandler> handlers = REGISTRY.stream()
                 .filter(handler -> !handler.ignoredApps().contains(app.getClass()))
+                .filter(handler ->
+                        handler.predication() != null && handler.predication().test(payload)
+                )
                 .collect(Collectors.toList());
-        return CollectionUtils.isEmpty(handlers) ? Optional.ofNullable(REGISTRY.get(null)) : Optional.of(handlers);
+        return CollectionUtils.isEmpty(handlers) ?
+                Optional.of(REGISTRY.stream().filter(handler -> handler.predication() == null).collect(Collectors.toList())) :
+                Optional.of(handlers);
     }
 
     /**
@@ -141,7 +138,6 @@ public interface IDingBotMsgCallBackHandler<T> {
                 message);
     }
 
-
     /**
      * 消息回复后
      *
@@ -167,12 +163,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      */
     @PostConstruct
     default void postConstruct() {
-        REGISTRY.add(keyWord(), this);
-        if (PATTERN_ORDER.containsKey(keyWord())) {
-            PATTERN_ORDER.computeIfPresent(keyWord(), (k, v) -> order() < v ? order() : v);
-        } else {
-            PATTERN_ORDER.put(keyWord(), order());
-        }
+        REGISTRY.add(order(), this);
     }
 
 }

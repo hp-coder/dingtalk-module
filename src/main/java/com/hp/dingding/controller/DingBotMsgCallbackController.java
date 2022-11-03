@@ -28,11 +28,14 @@ public class DingBotMsgCallbackController {
         log.info("content: {}", new Gson().toJson(payload));
         IDingBot bot = DingAppFactory.app(payload.getRobotCode());
         if (bot == null) {
-            log.error("未找到对应的钉钉应用: APP_KEY: {}", payload.getRobotCode());
+            log.error("SpringContext中未找到对应的钉钉应用Bean: APP_KEY: {}", payload.getRobotCode());
         }
         IDingBotMsgCallBackHandler.handlers(bot, payload)
-                .ifPresent(handlers -> {
-                    handlers.parallelStream().forEach(handler -> handler.handle(bot, payload));
-                });
+                .ifPresent(handlers ->
+                        handlers.parallelStream()
+                                .forEachOrdered(
+                                        handler -> handler.handle(bot, payload)
+                                )
+                );
     }
 }

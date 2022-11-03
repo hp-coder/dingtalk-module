@@ -12,9 +12,11 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 /**
+ * 默认测试处理器，用于调试是否能正常收到消息*
  * @Author: HP
  */
 @Component
@@ -23,13 +25,13 @@ public class DefaultBotMsgCallbackHandler implements IDingBotMsgCallBackHandler<
     private static final Pattern PATTERN = Pattern.compile("^(?i)test$|^测试$");
 
     @Override
-    public Pattern keyWord() {
-        return PATTERN;
+    public String beforeMessageSend(IDingBot app, BotInteractiveMsgPayload payload) {
+        return "前置处理完成：返回测试数据";
     }
 
     @Override
-    public String beforeMessageSend(IDingBot app, BotInteractiveMsgPayload payload) {
-        return "前置处理完成：返回测试数据";
+    public Predicate<BotInteractiveMsgPayload> predication() {
+        return payload-> PATTERN.asPredicate().test(payload.getText().getContent());
     }
 
     @Override

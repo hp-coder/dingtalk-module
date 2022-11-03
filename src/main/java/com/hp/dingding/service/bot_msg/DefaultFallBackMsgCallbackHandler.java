@@ -10,10 +10,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Pattern;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +26,7 @@ import java.util.stream.Collectors;
 public class DefaultFallBackMsgCallbackHandler implements IDingBotMsgCallBackHandler<String> {
 
     @Override
-    public Pattern keyWord() {
+    public Predicate<BotInteractiveMsgPayload> predication() {
         return null;
     }
 
@@ -48,12 +47,11 @@ public class DefaultFallBackMsgCallbackHandler implements IDingBotMsgCallBackHan
 
 
     private List<String> getHandlerDescriptions() {
-        final Collection<List<IDingBotMsgCallBackHandler>> values = IDingBotMsgCallBackHandler.REGISTRY.values();
+        final List<IDingBotMsgCallBackHandler> values = IDingBotMsgCallBackHandler.REGISTRY;
         if (CollectionUtils.isEmpty(values)) {
             return Collections.singletonList("未配置任何处理器");
         }
         return values.stream()
-                .flatMap(Collection::stream)
                 .map(IDingBotMsgCallBackHandler::description)
                 .filter(StringUtils::isNotEmpty)
                 .collect(Collectors.toList());
