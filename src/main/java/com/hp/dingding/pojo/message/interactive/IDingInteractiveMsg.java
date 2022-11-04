@@ -29,7 +29,7 @@ public interface IDingInteractiveMsg extends IDingMsg {
 
     String getOutTrackId();
 
-    String getCallbackUrl();
+    String getCallbackRouteKey();
 
     String getSign();
 

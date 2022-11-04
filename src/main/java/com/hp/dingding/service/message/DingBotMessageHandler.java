@@ -75,7 +75,7 @@ public class DingBotMessageHandler extends DingAbstractMessageHandler implements
             SendInteractiveCardRequest sendInteractiveCardRequest = new SendInteractiveCardRequest()
                     .setReceiverUserIdList(userIds)
                     .setConversationType(0)
-                    .setCallbackRouteKey(interactiveMsg.getCallbackUrl())
+                    .setCallbackRouteKey(interactiveMsg.getCallbackRouteKey())
                     .setCardTemplateId(interactiveMsg.getTemplateId())
                     .setCardData(cardData)
                     .setOutTrackId(interactiveMsg.getOutTrackId());
@@ -112,7 +112,7 @@ public class DingBotMessageHandler extends DingAbstractMessageHandler implements
                 .setReceiverUserIdList(userIds)
                 .setOutTrackId(UUID.randomUUID().toString())
                 .setConversationType(1)
-                .setCallbackRouteKey(interactiveMsg.getCallbackUrl())
+                .setCallbackRouteKey(interactiveMsg.getCallbackRouteKey())
                 .setCardData(cardData)
 //                .setPrivateData(privateData)
 //                .setChatBotId("123")

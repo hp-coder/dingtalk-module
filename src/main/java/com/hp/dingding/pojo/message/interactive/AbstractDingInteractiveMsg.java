@@ -8,13 +8,13 @@ import lombok.Setter;
 public abstract class AbstractDingInteractiveMsg implements IDingInteractiveMsg {
 
     public String templateId;
-    public String callbackUrl;
+    public String callbackRouteKey;
     public String outTrackId;
     public String sign;
     public Integer state = 0;
 
-    public AbstractDingInteractiveMsg(String callbackUrl, String outTrackId, String templateId) {
-        this.callbackUrl = callbackUrl;
+    public AbstractDingInteractiveMsg(String callbackRouteKey, String outTrackId, String templateId) {
+        this.callbackRouteKey = callbackRouteKey;
         this.outTrackId = outTrackId;
         this.templateId = templateId;
         this.sign = IDingInteractiveMsg.encryptSign(this.outTrackId);
