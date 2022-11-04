@@ -66,9 +66,9 @@ public interface IDingInteractiveMessageHandler extends IDingMessageHandler {
         OapiImChatScencegroupInteractivecardCallbackRegisterRequest req = new OapiImChatScencegroupInteractivecardCallbackRegisterRequest();
         req.setCallbackUrl(callBack.getCallbackUrl());
         req.setApiSecret(app.getAppSecret());
-        req.setCallbackRouteKey(callBack.getCallbackUrlKey());
+        req.setCallbackRouteKey(callBack.getCallbackRouteKey());
         req.setForceUpdate(true);
-        logger.info("应用：{}, 注册回调地址：路由地址：{}， 路由键：{}", app.getAppName(), callBack.getCallbackUrl(), callBack.getCallbackUrlKey());
+        logger.info("应用：{}, 注册回调地址：路由地址：{}， 路由键：{}", app.getAppName(), callBack.getCallbackUrl(), callBack.getCallbackRouteKey());
         client.execute(req, DingAccessTokenFactory.accessToken(app));
     }
 }

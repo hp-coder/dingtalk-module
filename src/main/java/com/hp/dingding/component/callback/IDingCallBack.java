@@ -17,7 +17,7 @@ public interface IDingCallBack {
 
     String getCallbackUrl();
 
-    String getCallbackUrlKey();
+    String getCallbackRouteKey();
 
     List<Class<? extends IDingApp>> getDingApps();
 
