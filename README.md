@@ -20,9 +20,9 @@ mvn install
 ### maven项目引入
 ```xml
 <dependency>
-    <groupId>com.hp</groupId>
-    <artifactId>dingtalk-module</artifactId>
-    <version>1.0.0</version>
+  <groupId>com.hp</groupId>
+  <artifactId>dingtalk-module</artifactId>
+  <version>1.0.1-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -95,7 +95,7 @@ DingOAHandler
 DingBotMsgCallbackController
 - 统一机器人消息回调
     - 启动类增加componentScan注解，扫描"com.hp"即可
-    - 如果有拦截器，请释放/ding/bot/msg/callback拦截
+    - 如果有拦截器，请释放`/ding/bot/msg/callback`拦截
 
 ### 机器人回调消息处理器
 IDingBotMsgCallBackHandler
