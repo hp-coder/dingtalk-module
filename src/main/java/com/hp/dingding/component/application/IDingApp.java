@@ -1,14 +1,14 @@
 package com.hp.dingding.component.application;
 
 import com.hp.dingding.component.factory.DingAppFactory;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.SmartInitializingSingleton;
 
 /**
  * 钉钉应用
  *
  * @Author: HP
  */
-public interface IDingApp extends InitializingBean {
+public interface IDingApp extends SmartInitializingSingleton {
 
     String getAppName();
 
@@ -19,7 +19,7 @@ public interface IDingApp extends InitializingBean {
     Long getAppId();
 
     @Override
-    default void afterPropertiesSet() {
+    default void afterSingletonsInstantiated() {
         DingAppFactory.setAppCache(this);
     }
 }

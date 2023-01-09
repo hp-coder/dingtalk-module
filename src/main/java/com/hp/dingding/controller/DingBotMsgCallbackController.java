@@ -29,6 +29,7 @@ public class DingBotMsgCallbackController {
         IDingBot bot = DingAppFactory.app(payload.getRobotCode());
         if (bot == null) {
             log.error("SpringContext中未找到对应的钉钉应用Bean: APP_KEY: {}", payload.getRobotCode());
+            return;
         }
         IDingBotMsgCallBackHandler.handlers(bot, payload)
                 .ifPresent(handlers ->
