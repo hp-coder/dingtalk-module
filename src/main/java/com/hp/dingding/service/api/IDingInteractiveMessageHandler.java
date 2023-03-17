@@ -6,7 +6,7 @@ import com.dingtalk.api.request.OapiImChatScencegroupInteractivecardCallbackRegi
 import com.hp.dingding.component.factory.DingAccessTokenFactory;
 import com.hp.dingding.constant.DingConstant;
 import com.hp.dingding.component.application.IDingApp;
-import com.hp.dingding.component.callback.IDingCallBack;
+import com.hp.dingding.pojo.message.interactive.callback.IDingInteractiveCardCallBack;
 import com.hp.dingding.pojo.message.interactive.IDingInteractiveMsg;
 import com.taobao.api.ApiException;
 import org.slf4j.Logger;
@@ -58,7 +58,7 @@ public interface IDingInteractiveMessageHandler extends IDingMessageHandler {
      * @param app      调用应用
      * @param callBack 回调url配置
      */
-    static void registerCallBackUrl(IDingApp app, IDingCallBack callBack) throws ApiException {
+    static void registerCallBackUrl(IDingApp app, IDingInteractiveCardCallBack callBack, boolean forceUpdate) throws ApiException {
         if (app == null || callBack == null) {
             return;
         }
@@ -67,7 +67,7 @@ public interface IDingInteractiveMessageHandler extends IDingMessageHandler {
         req.setCallbackUrl(callBack.getCallbackUrl());
         req.setApiSecret(app.getAppSecret());
         req.setCallbackRouteKey(callBack.getCallbackRouteKey());
-        req.setForceUpdate(true);
+        req.setForceUpdate(forceUpdate);
         logger.info("应用：{}, 注册回调地址：路由地址：{}， 路由键：{}", app.getAppName(), callBack.getCallbackUrl(), callBack.getCallbackRouteKey());
         client.execute(req, DingAccessTokenFactory.accessToken(app));
     }

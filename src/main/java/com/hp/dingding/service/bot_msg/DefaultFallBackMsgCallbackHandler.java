@@ -2,8 +2,8 @@ package com.hp.dingding.service.bot_msg;
 
 import com.hp.dingding.component.application.IDingBot;
 import com.hp.dingding.pojo.bot.BotInteractiveMsgPayload;
-import com.hp.dingding.pojo.message.DingMarkdownMsg;
-import com.hp.dingding.pojo.message.IDingMsg;
+import com.hp.dingding.pojo.message.common.DingMarkdownMsg;
+import com.hp.dingding.pojo.message.common.IDingCommonMsg;
 import com.hp.dingding.service.api.IDingBotMsgCallBackHandler;
 import com.hp.dingding.utils.DingMarkdown;
 import org.apache.commons.lang3.StringUtils;
@@ -31,7 +31,7 @@ public class DefaultFallBackMsgCallbackHandler implements IDingBotMsgCallBackHan
     }
 
     @Override
-    public IDingMsg message(IDingBot app, BotInteractiveMsgPayload payload, String data) {
+    public IDingCommonMsg message(IDingBot app, BotInteractiveMsgPayload payload, String data) {
         final String fallbackMsg = DingMarkdown.builder()
                 .level2Title("说明")
                 .text("未找到对应处理器，请检查发送内容（关键字，格式，长度等）或联系开发人员处理！")

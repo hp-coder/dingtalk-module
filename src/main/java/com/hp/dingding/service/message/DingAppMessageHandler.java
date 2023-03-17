@@ -7,36 +7,35 @@ import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
 import com.hp.dingding.component.application.IDingApp;
 import com.hp.dingding.component.factory.DingAccessTokenFactory;
 import com.hp.dingding.constant.DingConstant;
-import com.hp.dingding.pojo.message.IDingMsg;
+import com.hp.dingding.pojo.message.common.IDingCommonMsg;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 public class DingAppMessageHandler extends DingAbstractMessageHandler {
 
     @Override
-    public void sendMsg(IDingApp app, List<String> userIds, IDingMsg msgContent) {
+    public void sendMsg(IDingApp app, List<String> userIds, IDingCommonMsg msgContent) {
         sendMsg(app, userIds, false, msgContent);
     }
 
     @Override
-    public void sendMsg(IDingApp app, List<String> userIds, boolean toAllUser, IDingMsg msgContent) {
+    public void sendMsg(IDingApp app, List<String> userIds, boolean toAllUser, IDingCommonMsg msgContent) {
         sendMsg(app, userIds, null, toAllUser, msgContent);
     }
 
     @Override
-    public void sendMsg(IDingApp app, List<String> userIds, List<String> deptIds, boolean toAllUser, IDingMsg msgContent) {
+    public void sendMsg(IDingApp app, List<String> userIds, List<String> deptIds, boolean toAllUser, IDingCommonMsg msgContent) {
         try {
             argsValidation(app, userIds, msgContent);
             DingTalkClient client = new DefaultDingTalkClient(DingConstant.SEND_WORK_MESSAGE);
             OapiMessageCorpconversationAsyncsendV2Request request = new OapiMessageCorpconversationAsyncsendV2Request();
-            request.setUseridList(userIds.stream().collect(Collectors.joining(",")));
+            request.setUseridList(String.join(",", userIds));
             request.setAgentId(app.getAppId());
             if (!CollectionUtils.isEmpty(deptIds)) {
-                request.setDeptIdList(deptIds.stream().collect(Collectors.joining(",")));
+                request.setDeptIdList(String.join(",", deptIds));
             }
             request.setToAllUser(toAllUser);
             OapiMessageCorpconversationAsyncsendV2Request.Msg msg = buildMsg(msgContent);
@@ -49,7 +48,7 @@ public class DingAppMessageHandler extends DingAbstractMessageHandler {
         }
     }
 
-    private OapiMessageCorpconversationAsyncsendV2Request.Msg buildMsg(IDingMsg msgContent) {
+    private OapiMessageCorpconversationAsyncsendV2Request.Msg buildMsg(IDingCommonMsg msgContent) {
         OapiMessageCorpconversationAsyncsendV2Request.Msg msg = new OapiMessageCorpconversationAsyncsendV2Request.Msg();
         msg.setMsgtype(msgContent.getMsgtype());
         msg.setText(new OapiMessageCorpconversationAsyncsendV2Request.Text());

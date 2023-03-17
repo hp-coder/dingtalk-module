@@ -3,7 +3,7 @@ package com.hp.dingding.service.api;
 
 import com.hp.dingding.component.IDingApi;
 import com.hp.dingding.component.application.IDingApp;
-import com.hp.dingding.pojo.message.IDingMsg;
+import com.hp.dingding.pojo.message.common.IDingCommonMsg;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface IDingMessageHandler extends IDingApi {
      * @param userIds 钉钉用户id集合
      * @param msg 消息体
      */
-    default void sendMsg(IDingApp app, List<String> userIds, IDingMsg msg){};
+    default void sendMsg(IDingApp app, List<String> userIds, IDingCommonMsg msg){};
 
     /**
      * 发送消息
@@ -24,7 +24,7 @@ public interface IDingMessageHandler extends IDingApi {
      * @param toAllUser 是否发送全部用户
      * @param msg 消息体
      */
-    default void sendMsg(IDingApp app, List<String> userIds, boolean toAllUser, IDingMsg msg){};
+    default void sendMsg(IDingApp app, List<String> userIds, boolean toAllUser, IDingCommonMsg msg){};
 
     /**
      * 发送消息
@@ -34,7 +34,7 @@ public interface IDingMessageHandler extends IDingApi {
      * @param toAllUser 是否发送全部用户
      * @param msg 消息体
      */
-    default void sendMsg(IDingApp app, List<String> userIds, List<String> deptIds, boolean toAllUser, IDingMsg msg){};
+    default void sendMsg(IDingApp app, List<String> userIds, List<String> deptIds, boolean toAllUser, IDingCommonMsg msg){};
 
     /**
      * 通过手机号查找钉钉用户并发送消息
@@ -44,5 +44,5 @@ public interface IDingMessageHandler extends IDingApi {
      * @param toAllUser 是否发送全部用户
      * @param msg IDingMsg消息体
      */
-    default void sendMsgThroughMobile(IDingApp app, List<String> mobiles, List<String> deptIds, boolean toAllUser, IDingMsg msg){};
+    default void sendMsgThroughMobile(IDingApp app, List<String> mobiles, List<String> deptIds, boolean toAllUser, IDingCommonMsg msg){};
 }

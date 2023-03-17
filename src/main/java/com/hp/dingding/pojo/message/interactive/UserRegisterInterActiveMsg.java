@@ -1,7 +1,5 @@
 package com.hp.dingding.pojo.message.interactive;
 
-import com.google.gson.Gson;
-import com.hp.dingding.constant.DingMsgType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -35,15 +33,5 @@ public class UserRegisterInterActiveMsg extends AbstractDingInteractiveMsg {
 
     public UserRegisterInterActiveMsg(String callbackUrl, String outTrackId) {
         super(callbackUrl, outTrackId, "6f79c335-272e-4baa-846d-4927983ff816");
-    }
-
-    @Override
-    public String getMsgtype() {
-        return DingMsgType.sampleActionCard.name();
-    }
-
-    @Override
-    public String toBotJsonString() {
-        return new Gson().toJson(this);
     }
 }

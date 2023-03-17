@@ -2,7 +2,7 @@ package com.hp.dingding.service.api;
 
 import com.hp.dingding.component.application.IDingBot;
 import com.hp.dingding.pojo.bot.BotInteractiveMsgPayload;
-import com.hp.dingding.pojo.message.IDingMsg;
+import com.hp.dingding.pojo.message.common.IDingCommonMsg;
 import com.hp.dingding.service.message.DingBotMessageHandler;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
@@ -38,7 +38,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      * @param data    前置处理结果
      * @return 钉钉消息
      */
-    IDingMsg message(IDingBot app, BotInteractiveMsgPayload payload, T data);
+    IDingCommonMsg message(IDingBot app, BotInteractiveMsgPayload payload, T data);
 
     /**
      * 处理器功能说明
@@ -129,13 +129,12 @@ public interface IDingBotMsgCallBackHandler<T> {
      * @param data    发消息前操作返回的数据
      */
     default void send(IDingBot app, BotInteractiveMsgPayload payload, T data) {
-        final IDingMsg message = message(app, payload, data);
+        final IDingCommonMsg message = message(app, payload, data);
         if (message == null) {
             return;
         }
         new DingBotMessageHandler().sendMsg(app,
-                Collections.singletonList(payload.getSenderStaffId()),
-                message);
+                Collections.singletonList(payload.getSenderStaffId()), message);
     }
 
     /**

@@ -11,7 +11,7 @@ import com.aliyun.tea.TeaException;
 import com.aliyun.teautil.models.RuntimeOptions;
 import com.hp.dingding.component.application.IDingApp;
 import com.hp.dingding.component.factory.DingAccessTokenFactory;
-import com.hp.dingding.pojo.message.IDingMsg;
+import com.hp.dingding.pojo.message.common.IDingCommonMsg;
 import com.hp.dingding.pojo.message.interactive.IDingInteractiveMsg;
 import com.hp.dingding.service.api.IDingInteractiveMessageHandler;
 import lombok.SneakyThrows;
@@ -25,17 +25,17 @@ import java.util.UUID;
 public class DingBotMessageHandler extends DingAbstractMessageHandler implements IDingInteractiveMessageHandler {
 
     @Override
-    public void sendMsg(IDingApp app, List<String> userIds, IDingMsg msgContent) {
+    public void sendMsg(IDingApp app, List<String> userIds, IDingCommonMsg msgContent) {
         sendMsg(app, userIds, false, msgContent);
     }
 
     @Override
-    public void sendMsg(IDingApp app, List<String> userIds, boolean toAllUser, IDingMsg msgContent) {
+    public void sendMsg(IDingApp app, List<String> userIds, boolean toAllUser, IDingCommonMsg msgContent) {
         sendMsg(app, userIds, null, toAllUser, msgContent);
     }
 
     @Override
-    public void sendMsg(IDingApp app, List<String> userIds, List<String> deptIds, boolean toAllUser, IDingMsg msgContent) {
+    public void sendMsg(IDingApp app, List<String> userIds, List<String> deptIds, boolean toAllUser, IDingCommonMsg msgContent) {
         argsValidation(app, userIds, msgContent);
         try {
             com.aliyun.dingtalkrobot_1_0.Client client = new com.aliyun.dingtalkrobot_1_0.Client(this.config());
@@ -99,6 +99,7 @@ public class DingBotMessageHandler extends DingAbstractMessageHandler implements
     }
 
     @SneakyThrows
+    @Deprecated
     @Override
     public String sendInteractiveMsgToGroup(IDingApp app, List<String> userIds, String openConversationId, IDingInteractiveMsg interactiveMsg) {
         com.aliyun.dingtalkim_1_0.Client client = new com.aliyun.dingtalkim_1_0.Client(this.config());

@@ -3,8 +3,8 @@ package com.hp.dingding.service.bot_msg;
 
 import com.hp.dingding.component.application.IDingBot;
 import com.hp.dingding.pojo.bot.BotInteractiveMsgPayload;
-import com.hp.dingding.pojo.message.DingMarkdownMsg;
-import com.hp.dingding.pojo.message.IDingMsg;
+import com.hp.dingding.pojo.message.common.DingMarkdownMsg;
+import com.hp.dingding.pojo.message.common.IDingCommonMsg;
 import com.hp.dingding.service.api.IDingBotMsgCallBackHandler;
 import com.hp.dingding.utils.DingMarkdown;
 import org.springframework.stereotype.Component;
@@ -35,7 +35,7 @@ public class DefaultBotMsgCallbackHandler implements IDingBotMsgCallBackHandler<
     }
 
     @Override
-    public IDingMsg message(IDingBot bot, BotInteractiveMsgPayload payload, String data) {
+    public IDingCommonMsg message(IDingBot bot, BotInteractiveMsgPayload payload, String data) {
         final String content = DingMarkdown.builder()
                 .level3Title("测试回复")
                 .text("AppName：" + bot.getAppName())

@@ -1,7 +1,7 @@
 package com.hp.dingding.service.message;
 
 import com.hp.dingding.component.application.IDingApp;
-import com.hp.dingding.pojo.message.IDingMsg;
+import com.hp.dingding.pojo.message.common.IDingCommonMsg;
 import com.hp.dingding.service.api.IDingMessageHandler;
 import com.hp.dingding.service.user.DingUserHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public abstract class DingAbstractMessageHandler implements IDingMessageHandler{
 
     @Override
-    public void sendMsgThroughMobile(IDingApp app, List<String> mobiles, List<String> deptIds, boolean toAllUser, IDingMsg msg) {
+    public void sendMsgThroughMobile(IDingApp app, List<String> mobiles, List<String> deptIds, boolean toAllUser, IDingCommonMsg msg) {
         Assert.isTrue(!CollectionUtils.isEmpty(mobiles), "请传入有效的手机号集合");
         final DingUserHandler handler = new DingUserHandler();
         final List<String> userIds = mobiles.stream().map(i -> handler.findUserIdByMobile(app, i)).collect(Collectors.toList());
@@ -30,7 +30,7 @@ public abstract class DingAbstractMessageHandler implements IDingMessageHandler{
      * @param userIds 钉钉用户ids
      * @param msg     消息体
      */
-    protected void argsValidation(IDingApp app, List<String> userIds, IDingMsg msg) {
+    protected void argsValidation(IDingApp app, List<String> userIds, IDingCommonMsg msg) {
         Assert.notNull(app, "请传入有效的钉钉应用");
         Assert.notNull(msg, "请传入有效的钉钉消息对象");
         Assert.isTrue(!CollectionUtils.isEmpty(userIds), "请传入有效的钉钉userId集合");

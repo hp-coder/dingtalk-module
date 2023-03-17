@@ -1,4 +1,4 @@
-package com.hp.dingding.pojo.message;
+package com.hp.dingding.pojo.message.common;
 
 import com.google.gson.Gson;
 import com.hp.dingding.constant.DingMsgType;
@@ -9,7 +9,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class DingLinkMsg implements IDingMsg {
+public class DingLinkMsg implements IDingCommonMsg {
 
     private String msgtype;
 
