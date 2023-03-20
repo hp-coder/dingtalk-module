@@ -4,9 +4,8 @@ import lombok.AllArgsConstructor;
 
 /**
  * 钉钉消息类型
- *
- * @Description: 大小写与官方文档中对应
- * @Author: HP
+ * <p>
+ * 大小写与官方文档中对应
  */
 @AllArgsConstructor
 public enum DingMsgType {

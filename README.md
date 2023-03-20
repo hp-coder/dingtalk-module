@@ -14,6 +14,8 @@
 ```shell
 # make sure that you're on the right branch
 git clone -b prod https://github.com/hp-coder/dingtalk-module.git
+# latest version is most likely still on the test branch, I apologize for my laziness :( 
+git clone -b test https://github.com/hp-coder/dingtalk-module.git
 # install it in your local maven repository
 mvn install
 ```
@@ -22,7 +24,7 @@ mvn install
 <dependency>
   <groupId>com.hp</groupId>
   <artifactId>dingtalk-module</artifactId>
-  <version>1.0.1-SNAPSHOT</version>
+  <version>1.0.3-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -110,6 +112,6 @@ IDingBotMsgCallBackHandler
 - 启动增加包扫描即可
 
 
-
 ## 期望
-减小包体积,集成其他常用功能点,优化代码接口,增加更多可配置项等
+- *机器人消息互动类shell交互式的抽象或实现
+- 减小包体积,集成其他常用功能点,优化代码接口,增加更多可配置项等

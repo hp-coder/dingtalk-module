@@ -17,7 +17,7 @@ import java.util.List;
  * 已经认证的【中级、高级企业】最多可添加20万人。
  * 温馨提示：单次导入最多1万人，人数较多可以分批导入，每次导入一部分后请确认是否正常再继续导入，excel文件大小不要超过5M。
  *
- * @Author: HP
+ * @author HP
  */
 public interface IDingExtContactHandler extends IDingApi {
 

@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * 钉钉应用工厂
  *
- * @Author: HP
+ * @author HP
  */
 @Slf4j
 public class DingAppFactory {

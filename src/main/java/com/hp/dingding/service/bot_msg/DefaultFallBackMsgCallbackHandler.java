@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * <p>
  * 如果没有一个正常处理器能处理，那么将使用该处理器返回信息
  *
- * @Author: HP
+ * @author HP
  */
 @Component
 public class DefaultFallBackMsgCallbackHandler implements IDingBotMsgCallBackHandler<String> {
@@ -47,7 +47,7 @@ public class DefaultFallBackMsgCallbackHandler implements IDingBotMsgCallBackHan
 
 
     private List<String> getHandlerDescriptions() {
-        final List<IDingBotMsgCallBackHandler> values = IDingBotMsgCallBackHandler.REGISTRY;
+        final List<IDingBotMsgCallBackHandler<?>> values = IDingBotMsgCallBackHandler.REGISTRY;
         if (CollectionUtils.isEmpty(values)) {
             return Collections.singletonList("未配置任何处理器");
         }

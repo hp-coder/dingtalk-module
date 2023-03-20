@@ -8,7 +8,7 @@ import java.util.Objects;
 /**
  * 工具类
  *
- * @Author: HP
+ * @author HP
  */
 public class DingUtils {
 

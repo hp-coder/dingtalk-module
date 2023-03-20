@@ -6,7 +6,7 @@ import lombok.Data;
 /**
  * 钉钉系统常量
  *
- * @Author: HP
+ * @author HP
  */
 @Data
 public class DingConstant {

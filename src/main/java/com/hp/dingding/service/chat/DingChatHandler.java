@@ -18,7 +18,7 @@ import org.springframework.util.Assert;
 /**
  * 群组相关
  *
- * @Author: HP
+ * @author HP
  */
 public class DingChatHandler implements IDingChatHandler {
 

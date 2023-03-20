@@ -6,7 +6,7 @@ import java.util.Optional;
 /**
  * 钉钉accessToken顶层接口
  *
- * @Author: HP
+ * @author HP
  */
 public interface IDingToken extends IDingApi {
 

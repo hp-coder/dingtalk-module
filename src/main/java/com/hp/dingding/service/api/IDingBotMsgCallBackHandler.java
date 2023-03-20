@@ -15,30 +15,31 @@ import java.util.stream.Collectors;
 /**
  * 钉钉机器人单聊自动回复定义
  *
- * @Author: HP
+ * @author HP
  */
 public interface IDingBotMsgCallBackHandler<T> {
     /**
      * 注册容器*
      */
-    List<IDingBotMsgCallBackHandler> REGISTRY = new ArrayList<>(16);
+    List<IDingBotMsgCallBackHandler<?>> REGISTRY = new ArrayList<>(16);
 
     /**
-     * 将判断是否合法的方法继续抽象为一个Predicate方便多种校验方式*
+     * 将判断是否合法的方法继续抽象为一个Predicate方便多种校验方式
+     * 通过可继续执行发送消息流程
      *
-     * @return
+     * @return 校验是否通过
      */
     Predicate<BotInteractiveMsgPayload> predication();
 
     /**
      * 自动回复的消息
      *
-     * @param app     机器人应用
+     * @param bot     机器人应用
      * @param payload 请求体
      * @param data    前置处理结果
      * @return 钉钉消息
      */
-    IDingCommonMsg message(IDingBot app, BotInteractiveMsgPayload payload, T data);
+    IDingCommonMsg message(IDingBot bot, BotInteractiveMsgPayload payload, T data);
 
     /**
      * 处理器功能说明
@@ -65,18 +66,18 @@ public interface IDingBotMsgCallBackHandler<T> {
     /**
      * 获取处理器
      *
-     * @param app     机器人应用
+     * @param bot     机器人应用
      * @param payload 机器人消息回调请求体
      * @return 处理器集合
      */
-    static Optional<List<IDingBotMsgCallBackHandler>> handlers(IDingBot app, BotInteractiveMsgPayload payload) {
+    static Optional<List<IDingBotMsgCallBackHandler<?>>> handlers(IDingBot bot, BotInteractiveMsgPayload payload) {
         if (payload == null || StringUtils.isEmpty(payload.getText().getContent())) {
             return Optional.empty();
         }
         final String content = payload.getText().getContent();
         payload.getText().setContent(StringUtils.strip(content, StringUtils.SPACE));
-        final List<IDingBotMsgCallBackHandler> handlers = REGISTRY.stream()
-                .filter(handler -> !handler.ignoredApps().contains(app.getClass()))
+        final List<IDingBotMsgCallBackHandler<?>> handlers = REGISTRY.stream()
+                .filter(handler -> !handler.ignoredApps().contains(bot.getClass()))
                 .filter(handler ->
                         handler.predication() != null && handler.predication().test(payload)
                 )
@@ -89,35 +90,34 @@ public interface IDingBotMsgCallBackHandler<T> {
     /**
      * 处理入口
      *
-     * @param app     机器人应用
+     * @param bot     机器人应用
      * @param payload 机器人消息回调请求体
      */
-    default void handle(IDingBot app, BotInteractiveMsgPayload payload) {
-        notifyBeforeSend(app, payload);
-        final T data = beforeMessageSend(app, payload);
-        send(app, payload, data);
-        afterMessageSent(app, payload);
+    default void handle(IDingBot bot, BotInteractiveMsgPayload payload) {
+        notifyBeforeSend(bot, payload);
+        final T data = beforeMessageSend(bot, payload);
+        send(bot, payload, data);
+        afterMessageSent(bot, payload);
     }
 
     /**
      * 消息回复前
      *
-     * @param app     机器人应用
+     * @param bot     机器人应用
      * @param payload 机器人消息回调请求体
      * @return 返回
      */
-    default T beforeMessageSend(IDingBot app, BotInteractiveMsgPayload payload) {
+    default T beforeMessageSend(IDingBot bot, BotInteractiveMsgPayload payload) {
         return null;
     }
 
     /**
      * 消息回复前
      *
-     * @param app     机器人应用
+     * @param bot     机器人应用
      * @param payload 机器人消息回调请求体
-     * @return 返回
      */
-    default void notifyBeforeSend(IDingBot app, BotInteractiveMsgPayload payload) {
+    default void notifyBeforeSend(IDingBot bot, BotInteractiveMsgPayload payload) {
         //do nothing
     }
 

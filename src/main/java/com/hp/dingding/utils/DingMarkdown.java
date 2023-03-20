@@ -7,6 +7,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * 符合钉钉规范的markdown builder
+ * 钉钉不让空行, 暂时没想到其他办法，用了一个点隔开一行，这个点在钉钉主题是浅色的时候和背景相同
+ * @author hp
+ */
 public class DingMarkdown {
 
     /*
@@ -46,58 +51,58 @@ public class DingMarkdown {
     private static final String DING_MSG_BACKGROUND_COLOR = "#FFFFFF";
     private final List<String> fullContent;
 
-    public DingMarkdown(Builder builder) {
+    public DingMarkdown(DingMarkdownBuilder builder) {
         fullContent = builder.fullContent;
     }
 
-    public static DingMarkdown.Builder builder() {
-        return new DingMarkdown.Builder();
+    public static DingMarkdownBuilder builder() {
+        return new DingMarkdownBuilder();
     }
 
-    public static final class Builder {
+    public static final class DingMarkdownBuilder {
         List<String> fullContent = new ArrayList<>();
 
-        public Builder contentTitle(String contentTitle) {
+        public DingMarkdownBuilder contentTitle(String contentTitle) {
             fullContent.add(contentTitle);
             return this;
         }
 
-        public Builder level1Title(String level1Title) {
+        public DingMarkdownBuilder level1Title(String level1Title) {
             fullContent.add("# " + level1Title);
             return this;
         }
 
-        public Builder level2Title(String level2Title) {
+        public DingMarkdownBuilder level2Title(String level2Title) {
             fullContent.add("## " + level2Title);
             return this;
         }
 
-        public Builder level3Title(String level3Title) {
+        public DingMarkdownBuilder level3Title(String level3Title) {
             fullContent.add("### " + level3Title);
             return this;
         }
 
-        public Builder level4Title(String level4Title) {
+        public DingMarkdownBuilder level4Title(String level4Title) {
             fullContent.add("#### " + level4Title);
             return this;
         }
 
-        public Builder level5Title(String level5Title) {
+        public DingMarkdownBuilder level5Title(String level5Title) {
             fullContent.add("##### " + level5Title);
             return this;
         }
 
-        public Builder level6Title(String level6Title) {
+        public DingMarkdownBuilder level6Title(String level6Title) {
             fullContent.add("###### " + level6Title);
             return this;
         }
 
-        public Builder reference(String reference) {
+        public DingMarkdownBuilder reference(String reference) {
             fullContent.add("> " + reference);
             return this;
         }
 
-        public Builder text(String text) {
+        public DingMarkdownBuilder text(String text) {
             fullContent.add(text);
             return this;
         }
@@ -106,46 +111,46 @@ public class DingMarkdown {
             return new Font(this, text);
         }
 
-        public Builder boldText(String boldText) {
+        public DingMarkdownBuilder boldText(String boldText) {
             fullContent.add("**" + boldText + "**");
             return this;
         }
 
-        public Builder italicText(String italicText) {
+        public DingMarkdownBuilder italicText(String italicText) {
             fullContent.add("*" + italicText + "*");
             return this;
         }
 
-        public Builder link(String name, String url) {
+        public DingMarkdownBuilder link(String name, String url) {
             fullContent.add("[" + name + "](" + url + ")");
             return this;
         }
 
-        public Builder image(String url) {
+        public DingMarkdownBuilder image(String url) {
             fullContent.add("![](" + url + ")");
             return this;
         }
 
-        public Builder disorderedList(String... element) {
+        public DingMarkdownBuilder disorderedList(String... element) {
             if (element.length > 0) {
-                final String elements = Arrays.stream(element).map(i -> "- " + i).collect(Collectors.joining("\n\n"));
+                final String elements = Arrays.stream(element).map(i -> "- " + i).collect(Collectors.joining("  \n  "));
                 fullContent.add(elements);
             }
             return this;
         }
 
-        public Builder orderedList(String... element) {
+        public DingMarkdownBuilder orderedList(String... element) {
             if (element.length > 0) {
                 StringBuilder strBuilder = new StringBuilder();
                 for (int i = 0; i < element.length; i++) {
-                    strBuilder.append(i).append(1).append(". ").append(element[i]).append("\n\n");
+                    strBuilder.append(i).append(1).append(". ").append(element[i]).append("  \n  ");
                 }
                 fullContent.add(strBuilder.toString());
             }
             return this;
         }
 
-        public Builder newLine() {
+        public DingMarkdownBuilder newLine() {
             return this
                     .textWithFont("new-line")
                     .color(DING_MSG_BACKGROUND_COLOR)
@@ -155,7 +160,7 @@ public class DingMarkdown {
 
         public String build() {
             final DingMarkdown dingMarkdown = new DingMarkdown(this);
-            return String.join("\n\n", dingMarkdown.fullContent);
+            return String.join("  \n  ", dingMarkdown.fullContent);
         }
     }
 
@@ -163,10 +168,10 @@ public class DingMarkdown {
     public static class Font {
 
         private String temp = "<font face=\"{face}\" color=\"{color}\">{text}</font>";
-        private final Builder builder;
+        private final DingMarkdownBuilder builder;
 
 
-        public Font(Builder builder, String text) {
+        public Font(DingMarkdownBuilder builder, String text) {
             this.builder = builder;
             format("text", text);
         }
@@ -181,7 +186,7 @@ public class DingMarkdown {
             return this;
         }
 
-        public Builder builder() {
+        public DingMarkdownBuilder builder() {
             correctTemp();
             builder.fullContent.add(temp);
             return builder;
