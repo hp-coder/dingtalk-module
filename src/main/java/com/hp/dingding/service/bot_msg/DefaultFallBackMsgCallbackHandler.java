@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * <p>
  * 如果没有一个正常处理器能处理，那么将使用该处理器返回信息
  *
- * @Author: HP
+ * @author HP
  */
 @Component
 public class DefaultFallBackMsgCallbackHandler implements IDingBotMsgCallBackHandler<String> {

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.SmartInitializingSingleton;
 /**
  * 钉钉应用
  *
- * @Author: HP
+ * @author HP
  */
 public interface IDingApp extends SmartInitializingSingleton {
 

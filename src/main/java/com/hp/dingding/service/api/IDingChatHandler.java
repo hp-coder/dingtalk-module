@@ -7,7 +7,7 @@ import com.hp.dingding.component.application.IDingApp;
 /**
  * 群组相关
  *
- * @Author: HP
+ * @author HP
  */
 public interface IDingChatHandler extends IDingApi {
 

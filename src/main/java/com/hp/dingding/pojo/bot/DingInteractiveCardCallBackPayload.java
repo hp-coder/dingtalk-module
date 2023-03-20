@@ -8,9 +8,11 @@ import lombok.Setter;
 import java.util.List;
 
 /**
+ * 用于封装钉钉互动卡片的回调请求体对象
+ * 由于请求获得的json数据中，自定义卡片数据基本在最里层，直接通过嵌套的对象使用Gson序列化，
+ * 无法将最内层的自定义卡片数据反序列化成卡片对象（拿到的是一个Map集合），这里使用先拿json字符串然后在getParams中反序列化的方式获得模版对象
+ *
  * @author HP
- * @date 2022/8/15
- * @description 用于封装钉钉互动卡片的回调请求体对象
  */
 @Getter
 @Setter
@@ -56,7 +58,7 @@ public class DingInteractiveCardCallBackPayload {
 
         public <T> T getParams(Class<T> tClass) {
             final Gson gson = new Gson();
-            return gson.fromJson(gson.toJson(params),tClass);
+            return gson.fromJson(gson.toJson(params), tClass);
         }
     }
 

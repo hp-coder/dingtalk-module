@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 钉钉角色
  *
- * @Author: HP
+ * @author HP
  */
 public interface IDingRoleHandler extends IDingApi {
 

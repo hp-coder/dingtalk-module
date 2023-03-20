@@ -5,7 +5,7 @@ import com.aliyun.teaopenapi.models.Config;
 /**
  * 钉钉api顶层接口
  *
- * @Author: HP
+ * @author HP
  */
 public interface IDingApi {
 

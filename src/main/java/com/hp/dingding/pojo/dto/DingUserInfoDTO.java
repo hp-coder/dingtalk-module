@@ -10,8 +10,13 @@ import java.util.List;
 
 /**
  * 钉钉企业内用户信息响应信息
+ * <p>
+ * 对于钉钉用户来说，userId才是应用最广泛的参数；
+ * unionId或者openId等在更复杂的业务和接口交互中使用很少，
+ * 做钉钉扫码登录等最好使用userid与系统用户关联，
+ * 在一些第三方的钉钉小程序中也是使用userid最唯一性判断
  *
- * @Author: HP
+ * @author HP
  */
 @Data
 @AllArgsConstructor

@@ -19,7 +19,7 @@ import java.util.Objects;
 /**
  * 钉钉部门
  *
- * @Author: HP
+ * @author HP
  */
 @Slf4j
 public class DingDeptHandler implements IDingDeptHandler {

@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * @Author: HP
+ * @author HP
  */
 public class DingOAHandler implements IDingOAHandler {
 

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 /**
  * 钉钉角色
  *
- * @Author: HP
+ * @author HP
  */
 public class DingRoleHandler implements IDingRoleHandler {
 

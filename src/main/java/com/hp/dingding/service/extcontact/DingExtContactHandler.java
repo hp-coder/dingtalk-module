@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * 钉钉企业外部联系人接口
  *
- * @Author: HP
+ * @author HP
  */
 public class DingExtContactHandler implements IDingExtContactHandler {
 

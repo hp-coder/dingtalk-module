@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 根据手机号获取钉钉用户userId响应信息
  *
- * @Author: HP
+ * @author HP
  */
 @Data
 public class DingUserIdDTO extends DingResponse {

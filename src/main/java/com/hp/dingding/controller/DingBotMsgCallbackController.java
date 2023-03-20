@@ -14,8 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 钉钉机器人消息互动
+ * 此接口并非为机器人发送互动卡片的回调家接口；
+ * 该接口作为用户向机器人发送单聊/群聊等消息的接口，一般处理文本消息，具体可接收消息类型参考钉钉文档，
+ * 该接口由开发人员手动在钉钉机器人应用配置-开发管理-消息接收地址配置
  *
- * @Author: HP
+ * @author HP
  */
 @Slf4j
 @RestController

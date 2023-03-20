@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 
 /**
  * 默认测试处理器，用于调试是否能正常收到消息*
- * @Author: HP
+ * @author HP
  */
 @Component
 public class DefaultBotMsgCallbackHandler implements IDingBotMsgCallBackHandler<String> {
