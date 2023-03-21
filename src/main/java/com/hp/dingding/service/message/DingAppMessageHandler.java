@@ -13,6 +13,11 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
+/**
+ * 实现与最初不同
+ * @deprecated 这里的发送消息实际为工作消息，工作消息的处理有更多操作，这个类暂时作废
+ */
+@Deprecated
 @Slf4j
 public class DingAppMessageHandler extends DingAbstractMessageHandler {
 
