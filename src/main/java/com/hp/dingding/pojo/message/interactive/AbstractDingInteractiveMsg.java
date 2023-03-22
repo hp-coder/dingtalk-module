@@ -1,5 +1,6 @@
 package com.hp.dingding.pojo.message.interactive;
 
+import com.hp.dingding.pojo.message.interactive.callback.IDingInteractiveCardCallBack;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -15,8 +16,8 @@ public abstract class AbstractDingInteractiveMsg implements IDingInteractiveMsg 
     public String outTrackId;
     public String sign;
 
-    public AbstractDingInteractiveMsg(String callbackRouteKey, String outTrackId, String templateId) {
-        this.callbackRouteKey = callbackRouteKey;
+    public AbstractDingInteractiveMsg(IDingInteractiveCardCallBack callBack, String outTrackId, String templateId) {
+        this.callbackRouteKey = callBack.getCallbackRouteKey();
         this.outTrackId = outTrackId;
         this.templateId = templateId;
         this.sign = IDingInteractiveMsg.encryptSign(this.outTrackId);

@@ -60,4 +60,9 @@ public interface IDingInteractiveMsg extends IDingMsg {
         final String combine = outTrackId + GLOBAL_SALT;
         return DigestUtils.md5DigestAsHex(combine.getBytes(StandardCharsets.UTF_8));
     }
+
+    @Override
+    default String getMsgType() {
+        return null;
+    }
 }
