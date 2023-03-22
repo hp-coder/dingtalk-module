@@ -1,19 +1,33 @@
 package com.hp.dingding.utils;
 
+import com.hp.dingding.constant.DingApiCode;
+import com.taobao.api.ApiException;
 import com.taobao.api.TaobaoResponse;
-import org.springframework.util.Assert;
 
 import java.util.Objects;
 
 /**
  * 工具类
  *
- * @author HP
+ * @author hp
  */
 public class DingUtils {
 
-    public static void isSuccess(TaobaoResponse response) {
-        Assert.isTrue(response.isSuccess(), "请求失败：" + response.getMsg());
-        Assert.isTrue(Objects.equals("0", response.getErrorCode()), "请求失败：" + response.getMsg());
+    public static void isSuccess(TaobaoResponse response) throws ApiException {
+        isTrue(response.isSuccess(), response);
+        isTrue(Objects.equals("0", response.getErrorCode()), response);
+    }
+
+    private static void isTrue(boolean expression, TaobaoResponse response) throws ApiException {
+        if (!expression) {
+            throw new ApiException(response.getErrorCode(), response.getMsg(), response.getSubCode(), response.getSubMsg());
+        }
+    }
+
+    public static class UserResponse {
+        public static void isOk(TaobaoResponse response) throws ApiException {
+            isSuccess(response);
+            isTrue(!Objects.equals(String.valueOf(DingApiCode.UserResponse.NOT_FOUND.getCode()), response.getErrorCode()), response);
+        }
     }
 }

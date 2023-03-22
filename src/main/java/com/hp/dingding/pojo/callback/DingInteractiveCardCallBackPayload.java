@@ -1,4 +1,4 @@
-package com.hp.dingding.pojo.bot;
+package com.hp.dingding.pojo.callback;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -9,10 +9,8 @@ import java.util.List;
 
 /**
  * 用于封装钉钉互动卡片的回调请求体对象
- * 由于请求获得的json数据中，自定义卡片数据基本在最里层，直接通过嵌套的对象使用Gson序列化，
- * 无法将最内层的自定义卡片数据反序列化成卡片对象（拿到的是一个Map集合），这里使用先拿json字符串然后在getParams中反序列化的方式获得模版对象
  *
- * @author HP
+ * @author hp
  */
 @Getter
 @Setter

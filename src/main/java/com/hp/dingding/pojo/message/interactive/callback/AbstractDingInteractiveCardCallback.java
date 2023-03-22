@@ -2,11 +2,11 @@ package com.hp.dingding.pojo.message.interactive.callback;
 
 import com.hp.dingding.component.application.IDingBot;
 import lombok.Getter;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 
-import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author hp 2023/3/17
@@ -23,13 +23,6 @@ public abstract class AbstractDingInteractiveCardCallback implements IDingIntera
         this.callbackRouteKey = callbackRouteKey;
         this.callbackUrl = callbackUrl;
         this.dingBots = dingBots;
-    }
-
-    @PostConstruct
-    private void validate(){
-        Assert.hasText(callbackRouteKey,"回调路由key不能为空");
-        Assert.hasText(callbackUrl,"回调接口不能为空");
-        Assert.isTrue(!CollectionUtils.isEmpty(dingBots),"至少需要一个机器人应用");
     }
 
     public static List<IDingInteractiveCardCallBack> callbacks() {

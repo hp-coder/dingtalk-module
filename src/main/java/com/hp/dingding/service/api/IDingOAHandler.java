@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 钉钉OA审批相关
  *
- * @author HP
+ * @author hp
  */
 public interface IDingOAHandler extends IDingApi {
 

@@ -7,6 +7,7 @@ import com.dingtalk.api.request.OapiRoleSimplelistRequest;
 import com.dingtalk.api.response.OapiRoleListResponse;
 import com.dingtalk.api.response.OapiRoleSimplelistResponse;
 import com.hp.dingding.component.application.IDingApp;
+import com.hp.dingding.component.exception.DingApiException;
 import com.hp.dingding.component.factory.DingAccessTokenFactory;
 import com.hp.dingding.constant.DingConstant;
 import com.hp.dingding.service.api.IDingRoleHandler;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
 /**
  * 钉钉角色
  *
- * @author HP
+ * @author hp
  */
 public class DingRoleHandler implements IDingRoleHandler {
 
@@ -37,7 +38,7 @@ public class DingRoleHandler implements IDingRoleHandler {
             rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
             DingUtils.isSuccess(rsp);
         } catch (ApiException e) {
-            throw new RuntimeException("获取角色列表失败", e);
+            throw new DingApiException("获取角色列表失败", e);
         }
         return rsp.getResult()
                 .getList()
@@ -61,7 +62,7 @@ public class DingRoleHandler implements IDingRoleHandler {
             rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
             DingUtils.isSuccess(rsp);
         } catch (ApiException e) {
-            throw new RuntimeException("根据角色id获取用户列表失败", e);
+            throw new DingApiException("根据角色id获取用户列表失败", e);
         }
         return rsp.getResult().getList();
     }

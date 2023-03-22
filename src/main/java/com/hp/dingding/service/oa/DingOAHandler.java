@@ -11,6 +11,7 @@ import com.dingtalk.api.response.OapiProcessTemplateManageGetResponse;
 import com.dingtalk.api.response.OapiProcessinstanceGetResponse;
 import com.dingtalk.api.response.OapiProcessinstanceListidsResponse;
 import com.hp.dingding.component.application.IDingMiniH5;
+import com.hp.dingding.component.exception.DingApiException;
 import com.hp.dingding.component.factory.DingAccessTokenFactory;
 import com.hp.dingding.constant.DingConstant;
 import com.hp.dingding.service.api.IDingOAHandler;
@@ -22,10 +23,9 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.Objects;
 
 /**
- * @author HP
+ * @author hp
  */
 public class DingOAHandler implements IDingOAHandler {
 
@@ -41,7 +41,7 @@ public class DingOAHandler implements IDingOAHandler {
             rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
             DingUtils.isSuccess(rsp);
         } catch (ApiException e) {
-            throw new RuntimeException("根据用户id获取审批模版列表失败", e);
+            throw new DingApiException("根据用户id获取审批模版列表失败", e);
         }
         return rsp.getResult();
     }
@@ -58,7 +58,7 @@ public class DingOAHandler implements IDingOAHandler {
             rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
             DingUtils.isSuccess(rsp);
         } catch (ApiException e) {
-            throw new RuntimeException("根据名称获取审批模版编号失败", e);
+            throw new DingApiException("根据名称获取审批模版编号失败", e);
         }
         return rsp.getProcessCode();
     }
@@ -100,7 +100,7 @@ public class DingOAHandler implements IDingOAHandler {
             rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
             DingUtils.isSuccess(rsp);
         } catch (ApiException e) {
-            throw new RuntimeException("获取审批模版实例id列表失败：", e);
+            throw new DingApiException("获取审批模版实例id列表失败：", e);
         }
         return rsp.getResult();
     }
@@ -115,7 +115,7 @@ public class DingOAHandler implements IDingOAHandler {
             rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
             DingUtils.isSuccess(rsp);
         } catch (ApiException e) {
-            throw new RuntimeException("获取审批实例失败：", e);
+            throw new DingApiException("获取审批实例失败：", e);
         }
         return rsp.getProcessInstance();
     }

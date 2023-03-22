@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 钉钉部门
  *
- * @author HP
+ * @author hp
  */
 public interface IDingDeptHandler extends IDingApi {
 

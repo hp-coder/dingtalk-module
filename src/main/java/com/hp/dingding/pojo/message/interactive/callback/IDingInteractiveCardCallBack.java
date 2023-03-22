@@ -7,6 +7,7 @@ import java.util.List;
 
 /**
  * 互动卡片回调地址
+ * @author hp
  */
 public interface IDingInteractiveCardCallBack extends SmartInitializingSingleton {
     String getCallbackUrl();

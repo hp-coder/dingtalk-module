@@ -1,50 +1,27 @@
 package com.hp.dingding.pojo.message.common;
 
-import com.google.gson.Gson;
-import com.hp.dingding.constant.DingMsgType;
+import com.hp.dingding.pojo.message.AbstractDingMsg;
+import com.hp.dingding.pojo.message.IDingBotMsg;
+import com.hp.dingding.pojo.message.IDingBotWebhookMsg;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * @author hp
+ */
 @Getter
 @Setter
-public class DingLinkMsg implements IDingCommonMsg {
+public class DingLinkMsg {
 
-    private String msgtype;
 
-    private Link link;
-
-    public DingLinkMsg(Link link) {
-        this.msgtype = type(link);
-        this.link = link;
-    }
-
-    public DingLinkMsg(DingMsgType msgType , Link link) {
-        this.msgtype = msgType.name();
-        this.link = link;
-    }
-
-    public interface Link {
-    }
-
-    @Data
+    @Getter
+    @Setter
     @AllArgsConstructor
-    public static class OfficialImageMsg implements Link {
-        private String photoURL;
-    }
-
-    @Data
-    @AllArgsConstructor
-    public static class SampleLink implements Link {
+    public static class SampleLink extends AbstractDingMsg implements IDingBotMsg, IDingBotWebhookMsg {
         private String messageUrl;
         private String picUrl;
         private String title;
         private String text;
-    }
-
-    @Override
-    public String toBotJsonString() {
-        return new Gson().toJson(this.link);
     }
 }

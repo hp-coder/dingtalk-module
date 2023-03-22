@@ -5,7 +5,7 @@ import com.aliyun.teaopenapi.models.Config;
 /**
  * 钉钉api顶层接口
  *
- * @author HP
+ * @author hp
  */
 public interface IDingApi {
 
@@ -17,7 +17,7 @@ public interface IDingApi {
     /**
      * 新版api client 配置
      *
-     * @return
+     * @return 配置
      */
     default Config config() {
         Config config = new Config();

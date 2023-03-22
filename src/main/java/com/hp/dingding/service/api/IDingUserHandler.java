@@ -10,7 +10,7 @@ import java.util.Set;
 /**
  * 钉钉用户信息处理器
  *
- * @author HP
+ * @author hp
  */
 public interface IDingUserHandler extends IDingApi {
 
@@ -45,6 +45,7 @@ public interface IDingUserHandler extends IDingApi {
 
     /**
      * 根据钉钉用户userId获取钉钉用户信息
+     * 默认写死用中文了
      *
      * @param app    钉钉应用，新应用请实现IDingApp接口
      * @param userId 钉钉用户userId
@@ -53,11 +54,11 @@ public interface IDingUserHandler extends IDingApi {
     OapiV2UserGetResponse.UserGetResponse userByUserId(IDingApp app, String userId);
 
     /**
-     * 根据手机号获取钉钉用户信息
+     * 根据手机号获取钉钉用户信
      *
-     * @param app  钉钉应用，新应用请实现IDingApp接口
-     * @param mobile 钉钉用户电话
-     * @return 用户信息
+     * @param app    钉钉应用，新应用请实现IDingApp接口
+     * @param mobile 用户手机
+     * @return 钉钉用户信息json，两种情况，企业内和非企业内
      */
     OapiV2UserGetResponse.UserGetResponse userByMobile(IDingApp app, String mobile);
 
@@ -75,8 +76,7 @@ public interface IDingUserHandler extends IDingApi {
      * 获取所有员工
      * 理论上200以内没问题
      *
-     * @param app  钉钉应用，新应用请实现IDingApp接口
-     * @return 员工集合
+     * @param app 钉钉应用，新应用请实现IDingApp接口
      */
     Set<OapiRoleSimplelistResponse.OpenEmpSimple> getAllUsers(IDingApp app);
 

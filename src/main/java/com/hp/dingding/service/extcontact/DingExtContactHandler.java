@@ -6,6 +6,7 @@ import com.dingtalk.api.request.*;
 import com.dingtalk.api.response.*;
 import com.google.gson.Gson;
 import com.hp.dingding.component.application.IDingMiniH5;
+import com.hp.dingding.component.exception.DingApiException;
 import com.hp.dingding.component.factory.DingAccessTokenFactory;
 import com.hp.dingding.constant.DingConstant;
 import com.hp.dingding.service.api.IDingExtContactHandler;
@@ -21,7 +22,7 @@ import java.util.Objects;
 /**
  * 钉钉企业外部联系人接口
  *
- * @author HP
+ * @author hp
  */
 public class DingExtContactHandler implements IDingExtContactHandler {
 
@@ -35,11 +36,11 @@ public class DingExtContactHandler implements IDingExtContactHandler {
         OapiExtcontactGetResponse rsp;
         try {
             rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
-            if (!Objects.equals(rsp.getErrcode(),0L)){
+            if (!Objects.equals(rsp.getErrcode(), 0L)) {
                 throw new ApiException(new Gson().toJson(rsp));
             }
         } catch (ApiException e) {
-            throw new RuntimeException("获取钉钉外部联系人信息异常", e);
+            throw new DingApiException("获取钉钉外部联系人信息异常", e);
         }
         return rsp.getResult();
     }
@@ -52,12 +53,12 @@ public class DingExtContactHandler implements IDingExtContactHandler {
         OapiExtcontactCreateResponse rsp;
         try {
             rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
-            if (!Objects.equals(rsp.getErrcode(),0L)){
+            if (!Objects.equals(rsp.getErrcode(), 0L)) {
                 throw new ApiException(new Gson().toJson(rsp));
             }
         } catch (ApiException e) {
             e.printStackTrace();
-            throw new RuntimeException("添加外部联系人失败", e);
+            throw new DingApiException("添加外部联系人失败", e);
         }
         return rsp.getUserid();
     }
@@ -73,9 +74,9 @@ public class DingExtContactHandler implements IDingExtContactHandler {
         Assert.hasText(name, "联系人名称不能为空");
         Assert.hasText(mobile, "联系人电话不能为空");
         Assert.isTrue(labelIds.size() <= 20, "labelIds一次最多20个");
-        Assert.hasText(address,"地址不能为空");
-        Assert.hasText(companyName,"企业名称不能为空");
-        if (StringUtils.isEmpty(stateCode)) {
+        Assert.hasText(address, "地址不能为空");
+        Assert.hasText(companyName, "企业名称不能为空");
+        if (StringUtils.hasText(stateCode)) {
             stateCode = "86";
         }
         if (!CollectionUtils.isEmpty(shareDeptIds)) {
@@ -95,7 +96,7 @@ public class DingExtContactHandler implements IDingExtContactHandler {
         contact.setCompanyName(companyName);
         contact.setShareUserIds(shareUserIds);
         contact.setMobile(mobile);
-        return this.addExtContact(app,contact);
+        return this.addExtContact(app, contact);
     }
 
     @Override
@@ -153,7 +154,7 @@ public class DingExtContactHandler implements IDingExtContactHandler {
             final OapiExtcontactUpdateResponse rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
             DingUtils.isSuccess(rsp);
         } catch (ApiException e) {
-            throw new RuntimeException("更新外部联系人失败", e);
+            throw new DingApiException("更新外部联系人失败", e);
         }
     }
 
@@ -166,11 +167,11 @@ public class DingExtContactHandler implements IDingExtContactHandler {
         req.setUserId(userId);
         try {
             final OapiExtcontactDeleteResponse rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
-            if (!Objects.equals(rsp.getErrcode(),0L) && !Objects.equals(rsp.getErrcode(),33012L)){
+            if (!Objects.equals(rsp.getErrcode(), 0L) && !Objects.equals(rsp.getErrcode(), 33012L)) {
                 throw new ApiException(new Gson().toJson(rsp));
             }
         } catch (ApiException e) {
-            throw new RuntimeException("删除外部联系人失败", e);
+            throw new DingApiException("删除外部联系人失败", e);
         }
     }
 
@@ -183,14 +184,14 @@ public class DingExtContactHandler implements IDingExtContactHandler {
         Assert.isTrue(size >= 0, "size必须大于0");
         DingTalkClient client = new DefaultDingTalkClient(DingConstant.GET_EXTCONTACTS);
         OapiExtcontactListRequest req = new OapiExtcontactListRequest();
-        req.setSize(20L);
-        req.setOffset(0L);
+        req.setSize(size);
+        req.setOffset((page - 1) * size);
         OapiExtcontactListResponse rsp;
         try {
             rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
             DingUtils.isSuccess(rsp);
         } catch (ApiException e) {
-            throw new RuntimeException("获取外部联系人列表失败", e);
+            throw new DingApiException("获取外部联系人列表失败", e);
         }
         return rsp.getResults();
     }
@@ -211,7 +212,7 @@ public class DingExtContactHandler implements IDingExtContactHandler {
             rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
             DingUtils.isSuccess(rsp);
         } catch (ApiException e) {
-            throw new RuntimeException("获取外部联系人标签列表失败", e);
+            throw new DingApiException("获取外部联系人标签列表失败", e);
         }
         return rsp.getResults();
     }

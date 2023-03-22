@@ -1,14 +1,14 @@
-package com.hp.dingding.service.bot_msg;
+package com.hp.dingding.service.botcallback;
 
 import com.hp.dingding.component.application.IDingBot;
-import com.hp.dingding.pojo.bot.BotInteractiveMsgPayload;
+import com.hp.dingding.pojo.callback.DingBotMsgCallbackPayload;
+import com.hp.dingding.pojo.message.IDingBotMsg;
 import com.hp.dingding.pojo.message.common.DingMarkdownMsg;
-import com.hp.dingding.pojo.message.common.IDingCommonMsg;
 import com.hp.dingding.service.api.IDingBotMsgCallBackHandler;
 import com.hp.dingding.utils.DingMarkdown;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,19 +20,20 @@ import java.util.stream.Collectors;
  * <p>
  * 如果没有一个正常处理器能处理，那么将使用该处理器返回信息
  *
- * @author HP
+ * @author hp
  */
 @Component
-public class DefaultFallBackMsgCallbackHandler implements IDingBotMsgCallBackHandler<String> {
+public class DefaultFallbackMsgCallbackHandler implements IDingBotMsgCallBackHandler<String> {
 
     @Override
-    public Predicate<BotInteractiveMsgPayload> predication() {
+    public Predicate<DingBotMsgCallbackPayload> predication() {
         return null;
     }
 
     @Override
-    public IDingCommonMsg message(IDingBot app, BotInteractiveMsgPayload payload, String data) {
+    public IDingBotMsg message(IDingBot app, DingBotMsgCallbackPayload payload, String data) {
         final String fallbackMsg = DingMarkdown.builder()
+                .contentTitle("默认处理器")
                 .level2Title("说明")
                 .text("未找到对应处理器，请检查发送内容（关键字，格式，长度等）或联系开发人员处理！")
                 .newLine()
@@ -40,9 +41,9 @@ public class DefaultFallBackMsgCallbackHandler implements IDingBotMsgCallBackHan
                 .textWithFont("'" + payload.getText().getContent() + "'").color("#67C23A").builder()
                 .newLine()
                 .level3Title("已有处理器")
-                .orderedList(this.getHandlerDescriptions().toArray(new String[0]))
+                .disorderedList(this.getHandlerDescriptions().toArray(new String[0]))
                 .build();
-        return new DingMarkdownMsg(new DingMarkdownMsg.OfficialMarkdownMsg("消息说明", fallbackMsg));
+        return new DingMarkdownMsg.SampleMarkdown("消息说明", fallbackMsg);
     }
 
 
@@ -53,7 +54,7 @@ public class DefaultFallBackMsgCallbackHandler implements IDingBotMsgCallBackHan
         }
         return values.stream()
                 .map(IDingBotMsgCallBackHandler::description)
-                .filter(StringUtils::isNotEmpty)
+                .filter(StringUtils::hasText)
                 .collect(Collectors.toList());
     }
 }

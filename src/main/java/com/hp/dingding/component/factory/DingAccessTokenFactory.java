@@ -6,15 +6,19 @@ import com.aliyun.dingtalkoauth2_1_0.models.GetAccessTokenResponseBody;
 import com.aliyun.tea.TeaException;
 import com.hp.dingding.component.IDingToken;
 import com.hp.dingding.component.application.IDingApp;
+import com.hp.dingding.component.exception.DingApiException;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * @author hp
+ */
 @Slf4j
 public class DingAccessTokenFactory implements IDingToken {
 
@@ -53,45 +57,43 @@ public class DingAccessTokenFactory implements IDingToken {
             final GetAccessTokenResponseBody body = tokenResponse.getBody();
             final String accessToken = body.getAccessToken();
             final Long expireIn = body.getExpireIn();
-            log.info("DingKey: {}, token: {}, ttl: {}", appKey, accessToken, expireIn);
-            log.info("Is force refresh : {}", forceRefresh);
+            log.info("appKey:{},token:{},ttl:{}", appKey, accessToken, expireIn);
+            log.info("forceRefresh:{}", forceRefresh);
             storeCache(appKey, accessToken, expireIn, forceRefresh);
             return Optional.of(accessToken);
         } catch (TeaException err) {
-            if (!com.aliyun.teautil.Common.empty(err.code) && !com.aliyun.teautil.Common.empty(err.message)) {
-                log.info("AccessToken Ding异常码: {},Ding异常信息: {}", err.code, err.message);
+            if (StringUtils.hasText(err.code) && StringUtils.hasText(err.message)) {
+                log.error("钉钉AccessToken,code:{},me:{}", err.code, err.message);
             }
-            throw new RuntimeException(err.message);
-        } catch (Exception _err) {
-            _err.printStackTrace();
-            TeaException err = new TeaException(_err.getMessage(), _err);
-            if (!com.aliyun.teautil.Common.empty(err.code) && !com.aliyun.teautil.Common.empty(err.message)) {
-                log.info("AccessToken Ding异常码: {},Ding异常信息: {}", err.code, err.message);
+            throw new DingApiException(err.message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            TeaException err = new TeaException(e.getMessage(), e);
+            if (StringUtils.hasText(err.code) && StringUtils.hasText(err.message)) {
+                log.error("钉钉AccessToken Ding异常码:{},Ding异常信息:{}", err.code, err.message);
             }
-            throw new RuntimeException(err.message);
+            throw new DingApiException(err.message);
         }
     }
 
     private Optional<String> checkCache(String appKey) {
         final DingToken token = TOKEN_CACHE.get(appKey);
         if (token == null) {
-            log.error("TOKEN_CACHE appKey:{}, TOKEN NOT EXSITS", appKey);
             return Optional.empty();
         }
         if (token.isExpired()) {
             TOKEN_CACHE.remove(appKey);
-            log.error("TOKEN_CACHE appKey:{}, TOKEN HAS EXPIRED", appKey);
             return Optional.empty();
         }
         return Optional.ofNullable(token.getAccessToken());
     }
 
     private void storeCache(String appKey, String accessToken, Long expireIn, boolean forceRefresh) {
-        if (StringUtils.isEmpty(accessToken)) {
-            log.error("ding accessToken is empty");
+        if (!StringUtils.hasText(accessToken)) {
+            log.debug("ding accessToken is empty");
             return;
         }
-        Assert.isTrue(expireIn != null && expireIn > 600L, "DING TOKEN EXPRIRATION IS INVALID");
+        Assert.isTrue(expireIn != null && expireIn > 600L, "DING TOKEN EXPIRED");
         if (forceRefresh) {
             TOKEN_CACHE.put(appKey, new DingToken(accessToken, LocalDateTime.now().plusSeconds(expireIn - 600)));
         } else {

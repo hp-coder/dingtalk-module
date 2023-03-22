@@ -9,10 +9,12 @@ import com.dingtalk.api.request.OapiV2UserGetRequest;
 import com.dingtalk.api.request.OapiV2UserGetbymobileRequest;
 import com.dingtalk.api.response.*;
 import com.hp.dingding.component.application.IDingApp;
+import com.hp.dingding.component.exception.DingApiException;
 import com.hp.dingding.component.factory.DingAccessTokenFactory;
 import com.hp.dingding.constant.DingConstant;
 import com.hp.dingding.service.api.IDingUserHandler;
 import com.hp.dingding.service.role.DingRoleHandler;
+import com.hp.dingding.utils.DingUtils;
 import com.taobao.api.ApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
@@ -24,83 +26,90 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+/**
+ * @author hp
+ */
 @Slf4j
 public class DingUserHandler implements IDingUserHandler {
 
-    public static final String REGEX_MOBILE = "^1[3456789]\\d{9}$";
-
-    public static final Pattern pattern = Pattern.compile(REGEX_MOBILE);
+    public static final String MOBILE_REGEX = "^1[3456789]\\d{9}$";
+    public static final Pattern PHONE_PATTERN = Pattern.compile(MOBILE_REGEX);
 
     @Override
     public String findUserIdByMobile(IDingApp app, String mobile) {
+        log.info("根据手机获取用户id,app:{},mobile:{}", app.getAppName(), mobile);
         try {
             Assert.notNull(Collections.singleton(mobile), "请传入手机号码");
-            Assert.isTrue(pattern.matcher(mobile).matches(),"非法手机号");
-            log.info("应用: {} :请求钉钉根据手机获取用户id: 手机: {}", app.getAppName(), mobile);
+            Assert.isTrue(PHONE_PATTERN.matcher(mobile).matches(), "非法手机号");
             DingTalkClient client = new DefaultDingTalkClient(DingConstant.GET_USERID_BY_MOBILE);
-            OapiV2UserGetbymobileRequest req = new OapiV2UserGetbymobileRequest();
-            req.setMobile(mobile);
-            req.setSupportExclusiveAccountSearch(false);
-            OapiV2UserGetbymobileResponse rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
-            log.info("应用: {} :请求钉钉根据手机获取用户id: 手机: {} 响应: {}", app.getAppName(), mobile, rsp.getBody());
-            if ("找不到该用户".equals(rsp.getErrmsg()) || Long.valueOf(60121).equals(rsp.getErrcode())) {
-                return null;
-            }
-            return rsp.getResult().getUserid();
+            OapiV2UserGetbymobileRequest request = new OapiV2UserGetbymobileRequest();
+            request.setMobile(mobile);
+            request.setSupportExclusiveAccountSearch(false);
+            OapiV2UserGetbymobileResponse response = client.execute(request, DingAccessTokenFactory.accessToken(app));
+            log.debug("根据手机获取用户id,app:{},mobile:{},response-body:{}", app.getAppName(), mobile, response.getBody());
+            DingUtils.UserResponse.isOk(response);
+            return response.getResult().getUserid();
         } catch (ApiException e) {
-            log.error("应用: {} :请求钉钉根据手机获取用户id: 手机: {} 异常: {}", app.getAppName(), mobile, e.getMessage());
-            throw new RuntimeException("请求钉钉根据手机获取用户id出现异常");
+            log.error("请求钉钉根据手机获取用户id,app:{},mobile:{},异常:{}", app.getAppName(), mobile, e.getMessage());
+            throw new DingApiException("请求钉钉根据手机获取用户id异常", e);
         }
     }
 
     @Override
     public String unionIdByCode(IDingApp app, String code) {
+        log.info("根据临时码获取unionId,app:{},code:{}", app.getAppName(), code);
         try {
             // 通过临时授权码获取授权用户的个人信息
             DefaultDingTalkClient client2 = new DefaultDingTalkClient(DingConstant.GET_USER_INFO_BY_CODE);
-            OapiSnsGetuserinfoBycodeRequest reqBycodeRequest = new OapiSnsGetuserinfoBycodeRequest();
+            OapiSnsGetuserinfoBycodeRequest request = new OapiSnsGetuserinfoBycodeRequest();
             // 通过扫描二维码，跳转指定的redirect_uri后，向url中追加的code临时授权码
-            reqBycodeRequest.setTmpAuthCode(code);
+            request.setTmpAuthCode(code);
             // 修改appid和appSecret为步骤三创建扫码登录时创建的appid和appSecret
-            OapiSnsGetuserinfoBycodeResponse bycodeResponse = client2.execute(reqBycodeRequest, app.getAppKey(), app.getAppSecret());
-            // 根据unionid获取userid
-            return bycodeResponse.getUserInfo().getUnionid();
+            OapiSnsGetuserinfoBycodeResponse response = client2.execute(request, app.getAppKey(), app.getAppSecret());
+            log.debug("根据临时码获取unionId,app:{},code:{},response-body:{}", app.getAppName(), code, response.getBody());
+            DingUtils.UserResponse.isOk(response);
+            // 根据unionId获取userId
+            return response.getUserInfo().getUnionid();
         } catch (ApiException e) {
-            log.error("根据code获取钉钉unionId异常: 应用：{}，异常：{}", app.getAppName(), e.getCause(), e);
-            throw new RuntimeException("根据code获取钉钉unionId异常");
+            log.error("根据临时码获取unionId,app:{},code:{},err:{}", app.getAppName(), code, e.getLocalizedMessage(), e);
+            throw new DingApiException("根据临时码获取unionId异常", e);
         }
     }
 
     @Override
     public String userIdByUnionId(IDingApp app, String unionId) {
+        log.info("根据unionId获取userId,app:{},unionId:{}", app.getAppName(), unionId);
         try {
             DingTalkClient clientDingTalkClient = new DefaultDingTalkClient(DingConstant.GET_USER_ID_BY_UNION_ID);
-            OapiUserGetbyunionidRequest reqGetbyunionidRequest = new OapiUserGetbyunionidRequest();
-            reqGetbyunionidRequest.setUnionid(unionId);
-            OapiUserGetbyunionidResponse oapiUserGetbyunionidResponse = clientDingTalkClient.execute(reqGetbyunionidRequest, DingAccessTokenFactory.accessToken(app));
-            if (oapiUserGetbyunionidResponse.getErrcode() == 60121L) {
-                return oapiUserGetbyunionidResponse.getBody();
-            }
-            // 根据userId获取用户信息
-            return oapiUserGetbyunionidResponse.getResult().getUserid();
+            OapiUserGetbyunionidRequest request = new OapiUserGetbyunionidRequest();
+            request.setUnionid(unionId);
+            OapiUserGetbyunionidResponse response = clientDingTalkClient.execute(request, DingAccessTokenFactory.accessToken(app));
+            log.debug("根据unionId获取userId,app:{},unionId:{},response-body:{}", app.getAppName(), unionId, response.getBody());
+            DingUtils.UserResponse.isOk(response);
+            // 后续根据userId获取用户信息
+            return response.getResult().getUserid();
         } catch (ApiException e) {
-            log.error("根据unionId获取钉钉userId异常: 应用：{}，异常：{}", app.getAppName(), e.getCause(), e);
-            throw new RuntimeException("根据unionId获取钉钉userId异常");
+            log.error("根据unionId获取userId,app:{},unionId:{},err:{}", app.getAppName(), unionId, e.getLocalizedMessage(), e);
+            throw new DingApiException("根据unionId获取钉钉userId异常", e);
         }
     }
 
     @Override
     public OapiV2UserGetResponse.UserGetResponse userByUserId(IDingApp app, String userId) {
+        log.info("根据userId获取钉钉用户信息,app:{},userId:{}", app.getAppName(), userId);
+        final String language = "zh_CN";
         try {
             DingTalkClient clientDingTalkClient2 = new DefaultDingTalkClient(DingConstant.GET_USER_BY_USER_ID);
             OapiV2UserGetRequest request = new OapiV2UserGetRequest();
             request.setUserid(userId);
-            request.setLanguage("zh_CN");
+            request.setLanguage(language);
             OapiV2UserGetResponse response = clientDingTalkClient2.execute(request, DingAccessTokenFactory.accessToken(app));
+            log.info("根据userId获取钉钉用户信息,app:{},userId:{},response-body:{}", app.getAppName(), userId, response.getBody());
+            DingUtils.UserResponse.isOk(response);
             return response.getResult();
         } catch (ApiException e) {
-            log.error("根据userId获取钉钉用户信息异常: 应用：{}，异常：{}", app.getAppName(), e.getCause(), e);
-            throw new RuntimeException("根据userId获取钉钉用户信息异常");
+            log.error("根据userId获取钉钉用户信息,,app:{},userId:{},err:{}", app.getAppName(), userId, e.getLocalizedMessage(), e);
+            throw new DingApiException("根据userId获取钉钉用户信息异常", e);
         }
     }
 
@@ -121,10 +130,6 @@ public class DingUserHandler implements IDingUserHandler {
     public Set<OapiRoleSimplelistResponse.OpenEmpSimple> getAllUsers(IDingApp app) {
         final DingRoleHandler roleHandler = new DingRoleHandler();
         final List<OapiRoleListResponse.OpenRole> roles = roleHandler.roles(app, 1L, 200L);
-        return roles.parallelStream().map(role ->
-                        roleHandler.usersByRoleId(app, role.getId(), 1L, 100L))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toSet());
+        return roles.parallelStream().map(role -> roleHandler.usersByRoleId(app, role.getId(), 1L, 100L)).flatMap(Collection::stream).collect(Collectors.toSet());
     }
-
 }

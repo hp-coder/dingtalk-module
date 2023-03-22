@@ -8,12 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDateTime;
 
 /**
- * @author HP
+ * @author hp
  */
-@AllArgsConstructor
+@Slf4j
 @Getter
 @Setter
-@Slf4j
+@AllArgsConstructor
 public class DingToken {
 
     private String accessToken;

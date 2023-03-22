@@ -5,8 +5,7 @@ import lombok.Data;
 
 /**
  * 钉钉系统常量
- *
- * @author HP
+ * @author hp
  */
 @Data
 public class DingConstant {
@@ -17,7 +16,7 @@ public class DingConstant {
     public static final String GET_USERID_BY_MOBILE = "https://oapi.dingtalk.com/topapi/v2/user/getbymobile";
 
     /**
-     * 根据钉钉userId获取钉钉用户信息
+     * h5微应用发送工作通知
      */
     public static final String SEND_WORK_MESSAGE = "https://oapi.dingtalk.com/topapi/message/corpconversation/asyncsend_v2";
 
@@ -110,4 +109,8 @@ public class DingConstant {
      * 获取审批实例信息
      */
     public static final String GET_PROCESS_INSTANCE = "https://oapi.dingtalk.com/topapi/processinstance/get";
+    /**
+     * media文件上传
+     */
+    public static final String MEDIA_UPLOAD = "https://oapi.dingtalk.com/media/upload";
 }

@@ -10,14 +10,17 @@ import java.util.Map;
 
 /**
  * 钉钉应用工厂
+ * <p>
+ * 既然已经使用了spring框架，直接使用其容器完成单例效果
+ * <p>
+ * 实现IDingApp接口并注册到spring容器中的类将被自动添加到工厂缓存中
  *
- * @author HP
+ * @author hp
  */
 @Slf4j
 public class DingAppFactory {
-
-    private static final Map<String, IDingApp> KEY_CACHE = new HashMap<>(4);
-    private static final Map<Long, IDingApp> ID_CACHE = new HashMap<>(4);
+    private static final Map<String, IDingApp> KEY_CACHE = new HashMap<>(16);
+    private static final Map<Long, IDingApp> ID_CACHE = new HashMap<>(16);
 
     private DingAppFactory() {
     }
@@ -39,5 +42,4 @@ public class DingAppFactory {
     public static <T extends IDingApp> T app(String key) {
         return (T) KEY_CACHE.get(key);
     }
-
 }

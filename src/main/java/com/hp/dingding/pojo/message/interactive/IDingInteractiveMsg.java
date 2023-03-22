@@ -17,7 +17,7 @@ public interface IDingInteractiveMsg extends IDingMsg {
     String GLOBAL_SALT = "dfaen23djf461nJ51FHDowie17hf1";
 
     /**
-     * 统一用这个方法转map，或者改hutool也行
+     * 同一用这个方法转map，或者改hutool也行
      */
     default Map<String, String> getMap() {
         final BeanMap beanMap = BeanMap.create(this);
@@ -29,7 +29,6 @@ public interface IDingInteractiveMsg extends IDingMsg {
         });
         return map;
     }
-
 
     /**
      * 主要接口，看作消息唯一id
