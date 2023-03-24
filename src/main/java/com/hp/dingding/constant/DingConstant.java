@@ -5,6 +5,7 @@ import lombok.Data;
 
 /**
  * 钉钉系统常量
+ *
  * @author hp
  */
 @Data
@@ -113,4 +114,12 @@ public class DingConstant {
      * media文件上传
      */
     public static final String MEDIA_UPLOAD = "https://oapi.dingtalk.com/media/upload";
+    /**
+     * 旧版SDK 获取企业内部应用的access_token
+     */
+    public static final String ACCESS_TOKEN_OLD = "https://oapi.dingtalk.com/gettoken";
+    /**
+     * 通过免登码获取用户信息旧版SDK
+     */
+    public static final String GET_USER_BY_LOGIN_AUTH_CODE = "https://oapi.dingtalk.com/topapi/v2/user/getuserinfo";
 }

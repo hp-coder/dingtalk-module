@@ -1,9 +1,11 @@
-package com.hp.dingding.service.api;
+package com.hp.dingding.service;
 
 import com.dingtalk.api.response.OapiRoleSimplelistResponse;
 import com.dingtalk.api.response.OapiV2UserGetResponse;
+import com.dingtalk.api.response.OapiV2UserGetuserinfoResponse;
 import com.hp.dingding.component.IDingApi;
 import com.hp.dingding.component.application.IDingApp;
+import com.hp.dingding.component.application.IDingMiniH5;
 
 import java.util.Set;
 
@@ -71,6 +73,13 @@ public interface IDingUserHandler extends IDingApi {
      */
     OapiV2UserGetResponse.UserGetResponse userByCode(IDingApp app, String code);
 
+    /**
+     * 通过免登码获取用户信息
+     * @param app h5微应用
+     * @param authCode 免登录授权码,此授权码五分钟内有效，且只能使用一次
+     * @return 用户基本信息，包含unionId和userId
+     */
+    OapiV2UserGetuserinfoResponse.UserGetByCodeResponse userByLoginAuthCode(IDingMiniH5 app, String authCode);
 
     /**
      * 获取所有员工

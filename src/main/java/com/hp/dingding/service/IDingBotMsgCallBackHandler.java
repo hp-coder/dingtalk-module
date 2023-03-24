@@ -1,7 +1,7 @@
-package com.hp.dingding.service.api;
+package com.hp.dingding.service;
 
 import com.hp.dingding.component.application.IDingBot;
-import com.hp.dingding.pojo.callback.DingBotMsgCallbackPayload;
+import com.hp.dingding.pojo.callback.DingBotMsgCallbackRequest;
 import com.hp.dingding.pojo.message.IDingBotMsg;
 import com.hp.dingding.service.message.DingBotMessageHandler;
 import org.springframework.util.CollectionUtils;
@@ -25,7 +25,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      * 是否可以执行
      * @return Predicate
      */
-    Predicate<DingBotMsgCallbackPayload> predication();
+    Predicate<DingBotMsgCallbackRequest> predication();
 
     /**
      * 自动回复的消息
@@ -35,7 +35,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      * @param data    前置处理结果
      * @return 钉钉消息
      */
-    IDingBotMsg message(IDingBot app, DingBotMsgCallbackPayload payload, T data);
+    IDingBotMsg message(IDingBot app, DingBotMsgCallbackRequest payload, T data);
 
     /**
      * 处理器功能说明
@@ -66,7 +66,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      * @param payload 机器人消息回调请求体
      * @return 处理器集合
      */
-    static Optional<List<IDingBotMsgCallBackHandler<?>>> handlers(IDingBot app, DingBotMsgCallbackPayload payload) {
+    static Optional<List<IDingBotMsgCallBackHandler<?>>> handlers(IDingBot app, DingBotMsgCallbackRequest payload) {
         if (payload == null || !StringUtils.hasText(payload.getText().getContent())) {
             return Optional.empty();
         }
@@ -89,7 +89,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      * @param app     机器人应用
      * @param payload 机器人消息回调请求体
      */
-    default void handle(IDingBot app, DingBotMsgCallbackPayload payload) {
+    default void handle(IDingBot app, DingBotMsgCallbackRequest payload) {
         notifyBeforeSend(app, payload);
         final T data = beforeMessageSend(app, payload);
         send(app, payload, data);
@@ -103,7 +103,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      * @param payload 机器人消息回调请求体
      * @return 返回
      */
-    default T beforeMessageSend(IDingBot app, DingBotMsgCallbackPayload payload) {
+    default T beforeMessageSend(IDingBot app, DingBotMsgCallbackRequest payload) {
         return null;
     }
 
@@ -113,7 +113,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      * @param app     机器人应用
      * @param payload 机器人消息回调请求体
      */
-    default void notifyBeforeSend(IDingBot app, DingBotMsgCallbackPayload payload) {
+    default void notifyBeforeSend(IDingBot app, DingBotMsgCallbackRequest payload) {
         //do nothing
     }
 
@@ -124,7 +124,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      * @param payload 机器人消息回调请求体
      * @param data    发消息前操作返回的数据
      */
-    default void send(IDingBot app, DingBotMsgCallbackPayload payload, T data) {
+    default void send(IDingBot app, DingBotMsgCallbackRequest payload, T data) {
         final IDingBotMsg message = message(app, payload, data);
         if (message == null) {
             return;
@@ -139,7 +139,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      * @param app     机器人应用
      * @param payload 机器人消息回调请求体
      */
-    default void afterMessageSent(IDingBot app, DingBotMsgCallbackPayload payload) {
+    default void afterMessageSent(IDingBot app, DingBotMsgCallbackRequest payload) {
     }
 
     /**

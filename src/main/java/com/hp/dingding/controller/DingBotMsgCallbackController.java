@@ -3,9 +3,9 @@ package com.hp.dingding.controller;
 
 import com.google.gson.Gson;
 import com.hp.dingding.component.application.IDingBot;
-import com.hp.dingding.component.factory.DingAppFactory;
-import com.hp.dingding.pojo.callback.DingBotMsgCallbackPayload;
-import com.hp.dingding.service.api.IDingBotMsgCallBackHandler;
+import com.hp.dingding.component.factory.app.DingAppFactory;
+import com.hp.dingding.pojo.callback.DingBotMsgCallbackRequest;
+import com.hp.dingding.service.IDingBotMsgCallBackHandler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
@@ -29,7 +29,7 @@ public class DingBotMsgCallbackController extends AbstractDingBotMsgCallbackCont
     public void msg(
             @RequestHeader("timestamp") String timeStamp,
             @RequestHeader("sign") String sign,
-            @RequestBody DingBotMsgCallbackPayload payload
+            @RequestBody DingBotMsgCallbackRequest payload
     ) {
         log.info("timestamp:{},sign:{},content:{}", timeStamp, sign, new Gson().toJson(payload));
         IDingBot bot = DingAppFactory.app(payload.getRobotCode());

@@ -8,9 +8,9 @@ import com.dingtalk.api.response.OapiRoleListResponse;
 import com.dingtalk.api.response.OapiRoleSimplelistResponse;
 import com.hp.dingding.component.application.IDingApp;
 import com.hp.dingding.component.exception.DingApiException;
-import com.hp.dingding.component.factory.DingAccessTokenFactory;
+import com.hp.dingding.component.factory.token.DingAccessTokenFactory;
 import com.hp.dingding.constant.DingConstant;
-import com.hp.dingding.service.api.IDingRoleHandler;
+import com.hp.dingding.service.IDingRoleHandler;
 import com.hp.dingding.utils.DingUtils;
 import com.taobao.api.ApiException;
 

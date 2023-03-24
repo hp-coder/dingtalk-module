@@ -1,9 +1,9 @@
 package com.hp.dingding.component;
 
 import com.hp.dingding.component.application.IDingBot;
-import com.hp.dingding.component.factory.DingAppFactory;
+import com.hp.dingding.component.factory.app.DingAppFactory;
 import com.hp.dingding.pojo.message.interactive.callback.AbstractDingInteractiveCardCallback;
-import com.hp.dingding.service.api.IDingInteractiveMessageHandler;
+import com.hp.dingding.service.IDingInteractiveMessageHandler;
 import com.taobao.api.ApiException;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;

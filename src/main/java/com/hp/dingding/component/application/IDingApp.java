@@ -1,6 +1,6 @@
 package com.hp.dingding.component.application;
 
-import com.hp.dingding.component.factory.DingAppFactory;
+import com.hp.dingding.component.factory.app.DingAppFactory;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 
 /**
@@ -17,6 +17,7 @@ public interface IDingApp extends SmartInitializingSingleton {
     String getAppSecret();
 
     Long getAppId();
+
     @Override
     default void afterSingletonsInstantiated() {
         DingAppFactory.setAppCache(this);

@@ -61,8 +61,10 @@ public interface IDingInteractiveMsg extends IDingMsg {
         return DigestUtils.md5DigestAsHex(combine.getBytes(StandardCharsets.UTF_8));
     }
 
+    /**
+     * 空实现
+     * @return
+     */
     @Override
-    default String getMsgType() {
-        return null;
-    }
+    default String getMsgType(){return null;}
 }

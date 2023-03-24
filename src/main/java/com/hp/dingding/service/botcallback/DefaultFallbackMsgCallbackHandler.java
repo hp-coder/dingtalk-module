@@ -1,10 +1,10 @@
 package com.hp.dingding.service.botcallback;
 
 import com.hp.dingding.component.application.IDingBot;
-import com.hp.dingding.pojo.callback.DingBotMsgCallbackPayload;
+import com.hp.dingding.pojo.callback.DingBotMsgCallbackRequest;
 import com.hp.dingding.pojo.message.IDingBotMsg;
 import com.hp.dingding.pojo.message.common.DingMarkdownMsg;
-import com.hp.dingding.service.api.IDingBotMsgCallBackHandler;
+import com.hp.dingding.service.IDingBotMsgCallBackHandler;
 import com.hp.dingding.utils.DingMarkdown;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -26,12 +26,12 @@ import java.util.stream.Collectors;
 public class DefaultFallbackMsgCallbackHandler implements IDingBotMsgCallBackHandler<String> {
 
     @Override
-    public Predicate<DingBotMsgCallbackPayload> predication() {
+    public Predicate<DingBotMsgCallbackRequest> predication() {
         return null;
     }
 
     @Override
-    public IDingBotMsg message(IDingBot app, DingBotMsgCallbackPayload payload, String data) {
+    public IDingBotMsg message(IDingBot app, DingBotMsgCallbackRequest payload, String data) {
         final String fallbackMsg = DingMarkdown.builder()
                 .contentTitle("默认处理器")
                 .level2Title("说明")
