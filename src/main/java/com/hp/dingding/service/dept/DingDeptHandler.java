@@ -6,9 +6,9 @@ import com.dingtalk.api.request.OapiV2DepartmentListsubRequest;
 import com.dingtalk.api.response.OapiV2DepartmentListsubResponse;
 import com.hp.dingding.component.application.IDingApp;
 import com.hp.dingding.component.exception.DingApiException;
-import com.hp.dingding.component.factory.DingAccessTokenFactory;
+import com.hp.dingding.component.factory.token.DingAccessTokenFactory;
 import com.hp.dingding.constant.DingConstant;
-import com.hp.dingding.service.api.IDingDeptHandler;
+import com.hp.dingding.service.IDingDeptHandler;
 import com.hp.dingding.utils.DingUtils;
 import com.taobao.api.ApiException;
 import lombok.extern.slf4j.Slf4j;
@@ -39,8 +39,8 @@ public class DingDeptHandler implements IDingDeptHandler {
             rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
             DingUtils.isSuccess(rsp);
         } catch (ApiException e) {
-            log.error("应用: {} : 获取部门列表: 部门: {} 语言: {}", app.getAppName(), deptId, language, e);
-            throw new DingApiException("获取部门列表出现异常");
+            log.error("获取部门列表,应用:{},部门:{},语言:{}", app.getAppName(), deptId, language, e);
+            throw new DingApiException("获取部门列表异常", e);
         }
         return rsp.getResult();
     }

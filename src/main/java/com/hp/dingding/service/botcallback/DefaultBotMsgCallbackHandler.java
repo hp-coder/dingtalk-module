@@ -2,10 +2,10 @@ package com.hp.dingding.service.botcallback;
 
 
 import com.hp.dingding.component.application.IDingBot;
-import com.hp.dingding.pojo.callback.DingBotMsgCallbackPayload;
+import com.hp.dingding.pojo.callback.DingBotMsgCallbackRequest;
 import com.hp.dingding.pojo.message.IDingBotMsg;
 import com.hp.dingding.pojo.message.common.DingMarkdownMsg;
-import com.hp.dingding.service.api.IDingBotMsgCallBackHandler;
+import com.hp.dingding.service.IDingBotMsgCallBackHandler;
 import com.hp.dingding.utils.DingMarkdown;
 import org.springframework.stereotype.Component;
 
@@ -24,17 +24,17 @@ public class DefaultBotMsgCallbackHandler implements IDingBotMsgCallBackHandler<
     private static final Pattern PATTERN = Pattern.compile("^(?i)test$|^测试$");
 
     @Override
-    public String beforeMessageSend(IDingBot app, DingBotMsgCallbackPayload payload) {
+    public String beforeMessageSend(IDingBot app, DingBotMsgCallbackRequest payload) {
         return "前置处理完成：返回测试数据";
     }
 
     @Override
-    public Predicate<DingBotMsgCallbackPayload> predication() {
+    public Predicate<DingBotMsgCallbackRequest> predication() {
         return payload -> PATTERN.asPredicate().test(payload.getText().getContent());
     }
 
     @Override
-    public IDingBotMsg message(IDingBot bot, DingBotMsgCallbackPayload payload, String data) {
+    public IDingBotMsg message(IDingBot bot, DingBotMsgCallbackRequest payload, String data) {
         final String content = DingMarkdown.builder()
                 .level3Title("测试回复")
                 .text("AppName：" + bot.getAppName())

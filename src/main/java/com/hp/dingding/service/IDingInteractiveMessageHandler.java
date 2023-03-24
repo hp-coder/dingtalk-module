@@ -1,11 +1,11 @@
-package com.hp.dingding.service.api;
+package com.hp.dingding.service;
 
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiImChatScencegroupInteractivecardCallbackRegisterRequest;
 import com.hp.dingding.component.IDingApi;
 import com.hp.dingding.component.application.IDingBot;
-import com.hp.dingding.component.factory.DingAccessTokenFactory;
+import com.hp.dingding.component.factory.token.DingAccessTokenFactory;
 import com.hp.dingding.constant.DingConstant;
 import com.hp.dingding.pojo.message.interactive.IDingInteractiveMsg;
 import com.hp.dingding.pojo.message.interactive.callback.IDingInteractiveCardCallBack;

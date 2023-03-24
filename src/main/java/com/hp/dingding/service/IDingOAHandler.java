@@ -1,4 +1,4 @@
-package com.hp.dingding.service.api;
+package com.hp.dingding.service;
 
 import com.dingtalk.api.response.OapiProcessTemplateManageGetResponse;
 import com.dingtalk.api.response.OapiProcessinstanceGetResponse;

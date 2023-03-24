@@ -3,16 +3,14 @@ package com.hp.dingding.service.user;
 
 import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
-import com.dingtalk.api.request.OapiSnsGetuserinfoBycodeRequest;
-import com.dingtalk.api.request.OapiUserGetbyunionidRequest;
-import com.dingtalk.api.request.OapiV2UserGetRequest;
-import com.dingtalk.api.request.OapiV2UserGetbymobileRequest;
+import com.dingtalk.api.request.*;
 import com.dingtalk.api.response.*;
 import com.hp.dingding.component.application.IDingApp;
+import com.hp.dingding.component.application.IDingMiniH5;
 import com.hp.dingding.component.exception.DingApiException;
-import com.hp.dingding.component.factory.DingAccessTokenFactory;
+import com.hp.dingding.component.factory.token.DingAccessTokenFactory;
 import com.hp.dingding.constant.DingConstant;
-import com.hp.dingding.service.api.IDingUserHandler;
+import com.hp.dingding.service.IDingUserHandler;
 import com.hp.dingding.service.role.DingRoleHandler;
 import com.hp.dingding.utils.DingUtils;
 import com.taobao.api.ApiException;
@@ -124,6 +122,21 @@ public class DingUserHandler implements IDingUserHandler {
         final String unionId = unionIdByCode(app, code);
         final String userId = userIdByUnionId(app, unionId);
         return userByUserId(app, userId);
+    }
+
+    @Override
+    public OapiV2UserGetuserinfoResponse.UserGetByCodeResponse userByLoginAuthCode(IDingMiniH5 app, String authCode) {
+        DingTalkClient client = new DefaultDingTalkClient(DingConstant.GET_USER_BY_LOGIN_AUTH_CODE);
+        OapiV2UserGetuserinfoRequest request = new OapiV2UserGetuserinfoRequest();
+        request.setCode(authCode);
+        try {
+            OapiV2UserGetuserinfoResponse response = client.execute(request, DingAccessTokenFactory.access_token(app));
+            DingUtils.UserResponse.isOk(response);
+            return response.getResult();
+        } catch (ApiException e) {
+            log.error("根据钉钉应用内免登录授权码获取钉钉用户信息异常,,app:{},code:{},err:{}", app.getAppName(), authCode, e.getLocalizedMessage(), e);
+            throw new DingApiException("根据钉钉应用内免登录授权码获取钉钉用户信息异常", e);
+        }
     }
 
     @Override

@@ -3,8 +3,8 @@ package com.hp.dingding.service.file.bot;
 import com.aliyun.tea.TeaException;
 import com.hp.dingding.component.application.IDingBot;
 import com.hp.dingding.component.exception.DingApiException;
-import com.hp.dingding.component.factory.DingAccessTokenFactory;
-import com.hp.dingding.service.api.IDingBotFileDownloadHandler;
+import com.hp.dingding.component.factory.token.DingAccessTokenFactory;
+import com.hp.dingding.service.IDingBotFileDownloadHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 

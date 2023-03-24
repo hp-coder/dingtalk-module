@@ -2,6 +2,7 @@
 
 ## 说明
 仅针对钉钉文档中的部分常用api进行封装
+钉钉新版SDK常用驼峰命名，旧版SDK常用下划线方式，在看文档和调用其SDK时需特别注意！！！
 
 ## 更新
 - 0000-00-00：增加消息，用户，角色，联系人等
@@ -25,7 +26,7 @@ mvn install
 <dependency>
   <groupId>com.hp</groupId>
   <artifactId>dingtalk-module</artifactId>
-  <version>1.0.4-SNAPSHOT</version>
+  <version>1.0.5-SNAPSHOT</version>
 </dependency>
 ```
 
@@ -39,6 +40,7 @@ mvn install
       - IDingCoolApp 酷应用，暂时为一个抽象接口，没有实际应用
     - IDingBot 企业内机器人
 - IDingApi 实现封装后钉钉API的抽象顶层接口,对于未实现的接口可以自行实现IDingApi接口后自主集成
+- IDingToken 定义系统内获取token的能力，目前实现为工厂，仅用于获取企业内应用的accessToken
 - IDingInteractiveCardCallBack 对于互动卡片的回调地址封装的接口,实现该接口,项目在启动时会自动注册回调地址
 - IDingInteractiveMsg 互动卡片公共能力的抽象
 - IDingMsg 基本常用消息等模版已经实现,无需再次实现
@@ -57,10 +59,13 @@ mvn install
 ### AccessToken
 DingAccessTokenFactory
 - 使用静态工厂获取,本地cache减少依赖性
+- 引入了对应SDK版本的概念，虽然此前旧版SDK的API使用新版的AccessToken暂未发现问题，但是在最近即成新版钉钉登录的时候为了保险起见还是引入了旧版的token接口
 
 ### 用户
 DingUserHandler
 - 根据扫码/免登/钉钉账号密码登录后返回code获取用户userid, unionid, userinfo等信息
+- 增加一个钉钉应用内免登->获取临时授权码->配合accessToken获取用户userId->获取用户信息的登录接口
+  - 具体登录接入的实现会在demo仓库实现
 
 ### 消息
 DingBotMessageHandler
