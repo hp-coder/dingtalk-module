@@ -49,4 +49,9 @@ public class DefaultBotMsgCallbackHandler implements IDingBotMsgCallBackHandler<
     public String description() {
         return "测试处理器：用于检测配置是否成功，输入\"测试\"或\"test\"查看";
     }
+
+    @Override
+    public Integer order() {
+        return Integer.MAX_VALUE;
+    }
 }

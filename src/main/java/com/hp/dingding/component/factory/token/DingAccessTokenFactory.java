@@ -44,13 +44,13 @@ public class DingAccessTokenFactory implements IDingToken, IDingApi {
     private static final ConcurrentHashMap<String, ConcurrentHashMap<SDK.Version, DingToken>> TOKEN_CACHE = new ConcurrentHashMap<>(16);
 
     public static String accessToken(IDingApp dingApp) {
-        log.info("Getting accessToken with:{},usage: new sdk APIs", dingApp.getAppName());
+        log.debug("Getting accessToken with:{},usage: new sdk APIs", dingApp.getAppName());
         final DingAccessTokenFactory bean = SingletonHolder.INSTANCE;
         return bean.getAccessToken(dingApp).orElse(null);
     }
 
     public static String access_token(IDingApp dingApp) {
-        log.info("Getting access_token with:{},usage: old sdk APIs", dingApp.getAppName());
+        log.debug("Getting access_token with:{},usage: old sdk APIs", dingApp.getAppName());
         final DingAccessTokenFactory bean = SingletonHolder.INSTANCE;
         return bean.getAccess_token(dingApp).orElse(null);
     }
@@ -159,7 +159,7 @@ public class DingAccessTokenFactory implements IDingToken, IDingApi {
         private String description;
 
         public boolean isExpired() {
-            log.info("钉钉AccessToken:{},SDK.version:{},到期时间:{},说明:{}", accessToken, version, getExpiredAt(), description);
+            log.debug("钉钉AccessToken:{},SDK.version:{},到期时间:{},说明:{}", accessToken, version, getExpiredAt(), description);
             return this.expiredAt.compareTo(LocalDateTime.now()) <= 0;
         }
     }

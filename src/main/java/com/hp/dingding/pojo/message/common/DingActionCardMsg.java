@@ -13,6 +13,9 @@ import lombok.Setter;
 @Setter
 public class DingActionCardMsg {
 
+    private DingActionCardMsg(){}
+
+
     /**
      * 卡片消息：一个按钮
      */

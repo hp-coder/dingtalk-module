@@ -13,6 +13,7 @@ import lombok.Setter;
 @Setter
 public class DingImageMsg {
 
+    private DingImageMsg(){}
     @Getter
     @Setter
     @AllArgsConstructor

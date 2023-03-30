@@ -17,6 +17,9 @@ import lombok.Setter;
 @Setter
 public class DingTextMsg {
 
+    private DingTextMsg() {
+    }
+
     @Getter
     @Setter
     @AllArgsConstructor

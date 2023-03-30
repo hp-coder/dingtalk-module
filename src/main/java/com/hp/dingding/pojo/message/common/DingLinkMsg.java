@@ -14,6 +14,7 @@ import lombok.Setter;
 @Setter
 public class DingLinkMsg {
 
+    private DingLinkMsg(){}
 
     @Getter
     @Setter

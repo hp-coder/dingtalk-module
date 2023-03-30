@@ -14,6 +14,8 @@ import lombok.Setter;
 @Setter
 public class DingMediaMsg {
 
+    private DingMediaMsg() {
+    }
 
     @Getter
     @Setter
@@ -32,7 +34,7 @@ public class DingMediaMsg {
 
     @Getter
     @Setter
-    public static class SampleFile extends AbstractDingMsg implements IDingBotMsg  {
+    public static class SampleFile extends AbstractDingMsg implements IDingBotMsg {
         private String mediaId;
         private String fileName;
         private String fileType;
@@ -51,7 +53,7 @@ public class DingMediaMsg {
 
     @Getter
     @Setter
-    public static class SampleVideo extends AbstractDingMsg implements IDingBotMsg  {
+    public static class SampleVideo extends AbstractDingMsg implements IDingBotMsg {
         private String videoMediaId;
         private String videoType;
         private String picMediaId;

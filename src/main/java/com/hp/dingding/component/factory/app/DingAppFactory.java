@@ -14,7 +14,7 @@ import java.util.Map;
  * 既然已经使用了spring框架，直接使用其容器完成单例效果
  * <p>
  * 实现IDingApp接口并注册到spring容器中的类将被自动添加到工厂缓存中
- *
+ * it's a dummy factory. it pretends to be a real factory
  * @author hp
  */
 @Slf4j

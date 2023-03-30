@@ -4,7 +4,6 @@ import com.hp.dingding.component.application.IDingBot;
 import com.hp.dingding.pojo.callback.DingBotMsgCallbackRequest;
 import com.hp.dingding.pojo.message.IDingBotMsg;
 import com.hp.dingding.service.message.DingBotMessageHandler;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
@@ -23,6 +22,7 @@ public interface IDingBotMsgCallBackHandler<T> {
 
     /**
      * 是否可以执行
+     *
      * @return Predicate
      */
     Predicate<DingBotMsgCallbackRequest> predication();
@@ -71,16 +71,18 @@ public interface IDingBotMsgCallBackHandler<T> {
             return Optional.empty();
         }
         Optional.ofNullable(payload.getText().getContent())
-                .ifPresent(i ->payload.getText().setContent(i.trim()));
-        final List<IDingBotMsgCallBackHandler<?>> handlers = REGISTRY.stream()
+                .ifPresent(i -> payload.getText().setContent(i.trim()));
+        final Optional<IDingBotMsgCallBackHandler<?>> first = REGISTRY.stream()
+                .sorted(Comparator.comparing(IDingBotMsgCallBackHandler::order))
                 .filter(handler -> !handler.ignoredApps().contains(app.getClass()))
                 .filter(handler ->
-                                handler.predication() != null &&
+                        handler.predication() != null &&
                                 handler.predication().test(payload))
-                .collect(Collectors.toList());
-        return CollectionUtils.isEmpty(handlers) ?
-                Optional.of(REGISTRY.stream().filter(handler -> handler.predication() == null).collect(Collectors.toList())) :
-                Optional.of(handlers);
+                .findFirst();
+        return first.
+                <Optional<List<IDingBotMsgCallBackHandler<?>>>>
+                map(iDingBotMsgCallBackHandler -> Optional.of(Collections.singletonList(iDingBotMsgCallBackHandler)))
+                .orElseGet(() -> Optional.of(REGISTRY.stream().filter(handler -> handler.predication() == null).collect(Collectors.toList())));
     }
 
     /**
@@ -103,9 +105,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      * @param payload 机器人消息回调请求体
      * @return 返回
      */
-    default T beforeMessageSend(IDingBot app, DingBotMsgCallbackRequest payload) {
-        return null;
-    }
+    T beforeMessageSend(IDingBot app, DingBotMsgCallbackRequest payload);
 
     /**
      * 消息回复前
@@ -158,7 +158,7 @@ public interface IDingBotMsgCallBackHandler<T> {
      */
     @PostConstruct
     default void postConstruct() {
-        REGISTRY.add(order(), this);
+        REGISTRY.add(this);
     }
 
 }

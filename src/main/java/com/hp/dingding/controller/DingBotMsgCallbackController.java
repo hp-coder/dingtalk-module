@@ -31,7 +31,7 @@ public class DingBotMsgCallbackController extends AbstractDingBotMsgCallbackCont
             @RequestHeader("sign") String sign,
             @RequestBody DingBotMsgCallbackRequest payload
     ) {
-        log.info("timestamp:{},sign:{},content:{}", timeStamp, sign, new Gson().toJson(payload));
+        log.debug("timestamp:{},sign:{},content:{}", timeStamp, sign, new Gson().toJson(payload));
         IDingBot bot = DingAppFactory.app(payload.getRobotCode());
         Assert.notNull(bot, String.format("SpringContext中未找到对应的钉钉应用Bean: APP_KEY:%s", payload.getRobotCode()));
         validateRequest(timeStamp, sign, bot);

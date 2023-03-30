@@ -15,6 +15,8 @@ import java.util.List;
 @Setter
 public class DingFeedCardMsg extends AbstractDingMsg {
 
+    private DingFeedCardMsg(){}
+
     @Getter
     @Setter
     @AllArgsConstructor
