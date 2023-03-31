@@ -160,7 +160,7 @@ public class DingAccessTokenFactory implements IDingToken, IDingApi {
 
         public boolean isExpired() {
             log.debug("钉钉AccessToken:{},SDK.version:{},到期时间:{},说明:{}", accessToken, version, getExpiredAt(), description);
-            return this.expiredAt.compareTo(LocalDateTime.now()) <= 0;
+            return !this.expiredAt.isAfter(LocalDateTime.now());
         }
     }
 }

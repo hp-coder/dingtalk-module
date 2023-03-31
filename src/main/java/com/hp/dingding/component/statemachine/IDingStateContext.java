@@ -1,6 +1,7 @@
 package com.hp.dingding.component.statemachine;
 
 
+import com.hp.dingding.component.application.IDingBot;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Map;
@@ -9,6 +10,12 @@ import java.util.Map;
  * @author hp 2023/3/28
  */
 public interface IDingStateContext<T> {
+
+    /**
+     * 发消息用的机器人
+     * @return 机器人实例
+     */
+    IDingBot getBot();
 
     /**
      * 状态机唯一id

@@ -3,10 +3,13 @@ package com.hp.dingding.service;
 import com.hp.dingding.component.application.IDingBot;
 import com.hp.dingding.pojo.callback.DingBotMsgCallbackRequest;
 import com.hp.dingding.pojo.message.IDingBotMsg;
+import com.hp.dingding.pojo.message.common.DingMarkdownMsg;
 import com.hp.dingding.service.message.DingBotMessageHandler;
+import com.hp.dingding.utils.DingMarkdown;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -92,11 +95,27 @@ public interface IDingBotMsgCallBackHandler<T> {
      * @param payload 机器人消息回调请求体
      */
     default void handle(IDingBot app, DingBotMsgCallbackRequest payload) {
+        if (!authorized(app, payload)) {
+            DingMarkdown.Builder builder = DingMarkdown.builder().text("无权使用该功能").reference(LocalDateTime.now().toString());
+            new DingBotMessageHandler().sendToUserByUserIds(app, Collections.singletonList(payload.getSenderStaffId()), new DingMarkdownMsg.SampleMarkdown("权限", builder));
+            return;
+        }
         notifyBeforeSend(app, payload);
         final T data = beforeMessageSend(app, payload);
         send(app, payload, data);
         afterMessageSent(app, payload);
     }
+
+    /**
+     * 是否有权限使用该处理器功能
+     * @param app     机器人应用
+     * @param payload 机器人消息回调请求体
+     * @return 是否有权限
+     */
+    default boolean authorized(IDingBot app, DingBotMsgCallbackRequest payload) {
+        return true;
+    }
+
 
     /**
      * 消息回复前
