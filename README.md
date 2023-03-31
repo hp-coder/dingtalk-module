@@ -26,7 +26,7 @@ mvn install
 <dependency>
   <groupId>com.hp</groupId>
   <artifactId>dingtalk-module</artifactId>
-  <version>1.0.5-SNAPSHOT</version>
+  <version>1.0.6-SNAPSHOT</version>
 </dependency>
 ```
 
