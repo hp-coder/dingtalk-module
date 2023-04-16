@@ -1,7 +1,10 @@
-package com.hp.dingding.component.statemachine;
+package com.hp.dingtalk.component.statemachine;
 
+import com.hp.dingtalk.component.exception.DingApiException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Optional;
 
 
 /**
@@ -9,8 +12,9 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 public abstract class AbstractDingStateMachine<DATA> implements IDingStateMachine<DATA> {
-
     protected IDingState<DATA> current;
+    private IDingState<DATA> jump;
+
     @Getter
     protected IDingStateContext<?> context;
 
@@ -21,7 +25,7 @@ public abstract class AbstractDingStateMachine<DATA> implements IDingStateMachin
      * @param input    输入数据
      * @param reason   检测失败的原因
      */
-    protected abstract void cantProceedEntry(IDingState<DATA> newState, DATA input, String reason);
+    protected abstract void cantProceedEntry(IDingState<DATA> newState, DATA input, Exception reason);
 
     /**
      * 校验失败，无法执行complete
@@ -29,7 +33,7 @@ public abstract class AbstractDingStateMachine<DATA> implements IDingStateMachin
      * @param input  输入数据
      * @param reason 检测失败的原因
      */
-    protected abstract void cantProceedComplete(DATA input, String reason);
+    protected abstract void cantProceedComplete(DATA input, Exception reason);
 
     public AbstractDingStateMachine(IDingState<DATA> initState, DATA input) {
         this.current = initState;
@@ -54,13 +58,13 @@ public abstract class AbstractDingStateMachine<DATA> implements IDingStateMachin
                 this.current.onComplete(input);
             } catch (Exception e) {
                 log.error("currentState:{} onComplete error", current.getClass(), e);
-                cantProceedComplete(input, e.getMessage());
+                cantProceedComplete(input, e);
                 return;
             }
-            final IDingState<DATA> nextState = nextState(input);
+            final IDingState<DATA> nextState = Optional.ofNullable(jump).orElse(nextState(input));
             stateChange(nextState, input);
         } else {
-            cantProceedComplete(input, predicate.getReason());
+            cantProceedComplete(input, new DingApiException(predicate.getReason()));
         }
     }
 
@@ -76,12 +80,14 @@ public abstract class AbstractDingStateMachine<DATA> implements IDingStateMachin
                 newState.onEntry(input);
             } catch (Exception e) {
                 log.error("newState:{} onEntry error", newState.getClass(), e);
-                cantProceedEntry(newState, input, e.getMessage());
+                cantProceedEntry(newState, input, e);
                 return;
             }
             this.current = newState;
+            this.jump = null;
+            jumpAfterEntry(newState, input);
         } else {
-            cantProceedEntry(newState, input, predicate.getReason());
+            cantProceedEntry(newState, input, new DingApiException(predicate.getReason()));
         }
     }
 
@@ -100,4 +106,13 @@ public abstract class AbstractDingStateMachine<DATA> implements IDingStateMachin
         this.current = null;
         this.context = null;
     }
+
+    private void jumpAfterEntry(IDingState<DATA> newState, DATA input) {
+        final Optional<IDingState<DATA>> jumpState = Optional.ofNullable(newState.jumpAfterEntry(input));
+        if (jumpState.isPresent()) {
+            this.jump = jumpState.get();
+            computeInput(input);
+        }
+    }
+
 }

@@ -1,4 +1,4 @@
-package com.hp.dingding.component.statemachine;
+package com.hp.dingtalk.component.statemachine;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,6 +37,14 @@ public interface IDingState<DATA> {
      * @param input 输入
      */
     void onComplete(DATA input);
+
+    /**
+     * 跳链操作
+     * @param input 输入
+     */
+    IDingState<DATA> jumpAfterEntry(DATA input);
+
+    IDingState<DATA> jumpAfterComplete(DATA input);
 
     /**
      * 是否可以执行onComplete

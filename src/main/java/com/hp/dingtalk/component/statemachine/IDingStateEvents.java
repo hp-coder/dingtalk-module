@@ -1,4 +1,4 @@
-package com.hp.dingding.component.statemachine;
+package com.hp.dingtalk.component.statemachine;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,11 +6,11 @@ import lombok.Getter;
 /**
  * @author hp 2023/3/29
  */
-public interface IDingStateEvent {
+public interface IDingStateEvents {
 
     @AllArgsConstructor
     @Getter
     class CompleteEvent {
-       private IDingStateContext<?> context;
+        private IDingStateContext<?> context;
     }
 }

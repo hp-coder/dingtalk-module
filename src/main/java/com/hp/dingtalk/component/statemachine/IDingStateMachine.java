@@ -1,4 +1,4 @@
-package com.hp.dingding.component.statemachine;
+package com.hp.dingtalk.component.statemachine;
 
 /**
  * @author hp 2023/3/28

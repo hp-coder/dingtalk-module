@@ -1,7 +1,7 @@
-package com.hp.dingding.component.statemachine;
+package com.hp.dingtalk.component.statemachine;
 
 
-import com.hp.dingding.component.application.IDingBot;
+import com.hp.dingtalk.component.application.IDingBot;
 import org.springframework.context.ApplicationContext;
 
 import java.util.Map;

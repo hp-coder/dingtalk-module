@@ -1,4 +1,4 @@
-package com.hp.dingding.component.statemachine;
+package com.hp.dingtalk.component.statemachine;
 
 import lombok.Getter;
 
@@ -45,6 +45,15 @@ public abstract class AbstractDingState<DATA> implements IDingState<DATA> {
     @Override
     public void complete() {
         this.context.setComplete(true);
-        this.context.getApplicationContext().publishEvent(new IDingStateEvent.CompleteEvent(this.context));
+        this.context.getApplicationContext().publishEvent(new IDingStateEvents.CompleteEvent(this.context));
+    }
+
+    public IDingState<DATA> jumpAfterEntry(DATA input) {
+        return null;
+    }
+
+    @Override
+    public IDingState<DATA> jumpAfterComplete(DATA input) {
+        return null;
     }
 }
