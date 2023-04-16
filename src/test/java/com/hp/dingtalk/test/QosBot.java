@@ -1,6 +1,6 @@
 package com.hp.dingtalk.test;
 
-import com.hp.dingding.component.application.IDingBot;
+import com.hp.dingtalk.component.application.IDingBot;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -20,6 +20,5 @@ public class QosBot implements IDingBot {
         this.appId = appId;
         this.appKey = appKey;
         this.appSecret = appSecret;
-        this.afterSingletonsInstantiated();
     }
 }
