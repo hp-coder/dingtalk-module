@@ -2,33 +2,24 @@ package com.hp.dingtalk.pojo.message.common;
 
 import com.hp.dingtalk.pojo.message.AbstractDingMsg;
 import com.hp.dingtalk.pojo.message.IDingBotWebhookMsg;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Value;
 
 import java.util.List;
 
 /**
  * @author hp
  */
-@Getter
-@Setter
-public class DingFeedCardMsg extends AbstractDingMsg {
+public interface DingFeedCardMsg {
 
-    private DingFeedCardMsg(){}
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class FeedCard extends AbstractDingMsg implements IDingBotWebhookMsg {
-        private List<Link> links;
+    @Value
+    class FeedCard extends AbstractDingMsg implements IDingBotWebhookMsg {
+        List<FeedCardLink> links;
     }
 
-    @Getter
-    @AllArgsConstructor
-    public static class Link {
-        private final String title;
-        private final String messageURL;
-        private final String picURL;
+    @Value
+    class FeedCardLink {
+        String title;
+        String messageURL;
+        String picURL;
     }
 }

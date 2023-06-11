@@ -21,14 +21,13 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-
 @RequestMapping("/ding")
 public class DingBotMsgCallbackController extends AbstractDingBotMsgCallbackController{
 
     @SneakyThrows
     @RequestMapping("/bot/msg/callback")
     public void msg(
-            @RequestHeader("timestamp") String timeStamp,
+            @RequestHeader(value = "timestamp", required = false) String timeStamp,
             @RequestHeader("sign") String sign,
             @RequestBody DingBotMsgCallbackRequest payload
     ) {

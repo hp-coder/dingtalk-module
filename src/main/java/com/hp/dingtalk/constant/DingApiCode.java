@@ -1,5 +1,6 @@
 package com.hp.dingtalk.constant;
 
+import com.hp.common.base.enums.BaseEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

@@ -4,31 +4,27 @@ import com.hp.dingtalk.pojo.message.AbstractDingMsg;
 import com.hp.dingtalk.pojo.message.IDingBotMsg;
 import com.hp.dingtalk.pojo.message.IDingBotWebhookMsg;
 import com.hp.dingtalk.utils.DingMarkdown;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Value;
 
 
 /**
  * @author hp
  */
-@Getter
-@Setter
-public class DingMarkdownMsg {
+public interface DingMarkdownMsg {
 
-    private DingMarkdownMsg(){
-    }
-
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class SampleMarkdown extends AbstractDingMsg implements IDingBotMsg, IDingBotWebhookMsg {
-        private String title;
-        private String text;
+    @Value
+    class SampleMarkdown extends AbstractDingMsg implements IDingBotMsg, IDingBotWebhookMsg {
+        String title;
+        String text;
 
         public SampleMarkdown(String title, DingMarkdown.Builder markdownBuilder) {
             this.title = title;
             this.text = markdownBuilder.build();
+        }
+
+        public SampleMarkdown(String title, String markdown) {
+            this.title = title;
+            this.text = markdown;
         }
     }
 }

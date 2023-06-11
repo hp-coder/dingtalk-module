@@ -2,22 +2,16 @@ package com.hp.dingtalk.pojo.message.common;
 
 import com.hp.dingtalk.pojo.message.AbstractDingMsg;
 import com.hp.dingtalk.pojo.message.IDingBotMsg;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Value;
 
 /**
  * @author hp
  */
-@Getter
-@Setter
-public class DingImageMsg {
+public interface DingImageMsg {
 
-    private DingImageMsg(){}
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class SampleImageMsg extends AbstractDingMsg implements IDingBotMsg {
-        private final String photoURL;
+
+    @Value
+    class SampleImageMsg extends AbstractDingMsg implements IDingBotMsg {
+        String photoURL;
     }
 }
