@@ -94,10 +94,16 @@ public class DingConstant {
      * 根据角色id获取用户列表
      */
     public static final String GET_USERS_BY_ROLE_ID = "https://oapi.dingtalk.com/topapi/role/simplelist";
+
     /**
-     * 获取用户可见的审批模版
+     * 创建审批实例
      */
-    public static final String GET_PROCESS_TEMPLATE_LIST = "https://oapi.dingtalk.com/topapi/process/template/manage/get";
+    public static final String CREATE_PROCESS_INSTANCE = "https://oapi.dingtalk.com/topapi/processinstance/create";
+
+    /**
+     * 获取企业内,用户可管理的所有审批模版
+     */
+    public static final String GET_MANAGEABLE_PROCESS_TEMPLATE_IN_CORP_LIST = "https://oapi.dingtalk.com/topapi/process/template/manage/get";
     /**
      * 根据审批模版名称获取模版编号
      */

@@ -1,4 +1,4 @@
-package com.hp.dingtalk.service.botcallback;
+package com.hp.dingtalk.service.callback.bot;
 
 
 import com.hp.dingtalk.component.application.IDingBot;
@@ -33,14 +33,13 @@ public class DefaultBotMsgCallbackHandler implements IDingBotMsgCallBackHandler<
 
     @Override
     public IDingBotMsg message(IDingBot bot, DingBotMsgCallbackRequest payload, String data) {
-        final String content = DingMarkdown.builder()
+        final DingMarkdown.Builder builder = DingMarkdown.builder()
                 .level3Title("测试回复")
                 .text("AppName：" + bot.getAppName())
                 .text("AppId：" + bot.getAppId())
                 .text("Data：" + data)
-                .reference(LocalDateTime.now().atZone(ZoneId.of("Asia/Shanghai")).format(DateTimeFormatter.ofPattern("MM-dd HH:mm")))
-                .build();
-        return new DingMarkdownMsg.SampleMarkdown("测试", content);
+                .reference(LocalDateTime.now().atZone(ZoneId.of("Asia/Shanghai")).format(DateTimeFormatter.ofPattern("MM-dd HH:mm")));
+        return new DingMarkdownMsg.SampleMarkdown("测试", builder);
     }
 
     @Override

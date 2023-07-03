@@ -1,6 +1,7 @@
 package com.hp.dingtalk.pojo.message;
 
 import com.google.gson.Gson;
+import com.taobao.api.internal.util.StringUtils;
 
 /**
  * @author hp
@@ -13,9 +14,7 @@ public interface IDingMsg {
      * @return 消息类型（类名第一个字母小写）
      */
     default String msgType(Object msg) {
-        final char[] chars = msg.getClass().getSimpleName().toCharArray();
-        chars[0] += 32;
-        return String.valueOf(chars);
+        return StringUtils.toCamelStyle(msg.getClass().getSimpleName());
     }
 
     /**

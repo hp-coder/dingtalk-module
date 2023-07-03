@@ -1,8 +1,8 @@
 package com.hp.dingtalk.component;
 
+import com.hp.dingtalk.pojo.message.interactive.callback.IDingInteractiveCardCallBack;
 import com.hp.dingtalk.component.application.IDingBot;
 import com.hp.dingtalk.component.factory.app.DingAppFactory;
-import com.hp.dingtalk.pojo.message.interactive.callback.IDingInteractiveCardCallBack;
 import com.hp.dingtalk.service.IDingInteractiveMessageHandler;
 import com.taobao.api.ApiException;
 import lombok.RequiredArgsConstructor;

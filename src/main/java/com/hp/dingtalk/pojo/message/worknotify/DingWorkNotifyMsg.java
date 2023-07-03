@@ -11,6 +11,7 @@ import lombok.Getter;
  */
 @Getter
 public class DingWorkNotifyMsg implements IDingWorkNotifyMsg {
+
     @SerializedName("msgtype")
     private final String msgType;
 
@@ -57,6 +58,7 @@ public class DingWorkNotifyMsg implements IDingWorkNotifyMsg {
     /**
      * 卡片消息
      */
+    @SerializedName("action_card")
     private OapiMessageCorpconversationAsyncsendV2Request.ActionCard actionCard;
     /**
      * 文件消息

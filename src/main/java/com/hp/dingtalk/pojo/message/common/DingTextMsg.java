@@ -1,3 +1,4 @@
+
 package com.hp.dingtalk.pojo.message.common;
 
 

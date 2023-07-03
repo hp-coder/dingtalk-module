@@ -65,7 +65,7 @@ public class DingInteractiveCardCallBackRequest {
     public String toString() {
         final StringBuilder sb = new StringBuilder("DingInteractiveCardCallBackRequest{");
         sb.append("outTrackId='").append(outTrackId).append('\'');
-        sb.append(", corpId='").append(corpId).append('\'');
+        sb.append(", getCorpId='").append(corpId).append('\'');
         sb.append(", userId='").append(userId).append('\'');
         sb.append(", value='").append(value).append('\'');
         sb.append(", content='").append(content).append('\'');

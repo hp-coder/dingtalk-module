@@ -1,0 +1,56 @@
+package com.hp.dingtalk.pojo.callback.eventbody.oa;
+
+import com.google.gson.annotations.SerializedName;
+import com.hp.dingtalk.pojo.callback.eventbody.IDingMiniH5EventBody;
+import com.hp.common.base.annotations.FieldDesc;
+import com.hp.dingtalk.constant.DingMiniH5EventType;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+/**
+ * OA审批事件payload
+ *
+ * @author hp
+ */
+@NoArgsConstructor
+@Data
+public class DingMiniH5OAEventBody implements IDingMiniH5EventBody {
+
+    @FieldDesc("事件类型")
+    @SerializedName(value = "eventType", alternate = "EventType")
+    private DingMiniH5EventType eventType;
+
+    @FieldDesc("审批实例Id")
+    private String processInstanceId;
+
+    @FieldDesc("审批实例对应的企业corpId")
+    private String corpId;
+
+    @FieldDesc("创建审批实例时间。时间戳，单位毫秒。")
+    private Long createTime;
+
+    @FieldDesc("审批结束时间,时间戳,ms")
+    private Long finishTime;
+
+    @FieldDesc("实例标题")
+    private String title;
+
+    @FieldDesc("类型")
+    private OAEventType type;
+
+    @FieldDesc("发起审批实例的员工userId。")
+    private String staffId;
+
+    @FieldDesc("审批实例url，可在钉钉内跳转到审批页面")
+    private String url;
+
+    @FieldDesc("审批模板的唯一码。")
+    private String processCode;
+
+    @FieldDesc("正常结束时result为agree，拒绝时result为refuse，审批终止时没这个值。")
+    private OAEventResult result;
+
+    @FieldDesc("审批任务结束时, remark表示操作时写的评论内容。")
+    private String remark;
+
+}

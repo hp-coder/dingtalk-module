@@ -8,6 +8,7 @@ import com.hp.dingtalk.component.application.IDingApp;
 import com.hp.dingtalk.component.exception.DingApiException;
 import com.hp.dingtalk.component.factory.token.DingAccessTokenFactory;
 import com.hp.dingtalk.constant.DingConstant;
+import com.hp.dingtalk.constant.Language;
 import com.hp.dingtalk.service.IDingDeptHandler;
 import com.hp.dingtalk.utils.DingUtils;
 import com.taobao.api.ApiException;
@@ -25,15 +26,15 @@ public class DingDeptHandler implements IDingDeptHandler {
 
     @Override
     public List<OapiV2DepartmentListsubResponse.DeptBaseResponse> getDeptList(IDingApp app) {
-        return this.getDeptList(app, null, "zh_CN");
+        return this.getDeptList(app, null, Language.zh_CN);
     }
 
     @Override
-    public List<OapiV2DepartmentListsubResponse.DeptBaseResponse> getDeptList(IDingApp app, Long deptId, String language) {
+    public List<OapiV2DepartmentListsubResponse.DeptBaseResponse> getDeptList(IDingApp app, Long deptId, Language language) {
         DingTalkClient client = new DefaultDingTalkClient(DingConstant.GET_DEPT_LIST);
         OapiV2DepartmentListsubRequest req = new OapiV2DepartmentListsubRequest();
         req.setDeptId(deptId);
-        req.setLanguage(language);
+        req.setLanguage(language.name());
         OapiV2DepartmentListsubResponse rsp;
         try {
             rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));

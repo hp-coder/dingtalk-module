@@ -2,9 +2,9 @@ package com.hp.dingtalk.controller;
 
 
 import com.google.gson.Gson;
+import com.hp.dingtalk.pojo.callback.DingBotMsgCallbackRequest;
 import com.hp.dingtalk.component.application.IDingBot;
 import com.hp.dingtalk.component.factory.app.DingAppFactory;
-import com.hp.dingtalk.pojo.callback.DingBotMsgCallbackRequest;
 import com.hp.dingtalk.service.IDingBotMsgCallBackHandler;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 /**
  * 钉钉机器人消息互动
  *
@@ -22,12 +24,16 @@ import org.springframework.web.bind.annotation.RestController;
 @Slf4j
 @RestController
 @RequestMapping("/ding")
-public class DingBotMsgCallbackController extends AbstractDingBotMsgCallbackController{
+public class DingBotMsgCallbackController extends AbstractDingBotMsgCallbackController {
+
+    public DingBotMsgCallbackController(List<IDingBotMsgCallBackHandler<?>> dingBotMsgCallBackHandlers) {
+        super(dingBotMsgCallBackHandlers);
+    }
 
     @SneakyThrows
     @RequestMapping("/bot/msg/callback")
     public void msg(
-            @RequestHeader(value = "timestamp", required = false) String timeStamp,
+            @RequestHeader("timestamp") String timeStamp,
             @RequestHeader("sign") String sign,
             @RequestBody DingBotMsgCallbackRequest payload
     ) {
@@ -35,7 +41,8 @@ public class DingBotMsgCallbackController extends AbstractDingBotMsgCallbackCont
         IDingBot bot = DingAppFactory.app(payload.getRobotCode());
         Assert.notNull(bot, String.format("SpringContext中未找到对应的钉钉应用Bean: APP_KEY:%s", payload.getRobotCode()));
         validateRequest(timeStamp, sign, bot);
-        IDingBotMsgCallBackHandler.handlers(bot, payload)
+        handlers(bot, payload)
                 .ifPresent(handlers -> handlers.parallelStream().forEachOrdered(handler -> handler.handle(bot, payload)));
     }
+
 }

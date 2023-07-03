@@ -9,7 +9,9 @@ import com.hp.dingtalk.component.application.IDingApp;
 import com.hp.dingtalk.component.application.IDingMiniH5;
 import com.hp.dingtalk.component.exception.DingApiException;
 import com.hp.dingtalk.component.factory.token.DingAccessTokenFactory;
+import com.hp.dingtalk.constant.DeptUserOrder;
 import com.hp.dingtalk.constant.DingConstant;
+import com.hp.dingtalk.constant.Language;
 import com.hp.dingtalk.service.IDingUserHandler;
 import com.hp.dingtalk.service.role.DingRoleHandler;
 import com.hp.dingtalk.utils.DingUtils;
@@ -54,7 +56,7 @@ public class DingUserHandler implements IDingUserHandler {
     }
 
     @Override
-    public String unionIdByCode(IDingApp app, String code) {
+    public String findUnionIdByCode(IDingApp app, String code) {
         log.debug("根据临时码获取unionId,app:{},code:{}", app.getAppName(), code);
         try {
             // 通过临时授权码获取授权用户的个人信息
@@ -75,7 +77,7 @@ public class DingUserHandler implements IDingUserHandler {
     }
 
     @Override
-    public String userIdByUnionId(IDingApp app, String unionId) {
+    public String findUserIdByUnionId(IDingApp app, String unionId) {
         log.debug("根据unionId获取userId,app:{},unionId:{}", app.getAppName(), unionId);
         try {
             DingTalkClient clientDingTalkClient = new DefaultDingTalkClient(DingConstant.GET_USER_ID_BY_UNION_ID);
@@ -93,14 +95,13 @@ public class DingUserHandler implements IDingUserHandler {
     }
 
     @Override
-    public OapiV2UserGetResponse.UserGetResponse userByUserId(IDingApp app, String userId) {
+    public OapiV2UserGetResponse.UserGetResponse findUserByUserId(IDingApp app, String userId) {
         log.debug("根据userId获取钉钉用户信息,app:{},userId:{}", app.getAppName(), userId);
-        final String language = "zh_CN";
         try {
             DingTalkClient clientDingTalkClient2 = new DefaultDingTalkClient(DingConstant.GET_USER_BY_USER_ID);
             OapiV2UserGetRequest request = new OapiV2UserGetRequest();
             request.setUserid(userId);
-            request.setLanguage(language);
+            request.setLanguage(Language.zh_CN.name());
             OapiV2UserGetResponse response = clientDingTalkClient2.execute(request, DingAccessTokenFactory.accessToken(app));
             log.debug("根据userId获取钉钉用户信息,app:{},userId:{},response-body:{}", app.getAppName(), userId, response.getBody());
             DingUtils.UserResponse.isOk(response);
@@ -112,20 +113,20 @@ public class DingUserHandler implements IDingUserHandler {
     }
 
     @Override
-    public OapiV2UserGetResponse.UserGetResponse userByMobile(IDingApp app, String mobile) {
+    public OapiV2UserGetResponse.UserGetResponse findUserByMobile(IDingApp app, String mobile) {
         final String userId = this.findUserIdByMobile(app, mobile);
-        return this.userByUserId(app, userId);
+        return this.findUserByUserId(app, userId);
     }
 
     @Override
-    public OapiV2UserGetResponse.UserGetResponse userByCode(IDingApp app, String code) {
-        final String unionId = unionIdByCode(app, code);
-        final String userId = userIdByUnionId(app, unionId);
-        return userByUserId(app, userId);
+    public OapiV2UserGetResponse.UserGetResponse findUserByCode(IDingApp app, String code) {
+        final String unionId = findUnionIdByCode(app, code);
+        final String userId = findUserIdByUnionId(app, unionId);
+        return findUserByUserId(app, userId);
     }
 
     @Override
-    public OapiV2UserGetuserinfoResponse.UserGetByCodeResponse userByLoginAuthCode(IDingMiniH5 app, String authCode) {
+    public OapiV2UserGetuserinfoResponse.UserGetByCodeResponse findUserByLoginAuthCode(IDingMiniH5 app, String authCode) {
         DingTalkClient client = new DefaultDingTalkClient(DingConstant.GET_USER_BY_LOGIN_AUTH_CODE);
         OapiV2UserGetuserinfoRequest request = new OapiV2UserGetuserinfoRequest();
         request.setCode(authCode);
@@ -144,5 +145,30 @@ public class DingUserHandler implements IDingUserHandler {
         final DingRoleHandler roleHandler = new DingRoleHandler();
         final List<OapiRoleListResponse.OpenRole> roles = roleHandler.roles(app, 1L, 200L);
         return roles.parallelStream().map(role -> roleHandler.usersByRoleId(app, role.getId(), 1L, 100L)).flatMap(Collection::stream).collect(Collectors.toSet());
+    }
+
+    @Override
+    public OapiUserListsimpleResponse.PageResult findNameAndUserIdByDept(IDingApp app, Long deptId, Long cursor, Long size) {
+        return findNameAndUserIdByDept(app, deptId, cursor, size, DeptUserOrder.custom, true, Language.zh_CN);
+    }
+
+    @Override
+    public OapiUserListsimpleResponse.PageResult findNameAndUserIdByDept(IDingApp app, Long deptId, Long cursor, Long size, DeptUserOrder order, Boolean containAccessLimit, Language language) {
+        DingTalkClient client = new DefaultDingTalkClient("https://oapi.dingtalk.com/topapi/user/listsimple");
+        OapiUserListsimpleRequest req = new OapiUserListsimpleRequest();
+        req.setDeptId(deptId);
+        req.setCursor(cursor);
+        req.setSize(size);
+        req.setOrderField(order.name());
+        req.setContainAccessLimit(containAccessLimit);
+        req.setLanguage(language.name());
+        try {
+            OapiUserListsimpleResponse response = client.execute(req, DingAccessTokenFactory.access_token(app));
+            DingUtils.UserResponse.isOk(response);
+            return response.getResult();
+        } catch (ApiException e) {
+            log.error("获取钉钉部门下用户基础信息异常,app:{},deptId:{},err:{}", app.getAppName(), deptId, e.getLocalizedMessage(), e);
+            throw new DingApiException("获取钉钉部门下用户基础信息异常", e);
+        }
     }
 }

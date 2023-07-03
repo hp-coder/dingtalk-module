@@ -76,7 +76,7 @@ public class DingExtContactHandler implements IDingExtContactHandler {
         Assert.isTrue(labelIds.size() <= 20, "labelIds一次最多20个");
         Assert.hasText(address, "地址不能为空");
         Assert.hasText(companyName, "企业名称不能为空");
-        if (StringUtils.hasText(stateCode)) {
+        if (!StringUtils.hasText(stateCode)) {
             stateCode = "86";
         }
         if (!CollectionUtils.isEmpty(shareDeptIds)) {

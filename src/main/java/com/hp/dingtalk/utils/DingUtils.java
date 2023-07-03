@@ -1,8 +1,10 @@
 package com.hp.dingtalk.utils;
 
+import com.google.gson.GsonBuilder;
 import com.hp.dingtalk.constant.DingApiCode;
 import com.taobao.api.ApiException;
 import com.taobao.api.TaobaoResponse;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Objects;
 
@@ -11,6 +13,7 @@ import java.util.Objects;
  *
  * @author hp
  */
+@Slf4j
 public class DingUtils {
 
     public static void isSuccess(TaobaoResponse response) throws ApiException {
@@ -20,6 +23,7 @@ public class DingUtils {
 
     private static void isTrue(boolean expression, TaobaoResponse response) throws ApiException {
         if (!expression) {
+            log.error("钉钉请求异常:{}", new GsonBuilder().create().toJson(response));
             throw new ApiException(response.getErrorCode(), response.getMsg(), response.getSubCode(), response.getSubMsg());
         }
     }

@@ -4,14 +4,13 @@ import com.hp.dingtalk.component.application.IDingBot;
 import com.hp.dingtalk.pojo.callback.DingBotMsgCallbackRequest;
 import com.hp.dingtalk.pojo.message.IDingBotMsg;
 import com.hp.dingtalk.pojo.message.common.DingMarkdownMsg;
-import com.hp.dingtalk.service.message.DingBotMessageHandler;
 import com.hp.dingtalk.utils.DingMarkdown;
+import com.hp.dingtalk.service.message.DingBotMessageHandler;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collections;
+import java.util.Set;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * 钉钉机器人单聊自动回复定义
@@ -19,8 +18,6 @@ import java.util.stream.Collectors;
  * @author hp
  */
 public interface IDingBotMsgCallBackHandler<T> {
-
-    List<IDingBotMsgCallBackHandler<?>> REGISTRY = new ArrayList<>(16);
 
     /**
      * 是否可以执行
@@ -59,33 +56,6 @@ public interface IDingBotMsgCallBackHandler<T> {
      */
     default Integer order() {
         return 0;
-    }
-
-    /**
-     * 获取处理器
-     *
-     * @param app     机器人应用
-     * @param payload 机器人消息回调请求体
-     * @return 处理器集合
-     */
-    static Optional<List<IDingBotMsgCallBackHandler<?>>> handlers(IDingBot app, DingBotMsgCallbackRequest payload) {
-        if (payload == null || (payload.getText() == null && payload.emptyContent())) {
-            return Optional.empty();
-        }
-        Optional.ofNullable(payload.getText())
-                .ifPresent(i -> payload.getText().setContent(i.getContent().trim()));
-
-        final Optional<IDingBotMsgCallBackHandler<?>> first = REGISTRY.stream()
-                .sorted(Comparator.comparing(IDingBotMsgCallBackHandler::order))
-                .filter(handler -> !handler.ignoredApps().contains(app.getClass()))
-                .filter(handler ->
-                        handler.predication() != null &&
-                                handler.predication().test(payload))
-                .findFirst();
-        return first.
-                <Optional<List<IDingBotMsgCallBackHandler<?>>>>
-                map(iDingBotMsgCallBackHandler -> Optional.of(Collections.singletonList(iDingBotMsgCallBackHandler)))
-                .orElseGet(() -> Optional.of(REGISTRY.stream().filter(handler -> handler.predication() == null).collect(Collectors.toList())));
     }
 
     /**
@@ -171,14 +141,4 @@ public interface IDingBotMsgCallBackHandler<T> {
     default Set<Class<? extends IDingBot>> ignoredApps() {
         return Collections.emptySet();
     }
-
-
-    /**
-     * 自动注册
-     */
-    @PostConstruct
-    default void postConstruct() {
-        REGISTRY.add(this);
-    }
-
 }
