@@ -27,7 +27,7 @@ mvn deploy
 <dependency>
     <groupId>com.hp</groupId>
     <artifactId>com.hp.com.hp.dingtalk-module</artifactId>
-    <version>1.0.9-SNAPSHOT</version>
+    <version>1.0.10-SNAPSHOT</version>
 </dependency>
 ```
 
