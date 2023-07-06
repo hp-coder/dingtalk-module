@@ -1,19 +1,16 @@
 package com.hp.dingtalk.controller;
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.gson.GsonBuilder;
+import com.hp.dingtalk.component.configuration.DingMiniH5EventCallbackConfig;
+import com.hp.dingtalk.constant.DingMiniH5EventType;
 import com.hp.dingtalk.pojo.callback.DingMiniH5EventCallbackRequest;
 import com.hp.dingtalk.pojo.callback.event.DingMiniH5CallbackEvents;
 import com.hp.dingtalk.utils.DingCallbackCrypto;
-import com.hp.dingtalk.component.application.IDingMiniH5;
-import com.hp.dingtalk.component.configuration.IDingMiniH5EventCallbackConfig;
-import com.hp.dingtalk.constant.DingMiniH5EventType;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,13 +31,16 @@ import java.util.concurrent.TimeUnit;
  */
 @Slf4j
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/ding/miniH5/event")
 @ConditionalOnProperty(prefix = "dingtalk.miniH5.event", name = "enabled", havingValue = "true")
-public class DingMiniH5EventController {
+public class DingMiniH5EventController extends AbstractDingMiniH5EventController {
 
-    private final ApplicationEventPublisher eventPublisher;
-    private final IDingMiniH5EventCallbackConfig callbackConfiguration;
+    public DingMiniH5EventController(
+            DingMiniH5EventCallbackConfig callbackConfiguration,
+            ApplicationEventPublisher eventPublisher
+    ) {
+        super(callbackConfiguration, eventPublisher);
+    }
 
     @PostMapping("/callback")
     public Map<String, String> callback(
@@ -60,39 +60,29 @@ public class DingMiniH5EventController {
              * 2、调用订阅事件接口订阅的事件为企业级事件推送，
              *     此时OWNER_KEY为：企业的appkey（企业内部应用）或SUITE_KEY（三方应用）
              */
-            final IDingMiniH5 app = callbackConfiguration.getApp();
-            // 钉钉提供的加解密工具
-            DingCallbackCrypto callbackCrypto = new DingCallbackCrypto(app.getEventToken(), app.getEventKey(), app.getAppKey());
-            String encryptMsg = payload.getEncrypt();
-            String decryptMsg = callbackCrypto.getDecryptMsg(request.getSignature(), request.getTimestamp(), request.getNonce(), encryptMsg);
+            final String decryptMsg = decrypt(request, payload);
             log.debug("解密后的事件回调请求体:{}", decryptMsg);
             // 由于请求体跟事件类型相关, 不固定, 所以转Map取事件类型
             final Map<String, Object> decryptedMap = new GsonBuilder().create().fromJson(decryptMsg, Map.class);
             final String eventType = (String) decryptedMap.get("EventType");
             final Optional<DingMiniH5EventType> eventOptional = DingMiniH5EventType.of(eventType);
-            Assert.isTrue(eventOptional.isPresent(), "该插件模块暂不支持处理该类钉钉事件:" + eventType);
+            Preconditions.checkArgument(eventOptional.isPresent(), "该插件模块暂不支持处理该类钉钉事件:" + eventType);
             final DingMiniH5EventType miniH5EventType = eventOptional.get();
             if (Objects.equals(DingMiniH5EventType.CHECK_URL, miniH5EventType)) {
                 // 测试回调url的正确性
                 log.info("测试回调url的正确性");
             } else {
                 // 添加其他已注册的
-                log.info("发生了：{}({})事件, 开始广播事件", miniH5EventType.getCode(), miniH5EventType.getName());
+                log.info("发生了:{}({})事件, 开始广播事件", miniH5EventType.getCode(), miniH5EventType.getName());
                 eventPublisher.publishEvent(new DingMiniH5CallbackEvents.DingMiniH5EventDecryptedPayload(decryptMsg, miniH5EventType));
             }
             Map<String, String> successMap = callbackCrypto.getEncryptedMap("success");
             stopwatch.stop();
             log.debug("钉钉事件订阅回调耗时: {}ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
             return successMap;
-        } catch (
-                DingCallbackCrypto.DingTalkEncryptException e) {
+        } catch (DingCallbackCrypto.DingTalkEncryptException e) {
             log.error("钉钉事件订阅回调失败 \n {} \n {} \n", request, payload, e);
             return null;
         }
-    }
-
-    @Data
-    public static class EventPayload {
-        private String encrypt;
     }
 }

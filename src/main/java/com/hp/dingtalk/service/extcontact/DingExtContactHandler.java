@@ -1,89 +1,78 @@
 package com.hp.dingtalk.service.extcontact;
 
-import com.dingtalk.api.DefaultDingTalkClient;
-import com.dingtalk.api.DingTalkClient;
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.dingtalk.api.request.*;
-import com.dingtalk.api.response.*;
-import com.google.gson.Gson;
+import com.dingtalk.api.response.OapiExtcontactCreateResponse;
+import com.dingtalk.api.response.OapiExtcontactGetResponse;
+import com.dingtalk.api.response.OapiExtcontactListResponse;
+import com.dingtalk.api.response.OapiExtcontactListlabelgroupsResponse;
+import com.google.common.base.Preconditions;
 import com.hp.dingtalk.component.application.IDingMiniH5;
-import com.hp.dingtalk.component.exception.DingApiException;
-import com.hp.dingtalk.component.factory.token.DingAccessTokenFactory;
-import com.hp.dingtalk.constant.DingConstant;
+import com.hp.dingtalk.constant.DingUrlConstant;
+import com.hp.dingtalk.service.AbstractDingOldApi;
 import com.hp.dingtalk.service.IDingExtContactHandler;
-import com.hp.dingtalk.utils.DingUtils;
-import com.taobao.api.ApiException;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * 钉钉企业外部联系人接口
  *
  * @author hp
  */
-public class DingExtContactHandler implements IDingExtContactHandler {
-
-    @Override
-    public OapiExtcontactGetResponse.OpenExtContact getExtContactByDingUserId(IDingMiniH5 app, String userId) {
-        Assert.notNull(app, "调用接口应用不能为空");
-        Assert.hasText(userId, "userId不能为空");
-        DingTalkClient client = new DefaultDingTalkClient(DingConstant.GET_EXTCONTACT_INFO);
-        OapiExtcontactGetRequest req = new OapiExtcontactGetRequest();
-        req.setUserId(userId);
-        OapiExtcontactGetResponse rsp;
-        try {
-            rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
-            if (!Objects.equals(rsp.getErrcode(), 0L)) {
-                throw new ApiException(new Gson().toJson(rsp));
-            }
-        } catch (ApiException e) {
-            throw new DingApiException("获取钉钉外部联系人信息异常", e);
-        }
-        return rsp.getResult();
-    }
-
-
-    public String addExtContact(IDingMiniH5 app, OapiExtcontactCreateRequest.OpenExtContact payload) {
-        DingTalkClient client = new DefaultDingTalkClient(DingConstant.ADD_EXTCONTACT);
-        OapiExtcontactCreateRequest req = new OapiExtcontactCreateRequest();
-        req.setContact(payload);
-        OapiExtcontactCreateResponse rsp;
-        try {
-            rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
-            if (!Objects.equals(rsp.getErrcode(), 0L)) {
-                throw new ApiException(new Gson().toJson(rsp));
-            }
-        } catch (ApiException e) {
-            e.printStackTrace();
-            throw new DingApiException("添加外部联系人失败", e);
-        }
-        return rsp.getUserid();
+@Slf4j
+public class DingExtContactHandler extends AbstractDingOldApi implements IDingExtContactHandler {
+    public DingExtContactHandler(@NonNull IDingMiniH5 app) {
+        super(app);
     }
 
     @Override
-    public String addExtContact(IDingMiniH5 app, String title, List<Long> labelIds, List<Long> shareDeptIds,
+    public OapiExtcontactGetResponse.OpenExtContact getExtContactByDingUserId(@NonNull String userId) {
+        OapiExtcontactGetRequest request = new OapiExtcontactGetRequest();
+        request.setUserId(userId);
+        final OapiExtcontactGetResponse response = execute(
+                DingUrlConstant.GET_EXTCONTACT_INFO,
+                request,
+                () -> "获取钉钉外部联系人"
+        );
+        return response.getResult();
+    }
+
+    public String addExtContact(OapiExtcontactCreateRequest.OpenExtContact payload) {
+        OapiExtcontactCreateRequest request = new OapiExtcontactCreateRequest();
+        request.setContact(payload);
+        final OapiExtcontactCreateResponse response = execute(
+                DingUrlConstant.ADD_EXTCONTACT,
+                request,
+                () -> "添加外部联系人"
+        );
+        return response.getUserid();
+    }
+
+
+    @Override
+    public String addExtContact(String title, List<Long> labelIds, List<Long> shareDeptIds,
                                 String address, String remark, String followerUserId, String name,
                                 String stateCode, String companyName, List<String> shareUserIds, String mobile
     ) {
-        Assert.notNull(app, "调用接口应用不能为空");
-        Assert.notNull(labelIds, "联系人标签不能为空");
-        Assert.hasText(followerUserId, "关注用户ID不能为空");
-        Assert.hasText(name, "联系人名称不能为空");
-        Assert.hasText(mobile, "联系人电话不能为空");
-        Assert.isTrue(labelIds.size() <= 20, "labelIds一次最多20个");
-        Assert.hasText(address, "地址不能为空");
-        Assert.hasText(companyName, "企业名称不能为空");
+        Preconditions.checkNotNull(labelIds, "联系人标签不能为空");
+        Preconditions.checkArgument(StrUtil.isNotEmpty(followerUserId), "关注用户ID不能为空");
+        Preconditions.checkArgument(StrUtil.isNotEmpty(name), "联系人名称不能为空");
+        Preconditions.checkArgument(StrUtil.isNotEmpty(mobile), "联系人电话不能为空");
+        Preconditions.checkArgument(labelIds.size() <= 20, "labelIds一次最多20个");
+        Preconditions.checkArgument(StrUtil.isNotEmpty(address), "地址不能为空");
+        Preconditions.checkArgument(StrUtil.isNotEmpty(companyName), "企业名称不能为空");
         if (!StringUtils.hasText(stateCode)) {
             stateCode = "86";
         }
-        if (!CollectionUtils.isEmpty(shareDeptIds)) {
-            Assert.isTrue(shareDeptIds.size() <= 20, "shareDeptIds一次最多20个");
+        if (CollUtil.isNotEmpty(shareDeptIds)) {
+            Preconditions.checkArgument(shareDeptIds.size() <= 20, "shareDeptIds一次最多20个");
         }
-        if (!CollectionUtils.isEmpty(shareUserIds)) {
-            Assert.isTrue(shareUserIds.size() <= 20, "shareUserIds一次最多20个");
+        if (CollUtil.isNotEmpty(shareUserIds)) {
+            Preconditions.checkArgument(shareUserIds.size() <= 20, "shareUserIds一次最多20个");
         }
         OapiExtcontactCreateRequest.OpenExtContact contact = new OapiExtcontactCreateRequest.OpenExtContact();
         contact.setTitle(title);
@@ -96,36 +85,36 @@ public class DingExtContactHandler implements IDingExtContactHandler {
         contact.setCompanyName(companyName);
         contact.setShareUserIds(shareUserIds);
         contact.setMobile(mobile);
-        return this.addExtContact(app, contact);
+        contact.setRemark(remark);
+        return this.addExtContact(contact);
     }
 
     @Override
-    public String addExtContact(IDingMiniH5 app, List<Long> labelIds, String followerUserId, String address, String name, String stateCode, String companyName, String mobile) {
-        return addExtContact(app, null, labelIds, null,
+    public String addExtContact(List<Long> labelIds, String followerUserId, String address, String name, String stateCode, String companyName, String mobile) {
+        return addExtContact(null, labelIds, null,
                 address, null, followerUserId, name,
                 stateCode, companyName, null, mobile);
     }
 
     @Override
-    public String addExtContact(IDingMiniH5 app, List<Long> labelIds, String followerUserId, String address, String name, String companyName, String mobile) {
-        return addExtContact(app, labelIds, followerUserId, address, name, null, companyName, mobile);
+    public String addExtContact(List<Long> labelIds, String followerUserId, String address, String name, String companyName, String mobile) {
+        return addExtContact(labelIds, followerUserId, address, name, null, companyName, mobile);
     }
 
     @Override
-    public void updateExtContact(IDingMiniH5 app, String userId, String title, List<Long> labelIds, List<Long> shareDeptIds,
+    public void updateExtContact(String userId, String title, List<Long> labelIds, List<Long> shareDeptIds,
                                  String address, String remark, String followerUserId, String name,
                                  String companyName, List<String> shareUserIds) {
-        Assert.notNull(app, "调用接口应用不能为空");
-        Assert.hasText(userId, "联系人userId不能为空");
-        Assert.notNull(labelIds, "联系人标签不能为空");
-        Assert.hasText(followerUserId, "关注用户ID不能为空");
-        Assert.hasText(name, "联系人名称不能为空");
-        Assert.isTrue(labelIds.size() <= 20, "labelIds一次最多20个");
-        if (!CollectionUtils.isEmpty(shareDeptIds)) {
-            Assert.isTrue(shareDeptIds.size() <= 20, "shareDeptIds一次最多20个");
+        Preconditions.checkArgument(StrUtil.isNotEmpty(userId), "联系人userId不能为空");
+        Preconditions.checkArgument(CollUtil.isNotEmpty(labelIds), "联系人标签不能为空");
+        Preconditions.checkArgument(StrUtil.isNotEmpty(followerUserId), "关注用户ID不能为空");
+        Preconditions.checkArgument(StrUtil.isNotEmpty(name), "联系人名称不能为空");
+        Preconditions.checkArgument(labelIds.size() <= 20, "labelIds一次最多20个");
+        if (CollUtil.isNotEmpty(shareDeptIds)) {
+            Preconditions.checkArgument(shareDeptIds.size() <= 20, "shareDeptIds一次最多20个");
         }
-        if (!CollectionUtils.isEmpty(shareUserIds)) {
-            Assert.isTrue(shareUserIds.size() <= 20, "shareUserIds一次最多20个");
+        if (CollUtil.isNotEmpty(shareUserIds)) {
+            Preconditions.checkArgument(shareUserIds.size() <= 20, "shareUserIds一次最多20个");
         }
         OapiExtcontactUpdateRequest.OpenExtContact contact = new OapiExtcontactUpdateRequest.OpenExtContact();
         contact.setTitle(title);
@@ -138,82 +127,62 @@ public class DingExtContactHandler implements IDingExtContactHandler {
         contact.setUserId(userId);
         contact.setCompanyName(companyName);
         contact.setShareUserIds(shareUserIds);
-        this.updateExtContact(app, contact);
+        this.updateExtContact(contact);
     }
 
     @Override
-    public void updateExtContact(IDingMiniH5 app, String userId, List<Long> labelIds, String followerUserId, String address, String name, String companyName, String mobile) {
-        this.updateExtContact(app, userId, null, labelIds, null, address, null, followerUserId, name, companyName, null);
+    public void updateExtContact(String userId, List<Long> labelIds, String followerUserId, String address, String name, String companyName, String mobile) {
+        this.updateExtContact(userId, null, labelIds, null, address, null, followerUserId, name, companyName, null);
     }
 
-    public void updateExtContact(IDingMiniH5 app, OapiExtcontactUpdateRequest.OpenExtContact payload) {
-        DingTalkClient client = new DefaultDingTalkClient(DingConstant.UPDATE_EXTCONTACT);
-        OapiExtcontactUpdateRequest req = new OapiExtcontactUpdateRequest();
-        req.setContact(payload);
-        try {
-            final OapiExtcontactUpdateResponse rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
-            DingUtils.isSuccess(rsp);
-        } catch (ApiException e) {
-            throw new DingApiException("更新外部联系人失败", e);
-        }
-    }
-
-    @Override
-    public void deleteExtContactByDingUserId(IDingMiniH5 app, String userId) {
-        Assert.notNull(app, "调用接口应用不能为空");
-        Assert.hasText(userId, "联系人userId不能为空");
-        DingTalkClient client = new DefaultDingTalkClient(DingConstant.DELETE_EXTCONTACT);
-        OapiExtcontactDeleteRequest req = new OapiExtcontactDeleteRequest();
-        req.setUserId(userId);
-        try {
-            final OapiExtcontactDeleteResponse rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
-            if (!Objects.equals(rsp.getErrcode(), 0L) && !Objects.equals(rsp.getErrcode(), 33012L)) {
-                throw new ApiException(new Gson().toJson(rsp));
-            }
-        } catch (ApiException e) {
-            throw new DingApiException("删除外部联系人失败", e);
-        }
+    public void updateExtContact(OapiExtcontactUpdateRequest.OpenExtContact payload) {
+        OapiExtcontactUpdateRequest request = new OapiExtcontactUpdateRequest();
+        request.setContact(payload);
+        execute(
+                DingUrlConstant.UPDATE_EXTCONTACT,
+                request,
+                () -> "更新外部联系人"
+        );
     }
 
     @Override
-    public List<OapiExtcontactListResponse.OpenExtContact> getExtContacts(IDingMiniH5 app, Long page, Long size) {
-        Assert.notNull(app, "调用接口应用不能为空");
-        Assert.notNull(page, "page不能为空");
-        Assert.isTrue(page >= 1, "page必须大于1");
-        Assert.notNull(size, "size不能为空");
-        Assert.isTrue(size >= 0, "size必须大于0");
-        DingTalkClient client = new DefaultDingTalkClient(DingConstant.GET_EXTCONTACTS);
-        OapiExtcontactListRequest req = new OapiExtcontactListRequest();
-        req.setSize(size);
-        req.setOffset((page - 1) * size);
-        OapiExtcontactListResponse rsp;
-        try {
-            rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
-            DingUtils.isSuccess(rsp);
-        } catch (ApiException e) {
-            throw new DingApiException("获取外部联系人列表失败", e);
-        }
-        return rsp.getResults();
+    public void deleteExtContactByDingUserId(@NonNull String userId) {
+        OapiExtcontactDeleteRequest request = new OapiExtcontactDeleteRequest();
+        request.setUserId(userId);
+        execute(
+                DingUrlConstant.DELETE_EXTCONTACT,
+                request,
+                () -> "删除外部联系人"
+        );
     }
 
     @Override
-    public List<OapiExtcontactListlabelgroupsResponse.OpenLabelGroup> getExtContactTags(IDingMiniH5 app, Long page, Long size) {
-        Assert.notNull(app, "调用接口应用不能为空");
-        Assert.notNull(page, "page不能为空");
-        Assert.isTrue(page >= 1, "page必须大于1");
-        Assert.notNull(size, "size不能为空");
-        Assert.isTrue(size >= 0, "size必须大于0");
-        DingTalkClient client = new DefaultDingTalkClient(DingConstant.GET_EXTCONTACT_TAGS);
-        OapiExtcontactListlabelgroupsRequest req = new OapiExtcontactListlabelgroupsRequest();
-        req.setSize(size);
-        req.setOffset((page - 1) * size);
-        OapiExtcontactListlabelgroupsResponse rsp;
-        try {
-            rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
-            DingUtils.isSuccess(rsp);
-        } catch (ApiException e) {
-            throw new DingApiException("获取外部联系人标签列表失败", e);
-        }
-        return rsp.getResults();
+    public List<OapiExtcontactListResponse.OpenExtContact> getExtContacts(@NonNull Long page, @NonNull Long size) {
+        Preconditions.checkArgument(page >= 1, "page必须大于1");
+        Preconditions.checkArgument(size >= 0, "size必须大于0");
+        OapiExtcontactListRequest request = new OapiExtcontactListRequest();
+        request.setSize(size);
+        request.setOffset((page - 1) * size);
+        final OapiExtcontactListResponse response = execute(
+                DingUrlConstant.GET_EXTCONTACTS,
+                request,
+                () -> "获取外部联系人列表失败"
+        );
+        return response.getResults();
+    }
+
+    @Override
+    public List<OapiExtcontactListlabelgroupsResponse.OpenLabelGroup> getExtContactTags(@NonNull Long page, @NonNull Long size) {
+        Preconditions.checkArgument(page >= 1, "page必须大于1");
+        Preconditions.checkArgument(size >= 0, "size必须大于0");
+        OapiExtcontactListlabelgroupsRequest request = new OapiExtcontactListlabelgroupsRequest();
+        request.setSize(size);
+        request.setOffset((page - 1) * size);
+        final OapiExtcontactListlabelgroupsResponse response = execute(
+                DingUrlConstant.GET_EXTCONTACT_TAGS,
+                request,
+                () -> "获取外部联系人标签列表"
+        );
+        return response.getResults();
     }
 }

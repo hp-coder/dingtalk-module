@@ -6,12 +6,12 @@
 
     <groupId>com.hp</groupId>
     <artifactId>dingtalk-module</artifactId>
-    <version>1.0.9-SNAPSHOT</version>
+    <version>1.0.10-SNAPSHOT</version>
     <packaging>jar</packaging>
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
-        <!--dingtalk-->
+        <!--com.hp.com.hp.dingtalk-->
         <dingtalk.version>1.5.58</dingtalk.version>
         <dingtalk.old.version>2.0.0</dingtalk.old.version>
         <!--third parties-->
@@ -19,6 +19,7 @@
         <commonlang3.version>3.10</commonlang3.version>
         <fastjson.version>1.2.78</fastjson.version>
         <gson.version>2.8.6</gson.version>
+        <hutool-all.version>5.8.19</hutool-all.version>
         <!--from common-starter module-->
         <common-base.version>1.0.0-SNAPSHOT</common-base.version>
         <!--spring module-->
@@ -41,6 +42,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>${hutool-all.version}</version>
         </dependency>
         <dependency>
             <groupId>com.google.code.gson</groupId>

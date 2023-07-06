@@ -1,18 +1,12 @@
 package com.hp.dingtalk.service;
 
 import com.aliyun.dingtalkoauth2_1_0.models.GetUserTokenResponseBody;
-import com.hp.dingtalk.component.IDingApi;
-import com.hp.dingtalk.component.application.IDingMiniH5;
 import lombok.NonNull;
 
 /**
  * @author hp 2023/3/23
  */
-public interface IDingLoginHandler extends IDingApi {
-
-    default com.aliyun.dingtalkoauth2_1_0.Client client() throws Exception {
-        return new com.aliyun.dingtalkoauth2_1_0.Client(config());
-    }
+public interface IDingLoginHandler {
 
     enum GrantType{
         /**如果使用授权码换token，传authorization_code*/
@@ -24,10 +18,9 @@ public interface IDingLoginHandler extends IDingApi {
     /**
      * 登录时通过钉钉回调获取的授权码换取用户token，常用在登录
      *
-     * @param app      微应用
      * @param authCode 授权码
      * @return userToken
      * @throws Exception 客户端实例化异常
      */
-    GetUserTokenResponseBody getUserToken(IDingMiniH5 app, @NonNull String authCode, @NonNull GrantType grantType) throws Exception;
+    GetUserTokenResponseBody getUserToken( @NonNull String authCode, @NonNull GrantType grantType) throws Exception;
 }

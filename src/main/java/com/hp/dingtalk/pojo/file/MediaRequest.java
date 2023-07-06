@@ -1,9 +1,10 @@
 package com.hp.dingtalk.pojo.file;
 
+import cn.hutool.core.util.StrUtil;
+import com.google.common.base.Preconditions;
 import com.hp.dingtalk.service.file.media.DingMediaType;
 import com.taobao.api.FileItem;
 import lombok.Getter;
-import org.springframework.util.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,17 +41,17 @@ public class MediaRequest {
     }
 
     private void validateStream() throws IOException {
-        Assert.hasText(fileName, "文件名不能为空");
+        Preconditions.checkArgument(StrUtil.isNotEmpty(fileName), "文件名不能为空");
         final String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
-        Assert.isTrue(mediaType.getSuffix().contains(suffix), "非法文件类型" + suffix + "，请上传以下合法文件类型：" + mediaType.getSuffix());
-        Assert.isTrue(inputStream.available() <= mediaType.getSize(), "文件大小超过限制，合法文件大小为：" + mediaType.getSize() + "b");
+        Preconditions.checkArgument(mediaType.getSuffix().contains(suffix), "非法文件类型" + suffix + "，请上传以下合法文件类型：" + mediaType.getSuffix());
+        Preconditions.checkArgument(inputStream.available() <= mediaType.getSize(), "文件大小超过限制，合法文件大小为：" + mediaType.getSize() + "b");
     }
 
     private void validateFile() {
-        Assert.hasText(fileName, "文件名不能为空");
+        Preconditions.checkArgument(StrUtil.isNotEmpty(fileName), "文件名不能为空");
         final String suffix = fileName.substring(fileName.lastIndexOf(".") + 1);
-        Assert.isTrue(mediaType.getSuffix().contains(suffix), "非法文件类型" + suffix + "，请上传以下合法文件类型：" + mediaType.getSuffix());
-        Assert.isTrue(file.length() <= mediaType.getSize(), "文件大小超过限制，合法文件大小为：" + mediaType.getSize() + "b");
+        Preconditions.checkArgument(mediaType.getSuffix().contains(suffix), "非法文件类型" + suffix + "，请上传以下合法文件类型：" + mediaType.getSuffix());
+        Preconditions.checkArgument(file.length() <= mediaType.getSize(), "文件大小超过限制，合法文件大小为：" + mediaType.getSize() + "b");
     }
 
     public FileItem toFileItem() throws IOException {

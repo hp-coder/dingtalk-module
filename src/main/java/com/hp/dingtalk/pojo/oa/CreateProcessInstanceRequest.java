@@ -1,10 +1,11 @@
 package com.hp.dingtalk.pojo.oa;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.dingtalk.api.request.OapiProcessinstanceCreateRequest;
+import com.google.common.base.Preconditions;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.springframework.util.Assert;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;
@@ -45,10 +46,10 @@ public class CreateProcessInstanceRequest {
                 Long deptId,
                 List<OapiProcessinstanceCreateRequest.FormComponentValueVo> formComponentValueVos
         ) {
-            Assert.notNull(processCode,"审批模版编号不能为空");
-            Assert.notNull(userId,"发起人id不能为空");
-            Assert.notNull(deptId,"发起人部门id不能为空");
-            Assert.notNull(formComponentValueVos,"表单项不能为空");
+            Preconditions.checkArgument(StrUtil.isNotEmpty(processCode), "审批模版编号不能为空");
+            Preconditions.checkArgument(StrUtil.isNotEmpty(userId), "发起人id不能为空");
+            Preconditions.checkArgument(Objects.nonNull(deptId), "发起人部门id不能为空");
+            Preconditions.checkArgument(CollUtil.isNotEmpty(formComponentValueVos), "表单项不能为空");
             this.processCode = processCode;
             this.userId = userId;
             this.deptId = deptId;
@@ -104,6 +105,29 @@ public class CreateProcessInstanceRequest {
         }
 
         public CreateProcessInstanceRequest build() {
+            if (CollUtil.isNotEmpty(approvers)) {
+                Preconditions.checkArgument(approvers.size() <= 20,
+                        "审批人userid列表，最大列表长度20。多个审批人用逗号分隔，按传入的顺序依次审批。");
+            }
+            if (CollUtil.isNotEmpty(ccList)) {
+                Preconditions.checkArgument(ccList.size() <= 20,
+                        "抄送人userid列表，最大列表长度20。");
+            }
+            if (CollUtil.isNotEmpty(approversV2)) {
+                Preconditions.checkArgument(approversV2.size() <= 20,
+                        "审批人列表，最大列表长度20。支持会签/或签，优先级高于approvers变量。");
+                approversV2.forEach(approver -> {
+                    final List<String> userIds = approver.getUserIds();
+                    Preconditions.checkArgument(CollUtil.isNotEmpty(userIds) && userIds.size() <= 20,
+                            "审批人userid列表：\n" +
+                                    "\n" +
+                                    "会签/或签列表长度必须大于1\n" +
+                                    "\n" +
+                                    "非会签/或签列表长度只能为1\n" +
+                                    "\n" +
+                                    "最大列表长度20。");
+                });
+            }
             return new CreateProcessInstanceRequest(
                     processCode,
                     userId,
@@ -123,13 +147,13 @@ public class CreateProcessInstanceRequest {
         req.setOriginatorUserId(userId);
         req.setDeptId(deptId);
         req.setFormComponentValues(formComponentValueVos);
-        if (!CollectionUtils.isEmpty(approvers)) {
+        if (CollUtil.isNotEmpty(approvers)) {
             req.setApprovers(String.join(",", approvers));
         }
-        if (!CollectionUtils.isEmpty(approversV2)) {
+        if (CollUtil.isNotEmpty(approversV2)) {
             req.setApproversV2(approversV2);
         }
-        if (!CollectionUtils.isEmpty(ccList)) {
+        if (CollUtil.isNotEmpty(ccList)) {
             req.setCcList(String.join(",", ccList));
         }
         if (Objects.nonNull(ccPosition)) {

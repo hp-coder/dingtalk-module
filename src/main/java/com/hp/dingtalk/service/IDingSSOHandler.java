@@ -1,6 +1,6 @@
 package com.hp.dingtalk.service;
 
-import com.hp.dingtalk.component.IDingCorpSSO;
+import com.hp.dingtalk.component.application.IDingCorpSSO;
 
 /**
  *

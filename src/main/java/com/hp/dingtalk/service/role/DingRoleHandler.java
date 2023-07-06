@@ -1,18 +1,15 @@
 package com.hp.dingtalk.service.role;
 
-import com.dingtalk.api.DefaultDingTalkClient;
-import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiRoleListRequest;
 import com.dingtalk.api.request.OapiRoleSimplelistRequest;
 import com.dingtalk.api.response.OapiRoleListResponse;
 import com.dingtalk.api.response.OapiRoleSimplelistResponse;
 import com.hp.dingtalk.component.application.IDingApp;
-import com.hp.dingtalk.component.exception.DingApiException;
-import com.hp.dingtalk.component.factory.token.DingAccessTokenFactory;
-import com.hp.dingtalk.constant.DingConstant;
+import com.hp.dingtalk.constant.DingUrlConstant;
+import com.hp.dingtalk.service.AbstractDingOldApi;
 import com.hp.dingtalk.service.IDingRoleHandler;
-import com.hp.dingtalk.utils.DingUtils;
-import com.taobao.api.ApiException;
+import lombok.NonNull;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.List;
@@ -23,24 +20,22 @@ import java.util.stream.Collectors;
  *
  * @author hp
  */
-public class DingRoleHandler implements IDingRoleHandler {
+@Slf4j
+public class DingRoleHandler extends AbstractDingOldApi implements IDingRoleHandler {
+
+    public DingRoleHandler(@NonNull IDingApp app) {
+        super(app);
+    }
 
     @Override
-    public List<OapiRoleListResponse.OpenRole> roles(IDingApp app, Long page, Long size) {
-        page = page <= 0? 1: page;
-        size = size <= 0 || size > 200 ? 200: size;
-        DingTalkClient client = new DefaultDingTalkClient(DingConstant.GET_ROLE_LIST);
-        OapiRoleListRequest req = new OapiRoleListRequest();
-        req.setSize(size);
-        req.setOffset((page - 1) * size);
-        OapiRoleListResponse rsp;
-        try {
-            rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
-            DingUtils.isSuccess(rsp);
-        } catch (ApiException e) {
-            throw new DingApiException("获取角色列表失败", e);
-        }
-        return rsp.getResult()
+    public List<OapiRoleListResponse.OpenRole> roles(@NonNull Long page, @NonNull Long size) {
+        page = page <= 0 ? 1 : page;
+        size = size <= 0 || size > 200 ? 200 : size;
+        OapiRoleListRequest request = new OapiRoleListRequest();
+        request.setSize(size);
+        request.setOffset((page - 1) * size);
+        final OapiRoleListResponse response = execute(DingUrlConstant.GET_ROLE_LIST, request, () -> "获取角色列表");
+        return response.getResult()
                 .getList()
                 .stream()
                 .map(OapiRoleListResponse.OpenRoleGroup::getRoles)
@@ -49,23 +44,14 @@ public class DingRoleHandler implements IDingRoleHandler {
     }
 
     @Override
-    public List<OapiRoleSimplelistResponse.OpenEmpSimple> usersByRoleId(IDingApp app, Long roleId, Long page, Long size) {
-        page = page <= 0? 1: page;
-        size = size <= 0 || size > 100 ? 100: size;
-        DingTalkClient client = new DefaultDingTalkClient(DingConstant.GET_USERS_BY_ROLE_ID);
-        OapiRoleSimplelistRequest req = new OapiRoleSimplelistRequest();
-        req.setRoleId(roleId);
-        req.setSize(size);
-        req.setOffset((page - 1) * size);
-        OapiRoleSimplelistResponse rsp;
-        try {
-            rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
-            DingUtils.isSuccess(rsp);
-        } catch (ApiException e) {
-            throw new DingApiException("根据角色id获取用户列表失败", e);
-        }
-        return rsp.getResult().getList();
+    public List<OapiRoleSimplelistResponse.OpenEmpSimple> usersByRoleId(@NonNull Long roleId, @NonNull Long page, @NonNull Long size) {
+        page = page <= 0 ? 1 : page;
+        size = size <= 0 || size > 100 ? 100 : size;
+        OapiRoleSimplelistRequest request = new OapiRoleSimplelistRequest();
+        request.setRoleId(roleId);
+        request.setSize(size);
+        request.setOffset((page - 1) * size);
+        OapiRoleSimplelistResponse response = execute(DingUrlConstant.GET_USERS_BY_ROLE_ID, request, () -> "根据角色Id获取用户列表");
+        return response.getResult().getList();
     }
-
-
 }

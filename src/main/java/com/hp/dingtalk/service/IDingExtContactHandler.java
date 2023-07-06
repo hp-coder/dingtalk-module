@@ -3,8 +3,7 @@ package com.hp.dingtalk.service;
 import com.dingtalk.api.response.OapiExtcontactGetResponse;
 import com.dingtalk.api.response.OapiExtcontactListResponse;
 import com.dingtalk.api.response.OapiExtcontactListlabelgroupsResponse;
-import com.hp.dingtalk.component.IDingApi;
-import com.hp.dingtalk.component.application.IDingMiniH5;
+import lombok.NonNull;
 
 import java.util.List;
 
@@ -19,22 +18,20 @@ import java.util.List;
  *
  * @author hp
  */
-public interface IDingExtContactHandler extends IDingApi {
+public interface IDingExtContactHandler {
 
 
     /**
      * 获取外部联系人详情
      *
-     * @param app    钉钉MiniH5应用
      * @param userId 钉钉外部联系人userId
      * @return 联系人信息
      */
-    OapiExtcontactGetResponse.OpenExtContact getExtContactByDingUserId(IDingMiniH5 app, String userId);
+    OapiExtcontactGetResponse.OpenExtContact getExtContactByDingUserId(@NonNull String userId);
 
     /**
      * 添加外部联系人
      *
-     * @param app            钉钉MiniH5应用
      * @param title          职位
      * @param labelIds       标签 一次最多传20个
      * @param shareDeptIds   共享给的部门ID 一次最多20个
@@ -48,7 +45,7 @@ public interface IDingExtContactHandler extends IDingApi {
      * @param mobile         外部联系人的手机号
      * @return
      */
-    String addExtContact(IDingMiniH5 app, String title, List<Long> labelIds, List<Long> shareDeptIds,
+    String addExtContact(String title, List<Long> labelIds, List<Long> shareDeptIds,
                          String address, String remark, String followerUserId, String name,
                          String stateCode, String companyName, List<String> shareUserIds, String mobile
     );
@@ -56,8 +53,7 @@ public interface IDingExtContactHandler extends IDingApi {
     /**
      * 添加外部联系人
      *
-     * @param app            钉钉MiniH5应用
-     * @param labelIds       标签 一次最多传20个
+     * @param labelIds       标签 一次最多传2个
      * @param followerUserId 负责人的userId
      * @param address        地址
      * @param name           外部联系人的姓名
@@ -65,12 +61,11 @@ public interface IDingExtContactHandler extends IDingApi {
      * @param mobile         外部联系人的手机号
      * @return
      */
-    String addExtContact(IDingMiniH5 app, List<Long> labelIds, String followerUserId, String address, String name, String companyName, String stateCode, String mobile);
+    String addExtContact(List<Long> labelIds, String followerUserId, String address, String name, String companyName, String stateCode, String mobile);
 
     /**
      * 添加外部联系人
      *
-     * @param app            钉钉MiniH5应用
      * @param labelIds       标签 一次最多传20个
      * @param followerUserId 负责人的userId
      * @param address        地址
@@ -78,12 +73,11 @@ public interface IDingExtContactHandler extends IDingApi {
      * @param mobile         外部联系人的手机号
      * @return 外部联系人userId
      */
-    String addExtContact(IDingMiniH5 app, List<Long> labelIds, String followerUserId, String address, String name, String companyName, String mobile);
+    String addExtContact(List<Long> labelIds, String followerUserId, String address, String name, String companyName, String mobile);
 
     /**
      * 更新外部联系人
      *
-     * @param app            钉钉MiniH5应用
      * @param userId         外部联系人userId
      * @param title          职位
      * @param labelIds       标签 一次最多传20个
@@ -95,7 +89,7 @@ public interface IDingExtContactHandler extends IDingApi {
      * @param companyName    外部联系人的企业名称
      * @param shareUserIds   共享给的员工userid列表 一次最多20个
      */
-    void updateExtContact(IDingMiniH5 app, String userId, String title, List<Long> labelIds, List<Long> shareDeptIds,
+    void updateExtContact(String userId, String title, List<Long> labelIds, List<Long> shareDeptIds,
                           String address, String remark, String followerUserId, String name,
                           String companyName, List<String> shareUserIds);
 
@@ -103,7 +97,6 @@ public interface IDingExtContactHandler extends IDingApi {
     /**
      * 更新外部联系人
      *
-     * @param app            钉钉MiniH5应用
      * @param userId         外部联系人userId
      * @param labelIds       标签 一次最多传20个
      * @param followerUserId 负责人的userId
@@ -112,34 +105,32 @@ public interface IDingExtContactHandler extends IDingApi {
      * @param companyName    企业名称
      * @param mobile         电话
      */
-    void updateExtContact(IDingMiniH5 app, String userId, List<Long> labelIds, String followerUserId, String address, String name, String companyName, String mobile);
+    void updateExtContact(String userId, List<Long> labelIds, String followerUserId, String address, String name, String companyName, String mobile);
 
     /**
      * 删除外部联系人
      * 33012 无效的USERID
-     * @param app    钉钉MiniH5应用
+     *
      * @param userId 外部联系人userId
      */
-    void deleteExtContactByDingUserId(IDingMiniH5 app, String userId);
+    void deleteExtContactByDingUserId(@NonNull String userId);
 
 
     /**
      * 获取外部联系人列表
      *
-     * @param app  钉钉MiniH5应用
      * @param page 页码 从1开始。
      * @param size 条数 最大100
      * @return 外部联系人列表
      */
-    List<OapiExtcontactListResponse.OpenExtContact> getExtContacts(IDingMiniH5 app, Long page, Long size);
+    List<OapiExtcontactListResponse.OpenExtContact> getExtContacts(@NonNull Long page, @NonNull Long size);
 
     /**
      * 获取外部联系人标签列表
      *
-     * @param app  钉钉MiniH5应用
      * @param page 页码 从1开始。
      * @param size 条数 最大100
      * @return 外部联系人标签列表
      */
-    List<OapiExtcontactListlabelgroupsResponse.OpenLabelGroup> getExtContactTags(IDingMiniH5 app, Long page, Long size);
+    List<OapiExtcontactListlabelgroupsResponse.OpenLabelGroup> getExtContactTags(@NonNull Long page, @NonNull Long size);
 }

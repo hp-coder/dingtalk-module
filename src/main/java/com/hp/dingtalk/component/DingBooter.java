@@ -1,15 +1,15 @@
 package com.hp.dingtalk.component;
 
-import com.hp.dingtalk.pojo.message.interactive.callback.IDingInteractiveCardCallBack;
 import com.hp.dingtalk.component.application.IDingBot;
 import com.hp.dingtalk.component.factory.app.DingAppFactory;
-import com.hp.dingtalk.service.IDingInteractiveMessageHandler;
-import com.taobao.api.ApiException;
+import com.hp.dingtalk.pojo.message.interactive.callback.IDingInteractiveCardCallBack;
+import com.hp.dingtalk.service.callback.interactivemsg.DingInteractiveMessageCallbackRegisterHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -19,6 +19,7 @@ import java.util.List;
  *
  * @author hp
  */
+@Async
 @Slf4j
 @RequiredArgsConstructor
 public class DingBooter implements ApplicationListener<ApplicationReadyEvent> {
@@ -31,15 +32,12 @@ public class DingBooter implements ApplicationListener<ApplicationReadyEvent> {
             return;
         }
         callBacks.forEach(callBack ->
-                callBack.getDingBots().forEach(clazz -> {
-                    final IDingBot app = DingAppFactory.app(clazz);
-                    try {
-                        IDingInteractiveMessageHandler.registerCallBackUrl(app, callBack, true);
-                    } catch (ApiException e) {
-                        log.error("注册回调地址失败：应用：{}, 回调地址：{}, 路由键：{}", app.getAppName(), callBack.getCallbackUrl(), callBack.getCallbackRouteKey());
-                        log.error("注册回调地址失败：异常：{}", e.getCause(), e);
-                    }
-                })
+                callBack.getDingBots()
+                        .forEach(clazz -> {
+                            final IDingBot app = DingAppFactory.app(clazz);
+                            final DingInteractiveMessageCallbackRegisterHandler registerHandler = new DingInteractiveMessageCallbackRegisterHandler(app);
+                            registerHandler.registerCallBackUrl(callBack, true);
+                        })
         );
     }
 }

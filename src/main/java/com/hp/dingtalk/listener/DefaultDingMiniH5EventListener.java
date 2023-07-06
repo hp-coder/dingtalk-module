@@ -2,14 +2,12 @@ package com.hp.dingtalk.listener;
 
 import com.google.common.base.Stopwatch;
 import com.hp.dingtalk.constant.DingMiniH5EventType;
-import com.hp.dingtalk.pojo.callback.event.DingMiniH5CallbackEvents;
-import com.hp.dingtalk.service.IDingMiniH5EventCallbackHandler;
+import com.hp.dingtalk.service.callback.minih5.IDingMiniH5EventCallbackHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Component;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Comparator;
@@ -19,20 +17,24 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.hp.dingtalk.pojo.callback.event.DingMiniH5CallbackEvents.DingMiniH5EventDecryptedPayload;
+
 /**
+ * 默认的钉钉微应用事件订阅-系统内事件监听器
+ * 默认使用异步处理任务
+ *
  * @author hp
  */
 @Slf4j
-@Component
 @RequiredArgsConstructor
-@ConditionalOnProperty(prefix = "dingtalk.miniH5.event.listener", name = "enabled", havingValue = "true")
 public class DefaultDingMiniH5EventListener {
 
     private final List<IDingMiniH5EventCallbackHandler> miniH5EventCallbackHandlers;
     private final ExecutorService executorService;
 
+    @Async
     @EventListener
-    public void handleMiniH5EventCallback(DingMiniH5CallbackEvents.DingMiniH5EventDecryptedPayload payload) {
+    public void handleMiniH5EventCallback(DingMiniH5EventDecryptedPayload payload) {
         final DingMiniH5EventType eventType = payload.getEventType();
         log.info("使用插件自带默认监听器处理钉钉微应用事件回调:{}({})", eventType.getCode(), eventType.getName());
         if (CollectionUtils.isEmpty(miniH5EventCallbackHandlers)) {
@@ -41,7 +43,7 @@ public class DefaultDingMiniH5EventListener {
         }
         miniH5EventCallbackHandlers
                 .stream()
-                .filter(handler-> handler.support(payload))
+                .filter(handler -> handler.support(payload))
                 .collect(Collectors.groupingBy(h -> h.order()))
                 .entrySet()
                 .stream()
@@ -72,16 +74,16 @@ public class DefaultDingMiniH5EventListener {
     }
 
     @Value
-    class ExecutorWithLevel {
+    static class ExecutorWithLevel {
         Integer order;
         List<IDingMiniH5EventCallbackHandler> handlers;
     }
 
-    class Task implements Callable<Void> {
-        private final DingMiniH5CallbackEvents.DingMiniH5EventDecryptedPayload payload;
+    static class Task implements Callable<Void> {
+        private final DingMiniH5EventDecryptedPayload payload;
         private final IDingMiniH5EventCallbackHandler handler;
 
-        public Task(DingMiniH5CallbackEvents.DingMiniH5EventDecryptedPayload payload, IDingMiniH5EventCallbackHandler handler) {
+        public Task(DingMiniH5EventDecryptedPayload payload, IDingMiniH5EventCallbackHandler handler) {
             this.payload = payload;
             this.handler = handler;
         }

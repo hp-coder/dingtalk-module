@@ -1,4 +1,4 @@
-package com.hp.dingtalk.component;
+package com.hp.dingtalk.component.application;
 
 /**
  * @author hp 2023/3/22

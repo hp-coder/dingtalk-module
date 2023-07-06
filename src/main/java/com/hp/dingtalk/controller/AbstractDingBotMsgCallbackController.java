@@ -1,12 +1,12 @@
 package com.hp.dingtalk.controller;
 
-import com.hp.dingtalk.pojo.callback.DingBotMsgCallbackRequest;
+import com.google.common.base.Preconditions;
 import com.hp.dingtalk.component.application.IDingBot;
+import com.hp.dingtalk.pojo.callback.DingBotMsgCallbackRequest;
 import com.hp.dingtalk.service.IDingBotMsgCallBackHandler;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.codec.binary.Base64;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.util.Assert;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
@@ -27,9 +27,8 @@ public abstract class AbstractDingBotMsgCallbackController {
     protected final List<IDingBotMsgCallBackHandler<?>> dingBotMsgCallBackHandlers;
 
     protected static void validateRequest(String timeStamp, String sign, IDingBot bot) throws NoSuchAlgorithmException, InvalidKeyException {
-        Assert.hasText(timeStamp, "非法钉钉机器人回调请求");
-        Assert.isTrue(System.currentTimeMillis() - Long.parseLong(timeStamp) <= 60 * 60 * 1000, "非法钉钉机器人回调请求");
-        Assert.isTrue(Objects.equals(getSign(timeStamp, bot), sign), "非法钉钉机器人回调请求");
+       Preconditions.checkArgument(System.currentTimeMillis() - Long.parseLong(timeStamp) <= 60 * 60 * 1000, "非法钉钉机器人回调请求");
+       Preconditions.checkArgument(Objects.equals(getSign(timeStamp, bot), sign), "非法钉钉机器人回调请求");
     }
 
     @NotNull

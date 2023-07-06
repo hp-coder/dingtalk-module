@@ -1,9 +1,9 @@
 package com.hp.dingtalk.pojo.callback.eventbody.oa;
 
 import com.google.gson.annotations.SerializedName;
-import com.hp.dingtalk.pojo.callback.eventbody.IDingMiniH5EventBody;
 import com.hp.common.base.annotations.FieldDesc;
 import com.hp.dingtalk.constant.DingMiniH5EventType;
+import com.hp.dingtalk.pojo.callback.eventbody.IDingMiniH5EventBody;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

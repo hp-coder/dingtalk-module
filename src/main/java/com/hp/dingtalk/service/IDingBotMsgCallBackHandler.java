@@ -4,8 +4,8 @@ import com.hp.dingtalk.component.application.IDingBot;
 import com.hp.dingtalk.pojo.callback.DingBotMsgCallbackRequest;
 import com.hp.dingtalk.pojo.message.IDingBotMsg;
 import com.hp.dingtalk.pojo.message.common.DingMarkdownMsg;
-import com.hp.dingtalk.utils.DingMarkdown;
 import com.hp.dingtalk.service.message.DingBotMessageHandler;
+import com.hp.dingtalk.utils.DingMarkdown;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -67,7 +67,11 @@ public interface IDingBotMsgCallBackHandler<T> {
     default void handle(IDingBot app, DingBotMsgCallbackRequest payload) {
         if (!authorized(app, payload)) {
             DingMarkdown.Builder builder = DingMarkdown.builder().text("无权使用该功能").reference(LocalDateTime.now().toString());
-            new DingBotMessageHandler().sendToUserByUserIds(app, Collections.singletonList(payload.getSenderStaffId()), new DingMarkdownMsg.SampleMarkdown("权限", builder));
+            IDingBotMessageHandler dingBotMessageHandler = new DingBotMessageHandler(app);
+            dingBotMessageHandler.sendToUserByUserIds(
+                    Collections.singletonList(payload.getSenderStaffId()),
+                    new DingMarkdownMsg.SampleMarkdown("权限", builder)
+            );
             return;
         }
         notifyBeforeSend(app, payload);
@@ -119,7 +123,8 @@ public interface IDingBotMsgCallBackHandler<T> {
         if (message == null) {
             return;
         }
-        new DingBotMessageHandler().sendToUserByUserIds(app, Collections.singletonList(payload.getSenderStaffId()), message);
+        final IDingBotMessageHandler dingBotMessageHandler = new DingBotMessageHandler(app);
+        dingBotMessageHandler.sendToUserByUserIds(Collections.singletonList(payload.getSenderStaffId()), message);
     }
 
 

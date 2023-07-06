@@ -1,8 +1,8 @@
 package com.hp.dingtalk.pojo.callback.eventbody.oa;
 
 import com.google.gson.GsonBuilder;
-import com.hp.dingtalk.pojo.GsonBuilderVisitor;
 import com.hp.dingtalk.constant.DingMiniH5EventType;
+import com.hp.dingtalk.pojo.GsonBuilderVisitor;
 import com.hp.dingtalk.pojo.callback.eventbody.DingMiniH5EventTypeDeserializer;
 
 /**

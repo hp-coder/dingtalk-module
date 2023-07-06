@@ -1,20 +1,17 @@
 package com.hp.dingtalk.service.dept;
 
-import com.dingtalk.api.DefaultDingTalkClient;
-import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiV2DepartmentListsubRequest;
 import com.dingtalk.api.response.OapiV2DepartmentListsubResponse;
 import com.hp.dingtalk.component.application.IDingApp;
-import com.hp.dingtalk.component.exception.DingApiException;
-import com.hp.dingtalk.component.factory.token.DingAccessTokenFactory;
-import com.hp.dingtalk.constant.DingConstant;
 import com.hp.dingtalk.constant.Language;
+import com.hp.dingtalk.service.AbstractDingOldApi;
 import com.hp.dingtalk.service.IDingDeptHandler;
-import com.hp.dingtalk.utils.DingUtils;
-import com.taobao.api.ApiException;
+import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
+
+import static com.hp.dingtalk.constant.DingUrlConstant.GET_DEPT_LIST;
 
 /**
  * 钉钉部门
@@ -22,27 +19,27 @@ import java.util.List;
  * @author hp
  */
 @Slf4j
-public class DingDeptHandler implements IDingDeptHandler {
+public class DingDeptHandler extends AbstractDingOldApi implements IDingDeptHandler {
 
-    @Override
-    public List<OapiV2DepartmentListsubResponse.DeptBaseResponse> getDeptList(IDingApp app) {
-        return this.getDeptList(app, null, Language.zh_CN);
+    public DingDeptHandler(@NonNull IDingApp app) {
+        super(app);
     }
 
     @Override
-    public List<OapiV2DepartmentListsubResponse.DeptBaseResponse> getDeptList(IDingApp app, Long deptId, Language language) {
-        DingTalkClient client = new DefaultDingTalkClient(DingConstant.GET_DEPT_LIST);
-        OapiV2DepartmentListsubRequest req = new OapiV2DepartmentListsubRequest();
-        req.setDeptId(deptId);
-        req.setLanguage(language.name());
-        OapiV2DepartmentListsubResponse rsp;
-        try {
-            rsp = client.execute(req, DingAccessTokenFactory.accessToken(app));
-            DingUtils.isSuccess(rsp);
-        } catch (ApiException e) {
-            log.error("获取部门列表,应用:{},部门:{},语言:{}", app.getAppName(), deptId, language, e);
-            throw new DingApiException("获取部门列表异常", e);
-        }
-        return rsp.getResult();
+    public List<OapiV2DepartmentListsubResponse.DeptBaseResponse> getDeptList() {
+        return this.getDeptList(null, Language.zh_CN);
+    }
+
+    @Override
+    public List<OapiV2DepartmentListsubResponse.DeptBaseResponse> getDeptList(Long deptId, Language language) {
+        OapiV2DepartmentListsubRequest request = new OapiV2DepartmentListsubRequest();
+        request.setDeptId(deptId);
+        request.setLanguage(language.name());
+        final OapiV2DepartmentListsubResponse response = execute(
+                GET_DEPT_LIST,
+                request,
+                () -> "获取部门列表"
+        );
+        return response.getResult();
     }
 }

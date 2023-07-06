@@ -1,34 +1,32 @@
 package com.hp.dingtalk.service;
 
 
-import com.hp.dingtalk.component.IDingApi;
-import com.hp.dingtalk.component.application.IDingBot;
 import com.hp.dingtalk.pojo.message.IDingBotMsg;
+import lombok.NonNull;
 
 import java.util.List;
 
 /**
  * 钉钉机器人消息处理器
+ *
  * @author hp
  */
-public interface IDingBotMessageHandler extends IDingApi {
+public interface IDingBotMessageHandler {
 
     /**
      * 通过手机号查找钉钉用户并发送消息
      *
-     * @param bot       钉钉应用
-     * @param userIds   钉钉用户id
-     * @param msg       IDingBotMsg
+     * @param userIds 钉钉用户id
+     * @param msg     IDingBotMsg
      */
-    void sendToUserByUserIds(IDingBot bot, List<String> userIds, IDingBotMsg msg);
+    void sendToUserByUserIds(@NonNull List<String> userIds, @NonNull IDingBotMsg msg);
 
     /**
      * 通过手机号查找钉钉用户并发送消息
      *
-     * @param bot       钉钉应用
-     * @param mobiles   手机号 无前缀+86等
-     * @param msg       IDingBotMsg
+     * @param mobiles 手机号 无前缀+86等
+     * @param msg     IDingBotMsg
      */
-    void sendToUserByPhones(IDingBot bot, List<String> mobiles, IDingBotMsg msg);
+    void sendToUserByPhones(@NonNull List<String> mobiles, @NonNull IDingBotMsg msg);
 
 }

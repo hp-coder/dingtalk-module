@@ -1,6 +1,5 @@
 package com.hp.dingtalk.component.application;
 
-import com.hp.dingtalk.component.IDingCorp;
 import com.hp.dingtalk.component.factory.app.DingAppFactory;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 

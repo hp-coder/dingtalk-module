@@ -1,29 +1,25 @@
 package com.hp.dingtalk.pojo.message.interactive;
 
+import com.google.common.base.Preconditions;
+import com.hp.common.base.annotations.FieldDesc;
 import com.hp.dingtalk.pojo.message.IDingMsg;
 import org.springframework.cglib.beans.BeanMap;
-import org.springframework.util.Assert;
 import org.springframework.util.DigestUtils;
 
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public interface IDingInteractiveMsg extends IDingMsg {
-
-    /**
-     * 互动卡片全局密码盐，用于对消息对sign值加密
-     */
+    @FieldDesc("互动卡片全局密码盐，用于对消息对sign值加密")
     String GLOBAL_SALT = "dfaen23djf461nJ51FHDowie17hf1";
 
-    /**
-     * 同一用这个方法转map，或者改hutool也行
-     */
-    default Map<String, String> getMap() {
+    default Map<String, String> toMap() {
         final BeanMap beanMap = BeanMap.create(this);
-        final Map<String, String> map = new HashMap<>();
+        final Map<String, String> map = new HashMap<>(beanMap.size());
         beanMap.forEach((k, v) -> {
-            if (v != null) {
+            if (Objects.nonNull(v)) {
                 map.put(String.valueOf(k), String.valueOf(v));
             }
         });
@@ -52,19 +48,20 @@ public interface IDingInteractiveMsg extends IDingMsg {
      */
     String getTemplateId();
 
-    /**
-     * 字段加密方法，简单加密
-     */
+
     static String encryptSign(String outTrackId) {
-        Assert.notNull(outTrackId, "参数异常：outTrackId缺失");
+        Preconditions.checkNotNull(outTrackId, "参数异常：outTrackId缺失");
         final String combine = outTrackId + GLOBAL_SALT;
         return DigestUtils.md5DigestAsHex(combine.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
      * 空实现
+     *
      * @return
      */
     @Override
-    default String getMsgType(){return null;}
+    default String getMsgType() {
+        return null;
+    }
 }

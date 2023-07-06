@@ -1,4 +1,4 @@
-package com.hp.dingtalk.constant;
+package com.hp.dingtalk.component;
 
 /**
  * sdk版本
@@ -7,7 +7,7 @@ package com.hp.dingtalk.constant;
  */
 public interface SDK {
 
-    enum Version {
+     enum Version {
         NEW, OLD
     }
 }

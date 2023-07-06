@@ -8,19 +8,20 @@ import com.dingtalk.api.DefaultDingTalkClient;
 import com.dingtalk.api.DingTalkClient;
 import com.dingtalk.api.request.OapiGettokenRequest;
 import com.dingtalk.api.response.OapiGettokenResponse;
-import com.hp.dingtalk.component.IDingApi;
+import com.google.common.base.Preconditions;
+import com.hp.dingtalk.component.IDingNewApi;
+import com.hp.dingtalk.component.IDingOldApi;
+import com.hp.dingtalk.component.SDK;
 import com.hp.dingtalk.component.application.IDingApp;
-import com.hp.dingtalk.constant.DingConstant;
-import com.hp.dingtalk.utils.DingUtils;
 import com.hp.dingtalk.component.exception.DingApiException;
-import com.hp.dingtalk.constant.SDK;
+import com.hp.dingtalk.constant.DingUrlConstant;
+import com.hp.dingtalk.utils.DingUtils;
 import com.taobao.api.ApiException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -32,7 +33,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author hp
  */
 @Slf4j
-public class DingAccessTokenFactory implements IDingToken, IDingApi {
+public class DingAccessTokenFactory implements IDingToken, IDingOldApi, IDingNewApi {
 
     private DingAccessTokenFactory() {
     }
@@ -58,12 +59,11 @@ public class DingAccessTokenFactory implements IDingToken, IDingApi {
 
     @Override
     public Optional<String> getAccess_token(IDingApp app) {
-        final SDK.Version version = SDK.Version.OLD;
-        Optional<String> token = checkCache(app.getAppKey(), version);
+        Optional<String> token = checkCache(app.getAppKey(), OLD);
         if (token.isPresent()) {
             return token;
         }
-        DingTalkClient client = new DefaultDingTalkClient(DingConstant.ACCESS_TOKEN_OLD);
+        DingTalkClient client = new DefaultDingTalkClient(DingUrlConstant.ACCESS_TOKEN_OLD);
         OapiGettokenRequest request = new OapiGettokenRequest();
         request.setAppkey(app.getAppKey());
         request.setAppsecret(app.getAppSecret());
@@ -74,7 +74,7 @@ public class DingAccessTokenFactory implements IDingToken, IDingApi {
             final String accessToken = response.getAccessToken();
             final Long expireIn = response.getExpiresIn();
             log.debug("获取企业内部应用的access_token:{},app:{},ttl:{}", accessToken, app.getAppName(), expireIn);
-            storeCache(app.getAppKey(), accessToken, expireIn, version, "获取企业内部应用的accessToken旧版SDK");
+            storeCache(app.getAppKey(), accessToken, expireIn, OLD, "获取企业内部应用的accessToken旧版SDK");
             return Optional.of(accessToken);
         } catch (ApiException e) {
             log.error("获取企业内部应用的access_token旧版SDK异常,应用:{}", app.getAppName(), e);
@@ -87,12 +87,11 @@ public class DingAccessTokenFactory implements IDingToken, IDingApi {
     public Optional<String> getAccessToken(IDingApp app) {
         final String appKey = app.getAppKey();
         final String appSecret = app.getAppSecret();
-        final SDK.Version version = SDK.Version.NEW;
-        Optional<String> token = checkCache(appKey, version);
+        Optional<String> token = checkCache(appKey, NEW);
         if (token.isPresent()) {
             return token;
         }
-        com.aliyun.dingtalkoauth2_1_0.Client client = new com.aliyun.dingtalkoauth2_1_0.Client(this.config());
+        com.aliyun.dingtalkoauth2_1_0.Client client = new com.aliyun.dingtalkoauth2_1_0.Client(clientConfig());
         GetAccessTokenRequest getAccessTokenRequest = new GetAccessTokenRequest()
                 .setAppKey(appKey)
                 .setAppSecret(appSecret);
@@ -102,7 +101,7 @@ public class DingAccessTokenFactory implements IDingToken, IDingApi {
             final String accessToken = body.getAccessToken();
             final Long expireIn = body.getExpireIn();
             log.debug("获取企业内部应用的accessToken:{},app:{},ttl:{}", accessToken, app.getAppName(), expireIn);
-            storeCache(appKey, accessToken, expireIn, version, "获取企业内部应用的accessToken新版SDK");
+            storeCache(appKey, accessToken, expireIn, NEW, "获取企业内部应用的accessToken新版SDK");
             return Optional.of(accessToken);
         } catch (TeaException err) {
             if (StringUtils.hasText(err.code) && StringUtils.hasText(err.message)) {
@@ -121,7 +120,6 @@ public class DingAccessTokenFactory implements IDingToken, IDingApi {
 
     private Optional<String> checkCache(String appKey, SDK.Version version) {
         final ConcurrentHashMap<SDK.Version, DingToken> map = TOKEN_CACHE.get(appKey);
-
         if (CollectionUtils.isEmpty(map) || map.get(version) == null) {
             return Optional.empty();
         }
@@ -138,7 +136,7 @@ public class DingAccessTokenFactory implements IDingToken, IDingApi {
             log.debug("钉钉AccessToken:{}不存在,appKey:{},SDK.version:{}", accessToken, appKey, version);
             return;
         }
-        Assert.isTrue(expireIn != null && expireIn > 600L, "EXPIRED");
+        Preconditions.checkArgument(expireIn != null && expireIn > 600L, "EXPIRED");
         ConcurrentHashMap<SDK.Version, DingToken> map = TOKEN_CACHE.get(appKey);
         if (CollectionUtils.isEmpty(map)) {
             map = new ConcurrentHashMap<>(1);

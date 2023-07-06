@@ -11,7 +11,7 @@ import java.util.Optional;
  * 事件订阅总览
  *
  * @author hp
- * @See https://open.dingtalk.com/document/orgapp/event-list
+ * @See https://open.com.hp.dingtalk.com/document/orgapp/event-list
  */
 @Getter
 @AllArgsConstructor

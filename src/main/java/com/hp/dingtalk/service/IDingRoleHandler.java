@@ -2,8 +2,7 @@ package com.hp.dingtalk.service;
 
 import com.dingtalk.api.response.OapiRoleListResponse;
 import com.dingtalk.api.response.OapiRoleSimplelistResponse;
-import com.hp.dingtalk.component.IDingApi;
-import com.hp.dingtalk.component.application.IDingApp;
+import lombok.NonNull;
 
 import java.util.List;
 
@@ -12,9 +11,9 @@ import java.util.List;
  *
  * @author hp
  */
-public interface IDingRoleHandler extends IDingApi {
+public interface IDingRoleHandler {
 
-    List<OapiRoleListResponse.OpenRole> roles(IDingApp app, Long page, Long size);
+    List<OapiRoleListResponse.OpenRole> roles(@NonNull Long page, @NonNull Long size);
 
-    List<OapiRoleSimplelistResponse.OpenEmpSimple> usersByRoleId(IDingApp app, Long roleId, Long page, Long size);
+    List<OapiRoleSimplelistResponse.OpenEmpSimple> usersByRoleId(@NonNull Long roleId, @NonNull Long page,@NonNull Long size);
 }

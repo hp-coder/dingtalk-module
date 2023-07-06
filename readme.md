@@ -11,9 +11,9 @@
 
 ```shell
 # make sure that you're on the right branch
-git clone -b prod https://github.com/hp-coder/dingtalk-module.git
+git clone -b prod https://github.com/hp-coder/com.hp.com.hp.dingtalk-module.git
 # latest version is most likely still on the test branch, I apologize for my laziness :( 
-git clone -b test https://github.com/hp-coder/dingtalk-module.git
+git clone -b test https://github.com/hp-coder/com.hp.com.hp.dingtalk-module.git
 # install it in your local maven repository
 mvn install
 # deploy if you have a private repo
@@ -26,7 +26,7 @@ mvn deploy
 
 <dependency>
     <groupId>com.hp</groupId>
-    <artifactId>dingtalk-module</artifactId>
+    <artifactId>com.hp.com.hp.dingtalk-module</artifactId>
     <version>1.0.9-SNAPSHOT</version>
 </dependency>
 ```
@@ -53,7 +53,7 @@ configuration:
 
 - [IDingMiniH5EventCallbackConfig.java](src%2Fmain%2Fjava%2Fcom%2Fhp%2Fdingtalk%2Fcomponent%2Fconfiguration%2FIDingMiniH5EventCallbackConfig.java)
   钉钉微应用事件订阅回调接口, 为其提供钉钉应用实例的支持
-    - `dingtalk.miniH5.event.enabled=true`时, 必须配置提供一个默认可用的微应用
+    - `com.hp.com.hp.dingtalk.miniH5.event.enabled=true`时, 必须配置提供一个默认可用的微应用
 
 token:
 
@@ -85,7 +85,7 @@ API:
   微应用事件订阅回调接口
     - 微应用事件订阅的回调
     - 如果有拦截器，请释放`/ding/miniH5/event/callback`拦截
-    - `dingtalk.miniH5.event.enabled=true`时可用
+    - `com.hp.com.hp.dingtalk.miniH5.event.enabled=true`时可用
     - 增加请求校验
     - 通过站内广播事件的方式将收到的回调通知到客户端
     -
@@ -96,7 +96,7 @@ listener:
 
 - [DefaultDingMiniH5EventListener.java](src%2Fmain%2Fjava%2Fcom%2Fhp%2Fdingtalk%2Flistener%2FDefaultDingMiniH5EventListener.java)
   插件内提供一个默认的微应用事件回调的事件监听器
-    - `dingtalk.miniH5.event.listener.enabled=true`时可用
+    - `com.hp.com.hp.dingtalk.miniH5.event.listener.enabled=true`时可用
 
 service:
 
