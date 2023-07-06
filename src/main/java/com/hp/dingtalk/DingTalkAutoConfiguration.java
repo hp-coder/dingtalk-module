@@ -1,7 +1,7 @@
 package com.hp.dingtalk;
 
 import com.hp.dingtalk.component.DingBooter;
-import com.hp.dingtalk.component.configuration.DingMiniH5EventCallbackConfig;
+import com.hp.dingtalk.component.configuration.IDingMiniH5EventCallbackConfig;
 import com.hp.dingtalk.listener.DefaultDingMiniH5EventListener;
 import com.hp.dingtalk.pojo.message.interactive.callback.IDingInteractiveCardCallBack;
 import com.hp.dingtalk.service.callback.bot.DefaultBotMsgCallbackHandler;
@@ -44,7 +44,7 @@ public @Configuration class DingTalkAutoConfiguration {
 
     @ConditionalOnProperty(prefix = "dingtalk.miniH5.event", name = "enabled", havingValue = "true")
     @ConditionalOnMissingBean
-    public @Bean DingMiniH5EventCallbackConfig dingMiniH5EventCallbackConfig() {
+    public @Bean IDingMiniH5EventCallbackConfig dingMiniH5EventCallbackConfig() {
         return () -> null;
     }
 

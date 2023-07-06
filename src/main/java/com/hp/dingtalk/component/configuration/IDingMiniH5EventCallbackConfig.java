@@ -7,6 +7,6 @@ import com.hp.dingtalk.component.application.IDingMiniH5;
  *
  * @author hp
  */
-public interface DingMiniH5EventCallbackConfig {
+public interface IDingMiniH5EventCallbackConfig {
     IDingMiniH5 getApp();
 }

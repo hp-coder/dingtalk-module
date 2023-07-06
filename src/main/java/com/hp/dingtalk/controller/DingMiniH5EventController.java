@@ -3,7 +3,7 @@ package com.hp.dingtalk.controller;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.gson.GsonBuilder;
-import com.hp.dingtalk.component.configuration.DingMiniH5EventCallbackConfig;
+import com.hp.dingtalk.component.configuration.IDingMiniH5EventCallbackConfig;
 import com.hp.dingtalk.constant.DingMiniH5EventType;
 import com.hp.dingtalk.pojo.callback.DingMiniH5EventCallbackRequest;
 import com.hp.dingtalk.pojo.callback.event.DingMiniH5CallbackEvents;
@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class DingMiniH5EventController extends AbstractDingMiniH5EventController {
 
     public DingMiniH5EventController(
-            DingMiniH5EventCallbackConfig callbackConfiguration,
+            IDingMiniH5EventCallbackConfig callbackConfiguration,
             ApplicationEventPublisher eventPublisher
     ) {
         super(callbackConfiguration, eventPublisher);

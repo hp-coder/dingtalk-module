@@ -1,7 +1,7 @@
 package com.hp.dingtalk.controller;
 
 import com.hp.dingtalk.component.application.IDingMiniH5;
-import com.hp.dingtalk.component.configuration.DingMiniH5EventCallbackConfig;
+import com.hp.dingtalk.component.configuration.IDingMiniH5EventCallbackConfig;
 import com.hp.dingtalk.pojo.callback.DingMiniH5EventCallbackRequest;
 import com.hp.dingtalk.utils.DingCallbackCrypto;
 import lombok.Data;
@@ -16,7 +16,7 @@ import org.springframework.context.ApplicationEventPublisher;
 @RequiredArgsConstructor
 public abstract class AbstractDingMiniH5EventController {
 
-    protected final DingMiniH5EventCallbackConfig callbackConfiguration;
+    protected final IDingMiniH5EventCallbackConfig callbackConfiguration;
     protected final ApplicationEventPublisher eventPublisher;
     protected DingCallbackCrypto callbackCrypto;
 

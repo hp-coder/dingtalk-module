@@ -41,6 +41,7 @@ mvn deploy
 ### 接口/扩展
 
 application:
+application:
 
 - [IDingApp.java](src%2Fmain%2Fjava%2Fcom%2Fhp%2Fdingtalk%2Fcomponent%2Fapplication%2FIDingApp.java)
   钉钉应用对象接口,接口配置相关appid,key等信息, 推荐使用enum实现该接口
