@@ -16,7 +16,7 @@ git clone -b prod https://github.com/hp-coder/com.hp.com.hp.dingtalk-module.git
 git clone -b test https://github.com/hp-coder/com.hp.com.hp.dingtalk-module.git
 # install it in your local maven repository
 mvn install
-# deploy if you have a private repo
+# deploy it if you have a private repo
 mvn deploy
 ```
 
