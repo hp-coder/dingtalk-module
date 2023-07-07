@@ -23,10 +23,10 @@ mvn deploy
 ### maven项目引入
 
 ```xml
-
+<!--Please make sure you installed the code before introducing the dependency in the pom.xml-->
 <dependency>
     <groupId>com.hp</groupId>
-    <artifactId>com.hp.com.hp.dingtalk-module</artifactId>
+    <artifactId>dingtalk-module</artifactId>
     <version>1.0.10-SNAPSHOT</version>
 </dependency>
 ```
