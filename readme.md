@@ -27,20 +27,12 @@ mvn deploy
 <dependency>
     <groupId>com.hp</groupId>
     <artifactId>dingtalk-module</artifactId>
-    <version>1.0.10-SNAPSHOT</version>
+    <version>1.0.0-sp2-SNAPSHOT</version>
 </dependency>
 ```
 
-### 依赖
-
-请确保项目中包含相关配置信息
-
-- SpringBoot 2.7.2
-- [com.hp/common-base (branch:hup_dev)](https://github.com/hp-coder/common-starters/)
-
 ### 接口/扩展
 
-application:
 application:
 
 - [IDingApp.java](src%2Fmain%2Fjava%2Fcom%2Fhp%2Fdingtalk%2Fcomponent%2Fapplication%2FIDingApp.java)
