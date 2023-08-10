@@ -42,7 +42,7 @@ public class DingWorkNotifyMsg implements IDingWorkNotifyMsg {
 
     public DingWorkNotifyMsg(OapiMessageCorpconversationAsyncsendV2Request.OA oa) {
         this.oa = oa;
-        this.msgType = msgType(oa);
+        this.msgType = "oa";
     }
 
     public DingWorkNotifyMsg(OapiMessageCorpconversationAsyncsendV2Request.Text text) {
