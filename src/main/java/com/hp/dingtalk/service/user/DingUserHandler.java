@@ -68,7 +68,8 @@ public class DingUserHandler extends AbstractDingOldApi implements IDingUserHand
                         throw new DingApiException("根据code获取钉钉unionId响应失败");
                     }
                 },
-                () -> "根据code获取钉钉unionId"
+                () -> "根据code获取钉钉unionId",
+                false
         );
         return response.getUserInfo().getUnionid();
     }

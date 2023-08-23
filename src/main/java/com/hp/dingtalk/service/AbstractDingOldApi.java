@@ -30,8 +30,8 @@ public abstract class AbstractDingOldApi implements IDingOldApi {
         this.app = app;
     }
 
-    protected <T extends TaobaoResponse> T execute(@NonNull String URL, @NonNull TaobaoRequest<T> request, Supplier<String> description) {
-        return execute(URL, request, response -> {
+    protected <T extends TaobaoResponse> T execute(@NonNull String url, @NonNull TaobaoRequest<T> request, Supplier<String> description) {
+        return execute(url, request, response -> {
             try {
                 DingUtils.isSuccess(response);
             } catch (ApiException e) {
@@ -42,11 +42,19 @@ public abstract class AbstractDingOldApi implements IDingOldApi {
         }, description);
     }
 
-    protected <T extends TaobaoResponse> T execute(@NonNull String URL, @NonNull TaobaoRequest<T> request, Consumer<T> validator, Supplier<String> description) {
-        DingTalkClient client = new DefaultDingTalkClient(URL);
+    protected <T extends TaobaoResponse> T execute(@NonNull String url, @NonNull TaobaoRequest<T> request, Consumer<T> validator, Supplier<String> description) {
+        return execute(url, request, validator, description, true);
+    }
+
+    protected <T extends TaobaoResponse> T execute(@NonNull String url, @NonNull TaobaoRequest<T> request, Consumer<T> validator, Supplier<String> description, boolean usingAccessToken) {
+        DingTalkClient client = new DefaultDingTalkClient(url);
         final T response;
         try {
-            response = client.execute(request, accessToken());
+            if (usingAccessToken) {
+                response = client.execute(request, accessToken());
+            } else {
+                response = client.execute(request, app.getAppKey(), app.getAppSecret());
+            }
             validator.accept(response);
         } catch (ApiException e) {
             final String des = description.get();
