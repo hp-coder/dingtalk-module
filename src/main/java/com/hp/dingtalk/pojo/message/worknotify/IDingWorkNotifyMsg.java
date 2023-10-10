@@ -18,6 +18,7 @@ import com.taobao.api.internal.util.StringUtils;
 public interface IDingWorkNotifyMsg extends IDingMsg {
     default String getMsg() {
         return new GsonBuilder()
+                .disableHtmlEscaping()
                 .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .create()
                 .toJson(this);
