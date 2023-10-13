@@ -2,8 +2,11 @@ package com.hp.dingtalk.pojo.message.worknotify;
 
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.GsonBuilder;
+import com.hp.dingtalk.pojo.GsonBuilderVisitor;
 import com.hp.dingtalk.pojo.message.IDingMsg;
 import com.taobao.api.internal.util.StringUtils;
+
+import java.util.Optional;
 
 /**
  * 消息字段需要消息类型和以消息类型为key的消息内容组成的值
@@ -17,10 +20,16 @@ import com.taobao.api.internal.util.StringUtils;
  */
 public interface IDingWorkNotifyMsg extends IDingMsg {
     default String getMsg() {
-        return new GsonBuilder()
-                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+        final GsonBuilder gsonBuilder = new GsonBuilder()
+                .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+        Optional.ofNullable(getGsonBuilderVisitor()).ifPresent(v -> v.visit(gsonBuilder));
+        return gsonBuilder
                 .create()
                 .toJson(this);
+    }
+
+    default GsonBuilderVisitor getGsonBuilderVisitor() {
+        return null;
     }
 
     @Override

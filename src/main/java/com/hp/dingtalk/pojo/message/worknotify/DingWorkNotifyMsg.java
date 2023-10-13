@@ -1,8 +1,11 @@
 package com.hp.dingtalk.pojo.message.worknotify;
 
 import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
+import com.google.gson.FieldNamingPolicy;
 import com.google.gson.annotations.SerializedName;
+import com.hp.dingtalk.pojo.GsonBuilderVisitor;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 简化调用，原SDK提供的Msg对象容易将msgType和msg的对应关系搞乱
@@ -14,6 +17,9 @@ public class DingWorkNotifyMsg implements IDingWorkNotifyMsg {
 
     @SerializedName("msgtype")
     private final String msgType;
+
+    @Setter
+    private GsonBuilderVisitor gsonBuilderVisitor = null;
 
     public DingWorkNotifyMsg(OapiMessageCorpconversationAsyncsendV2Request.ActionCard actionCard) {
         this.actionCard = actionCard;
@@ -33,6 +39,11 @@ public class DingWorkNotifyMsg implements IDingWorkNotifyMsg {
     public DingWorkNotifyMsg(OapiMessageCorpconversationAsyncsendV2Request.Link link) {
         this.link = link;
         this.msgType = msgType(link);
+        setGsonBuilderVisitor(
+                gsonBuilder ->
+                        gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
+                                .disableHtmlEscaping()
+        );
     }
 
     public DingWorkNotifyMsg(OapiMessageCorpconversationAsyncsendV2Request.Markdown markdown) {
