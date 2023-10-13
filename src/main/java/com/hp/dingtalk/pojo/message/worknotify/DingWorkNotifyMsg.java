@@ -2,6 +2,7 @@ package com.hp.dingtalk.pojo.message.worknotify;
 
 import com.dingtalk.api.request.OapiMessageCorpconversationAsyncsendV2Request;
 import com.google.gson.FieldNamingPolicy;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 import com.hp.dingtalk.pojo.GsonBuilderVisitor;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class DingWorkNotifyMsg implements IDingWorkNotifyMsg {
     public DingWorkNotifyMsg(OapiMessageCorpconversationAsyncsendV2Request.ActionCard actionCard) {
         this.actionCard = actionCard;
         this.msgType = msgType(actionCard);
+        this.gsonBuilderVisitor = GsonBuilder::disableHtmlEscaping;
     }
 
     public DingWorkNotifyMsg(OapiMessageCorpconversationAsyncsendV2Request.File file) {
@@ -39,11 +41,9 @@ public class DingWorkNotifyMsg implements IDingWorkNotifyMsg {
     public DingWorkNotifyMsg(OapiMessageCorpconversationAsyncsendV2Request.Link link) {
         this.link = link;
         this.msgType = msgType(link);
-        setGsonBuilderVisitor(
-                gsonBuilder ->
+        this.gsonBuilderVisitor = gsonBuilder ->
                         gsonBuilder.setFieldNamingPolicy(FieldNamingPolicy.IDENTITY)
-                                .disableHtmlEscaping()
-        );
+                                .disableHtmlEscaping();
     }
 
     public DingWorkNotifyMsg(OapiMessageCorpconversationAsyncsendV2Request.Markdown markdown) {
