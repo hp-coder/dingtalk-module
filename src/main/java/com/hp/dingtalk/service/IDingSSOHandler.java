@@ -11,5 +11,5 @@ import com.hp.dingtalk.component.application.IDingCorpSSO;
  */
 public interface IDingSSOHandler {
 
-    String accessToken(IDingCorpSSO corpSSO);
+    String accessToken(IDingCorpSSO corpSso);
 }

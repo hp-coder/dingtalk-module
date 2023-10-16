@@ -5,7 +5,6 @@ import com.dingtalk.api.request.OapiRoleSimplelistRequest;
 import com.dingtalk.api.response.OapiRoleListResponse;
 import com.dingtalk.api.response.OapiRoleSimplelistResponse;
 import com.hp.dingtalk.component.application.IDingApp;
-import com.hp.dingtalk.constant.DingUrlConstant;
 import com.hp.dingtalk.service.AbstractDingOldApi;
 import com.hp.dingtalk.service.IDingRoleHandler;
 import lombok.NonNull;
@@ -14,6 +13,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.hp.dingtalk.constant.DingUrlConstant.Role.GET_ROLE_LIST;
+import static com.hp.dingtalk.constant.DingUrlConstant.Role.GET_USERS_BY_ROLE_ID;
 
 /**
  * 钉钉角色
@@ -34,7 +36,7 @@ public class DingRoleHandler extends AbstractDingOldApi implements IDingRoleHand
         OapiRoleListRequest request = new OapiRoleListRequest();
         request.setSize(size);
         request.setOffset((page - 1) * size);
-        final OapiRoleListResponse response = execute(DingUrlConstant.GET_ROLE_LIST, request, () -> "获取角色列表");
+        final OapiRoleListResponse response = execute(GET_ROLE_LIST, request, () -> "获取角色列表");
         return response.getResult()
                 .getList()
                 .stream()
@@ -51,7 +53,7 @@ public class DingRoleHandler extends AbstractDingOldApi implements IDingRoleHand
         request.setRoleId(roleId);
         request.setSize(size);
         request.setOffset((page - 1) * size);
-        OapiRoleSimplelistResponse response = execute(DingUrlConstant.GET_USERS_BY_ROLE_ID, request, () -> "根据角色Id获取用户列表");
+        OapiRoleSimplelistResponse response = execute(GET_USERS_BY_ROLE_ID, request, () -> "根据角色Id获取用户列表");
         return response.getResult().getList();
     }
 }

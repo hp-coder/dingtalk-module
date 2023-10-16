@@ -9,7 +9,7 @@ import com.aliyun.dingtalkrobot_1_0.models.BatchSendOTOResponse;
 import com.aliyun.teautil.models.RuntimeOptions;
 import com.hp.dingtalk.component.application.IDingBot;
 import com.hp.dingtalk.component.exception.DingApiException;
-import com.hp.dingtalk.pojo.message.IDingBotMsg;
+import com.hp.dingtalk.pojo.message.bot.IDingBotMsg;
 import com.hp.dingtalk.pojo.message.interactive.IDingInteractiveMsg;
 import com.hp.dingtalk.service.AbstractDingNewApi;
 import com.hp.dingtalk.service.IDingBotMessageHandler;
@@ -17,7 +17,7 @@ import com.hp.dingtalk.service.IDingInteractiveMessageHandler;
 import com.hp.dingtalk.service.user.DingUserHandler;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.util.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -34,14 +34,14 @@ public class DingBotMessageHandler extends AbstractDingNewApi implements IDingBo
     }
 
     @Override
-    public void sendToUserByUserIds(@NonNull List<String> userIds, @NonNull IDingBotMsg msg) {
+    public BatchSendOTOResponse sendToUserByUserIds(@NonNull List<String> userIds, @NonNull IDingBotMsg msg) {
         BatchSendOTOHeaders headers = new BatchSendOTOHeaders();
         headers.xAcsDingtalkAccessToken = accessToken();
         BatchSendOTORequest request = new BatchSendOTORequest()
                 .setRobotCode(app.getAppKey())
                 .setUserIds(userIds)
                 .setMsgKey(msg.getMsgType())
-                .setMsgParam(msg.getMsgParam());
+                .setMsgParam(msg.getMsg());
         final BatchSendOTOResponse response = execute(
                 com.aliyun.dingtalkrobot_1_0.Client.class,
                 client -> {
@@ -53,29 +53,27 @@ public class DingBotMessageHandler extends AbstractDingNewApi implements IDingBo
                     }
                 },
                 () -> "机器人向用户发送普通消息");
-        log.info("机器人向用户发送普通消息响应", response);
+        log.debug("机器人向用户发送普通消息响应:{}", response);
+        return response;
     }
 
     @Override
-    public void sendToUserByPhones(@NonNull List<String> mobiles, @NonNull IDingBotMsg msg) {
+    public BatchSendOTOResponse sendToUserByPhones(@NonNull List<String> mobiles, @NonNull IDingBotMsg msg) {
         final DingUserHandler handler = new DingUserHandler(app);
         final List<String> userIds = mobiles
                 .stream()
-                .map(i -> handler.findUserIdByMobile(i))
+                .map(handler::findUserIdByMobile)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
-        if (CollectionUtils.isEmpty(userIds)) {
-            return;
-        }
-        sendToUserByUserIds(userIds, msg);
+        return sendToUserByUserIds(userIds, msg);
     }
 
     @Override
-    public String sendInteractiveMsgToIndividual(List<String> userIds, IDingInteractiveMsg interactiveMsg) {
+    public String sendInteractiveMsgToIndividual(@NotNull List<String> userIds, @NotNull IDingInteractiveMsg interactiveMsg) {
         SendInteractiveCardHeaders sendInteractiveCardHeaders = new SendInteractiveCardHeaders();
         sendInteractiveCardHeaders.xAcsDingtalkAccessToken = accessToken();
         SendInteractiveCardRequest.SendInteractiveCardRequestCardData cardData = new SendInteractiveCardRequest.SendInteractiveCardRequestCardData();
-        cardData.setCardParamMap(interactiveMsg.toMap());
+        cardData.setCardParamMap(interactiveMsg.getMsg());
         SendInteractiveCardRequest sendInteractiveCardRequest = new SendInteractiveCardRequest()
                 .setCardTemplateId(interactiveMsg.getTemplateId())
                 .setReceiverUserIdList(userIds)
@@ -96,7 +94,7 @@ public class DingBotMessageHandler extends AbstractDingNewApi implements IDingBo
                 () -> "机器人发送互动卡片高级版至个人"
         );
         final String processQueryKey = response.getBody().getResult().getProcessQueryKey();
-        log.info("机器人发送互动卡片高级版至个人实例id:{}", processQueryKey);
+        log.debug("机器人发送互动卡片高级版至个人实例id:{}", processQueryKey);
         return interactiveMsg.getOutTrackId();
     }
 
@@ -106,7 +104,7 @@ public class DingBotMessageHandler extends AbstractDingNewApi implements IDingBo
         SendInteractiveCardHeaders sendInteractiveCardHeaders = new SendInteractiveCardHeaders();
         sendInteractiveCardHeaders.xAcsDingtalkAccessToken = accessToken();
         SendInteractiveCardRequest.SendInteractiveCardRequestCardData cardData = new SendInteractiveCardRequest.SendInteractiveCardRequestCardData();
-        cardData.setCardParamMap(interactiveMsg.toMap());
+        cardData.setCardParamMap(interactiveMsg.getMsg());
         SendInteractiveCardRequest sendInteractiveCardRequest = new SendInteractiveCardRequest()
                 .setRobotCode(app.getAppKey())
                 .setOpenConversationId(openConversationId)
@@ -130,17 +128,23 @@ public class DingBotMessageHandler extends AbstractDingNewApi implements IDingBo
                 () -> "机器人发送互动卡片高级版至群聊"
         );
         final String processQueryKey = response.getBody().getResult().getProcessQueryKey();
-        log.info("机器人发送互动卡片高级版至群聊实例id:{}", processQueryKey);
+        log.debug("机器人发送互动卡片高级版至群聊实例id:{}", processQueryKey);
         return interactiveMsg.getOutTrackId();
     }
 
     @Override
-    public String updateInteractiveMsg(String openConversationId, IDingInteractiveMsg interactiveMsg) {
+    public String updateInteractiveMsg(@NotNull String openConversationId, @NotNull IDingInteractiveMsg interactiveMsg) {
         UpdateInteractiveCardHeaders updateInteractiveCardHeaders = new UpdateInteractiveCardHeaders();
         updateInteractiveCardHeaders.xAcsDingtalkAccessToken = accessToken();
-        UpdateInteractiveCardRequest.UpdateInteractiveCardRequestCardOptions cardOptions = new UpdateInteractiveCardRequest.UpdateInteractiveCardRequestCardOptions().setUpdateCardDataByKey(true).setUpdatePrivateDataByKey(true);
-        UpdateInteractiveCardRequest.UpdateInteractiveCardRequestCardData cardData = new UpdateInteractiveCardRequest.UpdateInteractiveCardRequestCardData().setCardParamMap(interactiveMsg.toMap());
-        UpdateInteractiveCardRequest updateInteractiveCardRequest = new UpdateInteractiveCardRequest().setOutTrackId(interactiveMsg.getOutTrackId()).setCardData(cardData).setUserIdType(1).setCardOptions(cardOptions);
+        UpdateInteractiveCardRequest.UpdateInteractiveCardRequestCardOptions cardOptions = new UpdateInteractiveCardRequest.UpdateInteractiveCardRequestCardOptions()
+                .setUpdateCardDataByKey(true)
+                .setUpdatePrivateDataByKey(true);
+        UpdateInteractiveCardRequest.UpdateInteractiveCardRequestCardData cardData = new UpdateInteractiveCardRequest.UpdateInteractiveCardRequestCardData()
+                .setCardParamMap(interactiveMsg.getMsg());
+        UpdateInteractiveCardRequest updateInteractiveCardRequest = new UpdateInteractiveCardRequest()
+                .setOutTrackId(interactiveMsg.getOutTrackId())
+                .setCardData(cardData).setUserIdType(1)
+                .setCardOptions(cardOptions);
         execute(
                 Client.class,
                 client -> {

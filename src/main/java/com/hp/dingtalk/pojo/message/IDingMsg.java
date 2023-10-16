@@ -1,24 +1,29 @@
 package com.hp.dingtalk.pojo.message;
 
-import com.google.gson.Gson;
-import com.hp.common.base.annotations.MethodDesc;
-import com.taobao.api.internal.util.StringUtils;
-
 /**
+ * DingTalk message design according to the documentation.
+ *
  * @author hp
  */
-public interface IDingMsg {
+public interface IDingMsg<T> {
 
-    @MethodDesc("获取以类名直接定义的消息类型")
-    default String msgType(Object msg) {
-        return StringUtils.toCamelStyle(msg.getClass().getSimpleName());
-    }
-
-    @MethodDesc("消息类型")
+    /**
+     * Based on the DingTalk documentation, the actual request body usually has a field called msgType,
+     * but this field is implemented poorly in many APIs due to the different formats it has.
+     * <p>
+     * Implementation of this interface should consider overriding this method.
+     *
+     * @return the literal key of the concept msgType
+     */
     String getMsgType();
 
-    @MethodDesc("消息内容")
-    default String getMsgParam() {
-        return new Gson().toJson(this);
-    }
+    /**
+     * A message formatted as requested by the API according to the documentation.
+     * Based on the DingTalk documentation, the message is usually converted into a JSON.
+     * <p>
+     * Implementation of this interface should override this method.
+     *
+     * @return formatted message
+     */
+    T getMsg();
 }

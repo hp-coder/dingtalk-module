@@ -37,7 +37,7 @@ public abstract class AbstractDingOldApi implements IDingOldApi {
             } catch (ApiException e) {
                 final String des = description.get();
                 log.error("{}旧版SDK响应失败", des, e);
-                throw new DingApiException("%s旧版SDK响应失败", des);
+                throw new DingApiException(String.format("%s旧版SDK响应失败", des), e);
             }
         }, description);
     }
@@ -59,7 +59,7 @@ public abstract class AbstractDingOldApi implements IDingOldApi {
         } catch (ApiException e) {
             final String des = description.get();
             log.error("{}执行旧版SDK失败", des, e);
-            throw new DingApiException("%s执行旧版SDK失败", des);
+            throw new DingApiException(String.format("%s执行旧版SDK失败", des), e);
         }
         return response;
     }

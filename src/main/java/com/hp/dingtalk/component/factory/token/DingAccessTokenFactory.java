@@ -14,7 +14,6 @@ import com.hp.dingtalk.component.IDingOldApi;
 import com.hp.dingtalk.component.SDK;
 import com.hp.dingtalk.component.application.IDingApp;
 import com.hp.dingtalk.component.exception.DingApiException;
-import com.hp.dingtalk.constant.DingUrlConstant;
 import com.hp.dingtalk.utils.DingUtils;
 import com.taobao.api.ApiException;
 import lombok.AllArgsConstructor;
@@ -28,6 +27,8 @@ import org.springframework.util.StringUtils;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static com.hp.dingtalk.constant.DingUrlConstant.AccessToken.ACCESS_TOKEN_OLD;
 
 /**
  * @author hp
@@ -63,7 +64,7 @@ public class DingAccessTokenFactory implements IDingToken, IDingOldApi, IDingNew
         if (token.isPresent()) {
             return token;
         }
-        DingTalkClient client = new DefaultDingTalkClient(DingUrlConstant.ACCESS_TOKEN_OLD);
+        DingTalkClient client = new DefaultDingTalkClient(ACCESS_TOKEN_OLD);
         OapiGettokenRequest request = new OapiGettokenRequest();
         request.setAppkey(app.getAppKey());
         request.setAppsecret(app.getAppSecret());
@@ -109,7 +110,6 @@ public class DingAccessTokenFactory implements IDingToken, IDingOldApi, IDingNew
             }
             throw new DingApiException(err.message, err);
         } catch (Exception e) {
-            e.printStackTrace();
             TeaException err = new TeaException(e.getMessage(), e);
             if (StringUtils.hasText(err.code) && StringUtils.hasText(err.message)) {
                 log.error("获取企业内部应用的accessToken,app:{},err:{}:{}", app.getAppName(), err.code, err.message);

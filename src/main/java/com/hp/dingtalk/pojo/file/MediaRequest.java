@@ -9,12 +9,14 @@ import lombok.Getter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Objects;
 
 /**
  * @author hp 2023/3/15
  */
 @Getter
 public class MediaRequest {
+
     private final DingMediaType mediaType;
     private final String fileName;
     private InputStream inputStream;
@@ -22,18 +24,27 @@ public class MediaRequest {
     private String mimeType;
 
     public MediaRequest(DingMediaType mediaType, File file) {
+        Preconditions.checkArgument(Objects.nonNull(mediaType));
+        Preconditions.checkArgument(Objects.nonNull(file));
         this.mediaType = mediaType;
         this.file = file;
         this.fileName = this.file.getName();
     }
 
     public MediaRequest(DingMediaType mediaType, String fileName, InputStream inputStream) {
+        Preconditions.checkArgument(Objects.nonNull(mediaType));
+        Preconditions.checkArgument(StrUtil.isNotEmpty(fileName));
+        Preconditions.checkArgument(Objects.nonNull(inputStream));
         this.mediaType = mediaType;
         this.fileName = fileName;
         this.inputStream = inputStream;
     }
 
     public MediaRequest(DingMediaType mediaType, String fileName, InputStream inputStream, String mimeType) {
+        Preconditions.checkArgument(Objects.nonNull(mediaType));
+        Preconditions.checkArgument(StrUtil.isNotEmpty(fileName));
+        Preconditions.checkArgument(StrUtil.isNotEmpty(mimeType));
+        Preconditions.checkArgument(Objects.nonNull(inputStream));
         this.mediaType = mediaType;
         this.fileName = fileName;
         this.inputStream = inputStream;

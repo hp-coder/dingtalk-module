@@ -11,11 +11,48 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public interface IDingInteractiveMsg extends IDingMsg {
+/**
+ * Interactive card messages
+ *
+ * @author hp
+ */
+public interface IDingInteractiveMsg extends IDingMsg<Map<String, String>> {
     @FieldDesc("互动卡片全局密码盐，用于对消息对sign值加密")
     String GLOBAL_SALT = "dfaen23djf461nJ51FHDowie17hf1";
 
-    default Map<String, String> toMap() {
+    /**
+     * Using the instance id of the card, generate a md5 encrypted key.
+     *
+     * @param outTrackId instance id of the card
+     * @return encrypted key
+     */
+    static String getEncryptedSign(String outTrackId) {
+        Preconditions.checkNotNull(outTrackId, "参数异常：outTrackId缺失");
+        final String combine = outTrackId + GLOBAL_SALT;
+        return DigestUtils.md5DigestAsHex(combine.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Empty implementation
+     * <p>
+     * Should not be called.
+     *
+     * @return null
+     */
+    @Override
+    default String getMsgType() {
+        throw new IllegalStateException("The interactive card message doesn't need a msgType");
+    }
+
+    /**
+     * According to the documentation and the APIs, convert the
+     * message object to a map.
+     *
+     * @return A map of which keys are the literal fields' names,
+     * and values are the fields' values converted into strings.
+     */
+    @Override
+    default Map<String, String> getMsg() {
         final BeanMap beanMap = BeanMap.create(this);
         final Map<String, String> map = new HashMap<>(beanMap.size());
         beanMap.forEach((k, v) -> {
@@ -27,41 +64,26 @@ public interface IDingInteractiveMsg extends IDingMsg {
     }
 
     /**
-     * 主要接口，看作消息唯一id
+     * Used as the identification of the card
+     *
+     * @return id sequence
      */
     String getOutTrackId();
 
     /**
-     * 主要参数
-     * 卡片的回调路由key，接口也只能配置一个key，多按钮通过接口参数区分
+     * The callback route key, directly related to the interactive card message,
+     * should be configured before constructing an interactive card message.
+     *
+     * @return the route key.
      */
     String getCallbackRouteKey();
 
     /**
-     * 业务历史遗留，简单的通过该加密字段对回调参数做校验
-     */
-    String getSign();
-
-    /**
-     * 主要参数
-     * 互动卡片模版Id，卡片后台配置后获取（不需要发布）
+     * After constructing an interactive card message template
+     * on the card platform, the template Id can be found in the template description
+     * section.
+     *
+     * @return the template id of the template
      */
     String getTemplateId();
-
-
-    static String encryptSign(String outTrackId) {
-        Preconditions.checkNotNull(outTrackId, "参数异常：outTrackId缺失");
-        final String combine = outTrackId + GLOBAL_SALT;
-        return DigestUtils.md5DigestAsHex(combine.getBytes(StandardCharsets.UTF_8));
-    }
-
-    /**
-     * 空实现
-     *
-     * @return
-     */
-    @Override
-    default String getMsgType() {
-        return null;
-    }
 }

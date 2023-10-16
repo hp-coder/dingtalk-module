@@ -10,10 +10,10 @@ import java.lang.reflect.Type;
 /**
  * @author hp
  */
-public class OAEventResultDeserializer implements JsonDeserializer<OAEventResult> {
+public class OaEventResultDeserializer implements JsonDeserializer<OaEventResult> {
     @Override
-    public OAEventResult deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+    public OaEventResult deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         final String asString = json.getAsString();
-        return OAEventResult.of(asString).orElse(null);
+        return OaEventResult.of(asString).orElse(null);
     }
 }

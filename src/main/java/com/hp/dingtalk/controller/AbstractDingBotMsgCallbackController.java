@@ -1,5 +1,6 @@
 package com.hp.dingtalk.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.google.common.base.Preconditions;
 import com.hp.dingtalk.component.application.IDingBot;
 import com.hp.dingtalk.pojo.callback.DingBotMsgCallbackRequest;
@@ -33,6 +34,8 @@ public abstract class AbstractDingBotMsgCallbackController {
 
     @NotNull
     private static String getSign(String timeStamp, IDingBot bot) throws NoSuchAlgorithmException, InvalidKeyException {
+        Preconditions.checkArgument(StrUtil.isNotEmpty(timeStamp));
+        Preconditions.checkArgument(Objects.nonNull(bot));
         String calculatedSign = timeStamp + "\n" + bot.getAppSecret();
         Mac mac = Mac.getInstance("HmacSHA256");
         mac.init(new SecretKeySpec(bot.getAppSecret().getBytes(StandardCharsets.UTF_8), "HmacSHA256"));
@@ -52,9 +55,6 @@ public abstract class AbstractDingBotMsgCallbackController {
         if (payload == null || (payload.getText() == null && payload.emptyContent())) {
             return Optional.empty();
         }
-        Optional.ofNullable(payload.getText())
-                .ifPresent(i -> payload.getText().setContent(i.getContent().trim()));
-
         final Optional<IDingBotMsgCallBackHandler<?>> first = dingBotMsgCallBackHandlers.stream()
                 .sorted(Comparator.comparing(IDingBotMsgCallBackHandler::order))
                 .filter(handler -> !handler.ignoredApps().contains(app.getClass()))

@@ -9,7 +9,6 @@ import com.dingtalk.api.response.OapiExtcontactListResponse;
 import com.dingtalk.api.response.OapiExtcontactListlabelgroupsResponse;
 import com.google.common.base.Preconditions;
 import com.hp.dingtalk.component.application.IDingMiniH5;
-import com.hp.dingtalk.constant.DingUrlConstant;
 import com.hp.dingtalk.service.AbstractDingOldApi;
 import com.hp.dingtalk.service.IDingExtContactHandler;
 import lombok.NonNull;
@@ -17,6 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+
+import static com.hp.dingtalk.constant.DingUrlConstant.ExternalContact.*;
 
 /**
  * 钉钉企业外部联系人接口
@@ -34,7 +35,7 @@ public class DingExtContactHandler extends AbstractDingOldApi implements IDingEx
         OapiExtcontactGetRequest request = new OapiExtcontactGetRequest();
         request.setUserId(userId);
         final OapiExtcontactGetResponse response = execute(
-                DingUrlConstant.GET_EXTCONTACT_INFO,
+                GET_EXTCONTACT_INFO,
                 request,
                 () -> "获取钉钉外部联系人"
         );
@@ -45,7 +46,7 @@ public class DingExtContactHandler extends AbstractDingOldApi implements IDingEx
         OapiExtcontactCreateRequest request = new OapiExtcontactCreateRequest();
         request.setContact(payload);
         final OapiExtcontactCreateResponse response = execute(
-                DingUrlConstant.ADD_EXTCONTACT,
+                ADD_EXTCONTACT,
                 request,
                 () -> "添加外部联系人"
         );
@@ -139,7 +140,7 @@ public class DingExtContactHandler extends AbstractDingOldApi implements IDingEx
         OapiExtcontactUpdateRequest request = new OapiExtcontactUpdateRequest();
         request.setContact(payload);
         execute(
-                DingUrlConstant.UPDATE_EXTCONTACT,
+                UPDATE_EXTCONTACT,
                 request,
                 () -> "更新外部联系人"
         );
@@ -150,7 +151,7 @@ public class DingExtContactHandler extends AbstractDingOldApi implements IDingEx
         OapiExtcontactDeleteRequest request = new OapiExtcontactDeleteRequest();
         request.setUserId(userId);
         execute(
-                DingUrlConstant.DELETE_EXTCONTACT,
+                DELETE_EXTCONTACT,
                 request,
                 () -> "删除外部联系人"
         );
@@ -164,7 +165,7 @@ public class DingExtContactHandler extends AbstractDingOldApi implements IDingEx
         request.setSize(size);
         request.setOffset((page - 1) * size);
         final OapiExtcontactListResponse response = execute(
-                DingUrlConstant.GET_EXTCONTACTS,
+                GET_EXTCONTACTS,
                 request,
                 () -> "获取外部联系人列表失败"
         );
@@ -179,7 +180,7 @@ public class DingExtContactHandler extends AbstractDingOldApi implements IDingEx
         request.setSize(size);
         request.setOffset((page - 1) * size);
         final OapiExtcontactListlabelgroupsResponse response = execute(
-                DingUrlConstant.GET_EXTCONTACT_TAGS,
+                GET_EXTCONTACT_TAGS,
                 request,
                 () -> "获取外部联系人标签列表"
         );

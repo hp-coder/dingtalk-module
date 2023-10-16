@@ -5,25 +5,39 @@ import com.hp.dingtalk.component.application.IDingBot;
 import java.util.List;
 
 /**
- * 互动卡片回调地址
+ * Configure and register an instance of this interface
+ * to the Spring Container before sending any interactive
+ * card messages that need to interact with users.
+ * <p>
+ * Note:
+ * <p>
+ * Any implementations of this interface only need to be
+ * registered once, so in this framework, the registration process
+ * was done at the ready phase of the SpringBoot application boot-up process.
+ * See: {@link com.hp.dingtalk.component.DingBooter}
+ *
  * @author hp
  */
 public interface IDingInteractiveCardCallBack {
+
     /**
-     * 互动卡片回调接口的URL
-     * @return URL
+     * When users interact with messages, DingTalk will send POST requests to the URL.
+     *
+     * @return callback url
      */
     String getCallbackUrl();
 
     /**
-     * 钉钉注册卡片和发送发卡片时对应URL的路由Key
-     * @return 路由key
+     * The key is used to send with the interactive card message.
+     *
+     * @return route key
      */
     String getCallbackRouteKey();
 
     /**
-     * 需要注册的应用
-     * @return 机器人应用
+     * Robot applications were used to send the interactive card message.
+     *
+     * @return robot application instances
      */
     List<Class<? extends IDingBot>> getDingBots();
 }

@@ -2,7 +2,7 @@ package com.hp.dingtalk.pojo.callback.eventbody.oa;
 
 import com.google.gson.annotations.SerializedName;
 import com.hp.common.base.annotations.FieldDesc;
-import com.hp.dingtalk.constant.DingMiniH5EventType;
+import com.hp.dingtalk.constant.minih5event.DingMiniH5Event;
 import com.hp.dingtalk.pojo.callback.eventbody.IDingMiniH5EventBody;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,11 +14,11 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @Data
-public class DingMiniH5OAEventBody implements IDingMiniH5EventBody {
+public class DingMiniH5OaEventBody implements IDingMiniH5EventBody {
 
     @FieldDesc("事件类型")
     @SerializedName(value = "eventType", alternate = "EventType")
-    private DingMiniH5EventType eventType;
+    private DingMiniH5Event eventType;
 
     @FieldDesc("审批实例Id")
     private String processInstanceId;
@@ -36,7 +36,7 @@ public class DingMiniH5OAEventBody implements IDingMiniH5EventBody {
     private String title;
 
     @FieldDesc("类型")
-    private OAEventType type;
+    private OaEventType type;
 
     @FieldDesc("发起审批实例的员工userId。")
     private String staffId;
@@ -48,7 +48,7 @@ public class DingMiniH5OAEventBody implements IDingMiniH5EventBody {
     private String processCode;
 
     @FieldDesc("正常结束时result为agree，拒绝时result为refuse，审批终止时没这个值。")
-    private OAEventResult result;
+    private OaEventResult result;
 
     @FieldDesc("审批任务结束时, remark表示操作时写的评论内容。")
     private String remark;

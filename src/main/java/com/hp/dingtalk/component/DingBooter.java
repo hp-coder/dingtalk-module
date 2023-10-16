@@ -1,5 +1,6 @@
 package com.hp.dingtalk.component;
 
+import cn.hutool.core.collection.CollUtil;
 import com.hp.dingtalk.component.application.IDingBot;
 import com.hp.dingtalk.component.factory.app.DingAppFactory;
 import com.hp.dingtalk.pojo.message.interactive.callback.IDingInteractiveCardCallBack;
@@ -10,13 +11,10 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
 /**
- * springboot ready后 调用注册
- *
  * @author hp
  */
 @Async
@@ -28,7 +26,7 @@ public class DingBooter implements ApplicationListener<ApplicationReadyEvent> {
 
     @Override
     public void onApplicationEvent(@NotNull ApplicationReadyEvent applicationReadyEvent) {
-        if (CollectionUtils.isEmpty(callBacks)) {
+        if (CollUtil.isEmpty(callBacks)) {
             return;
         }
         callBacks.forEach(callBack ->

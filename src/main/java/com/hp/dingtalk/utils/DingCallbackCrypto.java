@@ -19,6 +19,7 @@ import java.util.Random;
 
 /**
  * 钉钉开放平台加解密方法
+ * @author DingTalk
  */
 public class DingCallbackCrypto {
 

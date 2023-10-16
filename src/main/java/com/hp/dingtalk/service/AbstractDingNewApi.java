@@ -40,17 +40,15 @@ public abstract class AbstractDingNewApi implements IDingNewApi {
         } catch (TeaException err) {
             final String des = description.get();
             log.error("{}执行新版SDK失败", des, err);
-            throw new DingApiException("%s执行新版SDK失败", des);
+            throw new DingApiException(String.format("%s执行新版SDK失败", des), err);
         } catch (Exception e) {
             final String des = description.get();
             log.error("{}执行新版SDK异常", des, e);
-            throw new DingApiException("%s执行新版SDK异常", des);
+            throw new DingApiException(String.format("%s执行新版SDK异常", des), e);
         }
     }
 
     protected String accessToken() {
         return DingAccessTokenFactory.accessToken(app);
     }
-
-
 }

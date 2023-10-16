@@ -34,7 +34,7 @@ public class DingBotMsgCallbackController extends AbstractDingBotMsgCallbackCont
     @RequestMapping("/bot/msg/callback")
     public void msg(
             @RequestHeader(value = "timestamp", required = false) String timeStamp,
-            @RequestHeader("sign") String sign,
+            @RequestHeader(value = "sign") String sign,
             @RequestBody DingBotMsgCallbackRequest payload
     ) {
         log.debug("timestamp:{},sign:{},content:{}", timeStamp, sign, new Gson().toJson(payload));

@@ -6,19 +6,16 @@ package com.hp.dingtalk.component.exception;
  * @author hp 2023/3/21
  */
 public class DingApiException extends RuntimeException {
+
     public DingApiException(String message) {
         super(message);
     }
 
-    public DingApiException(String format, Object... args) {
-        super(String.format(format, args));
+    public DingApiException(Throwable cause) {
+        super(cause);
     }
 
     public DingApiException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public DingApiException(Throwable cause) {
-        super(cause);
     }
 }

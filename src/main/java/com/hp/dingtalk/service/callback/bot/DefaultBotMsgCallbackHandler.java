@@ -3,8 +3,8 @@ package com.hp.dingtalk.service.callback.bot;
 
 import com.hp.dingtalk.component.application.IDingBot;
 import com.hp.dingtalk.pojo.callback.DingBotMsgCallbackRequest;
-import com.hp.dingtalk.pojo.message.IDingBotMsg;
-import com.hp.dingtalk.pojo.message.common.DingMarkdownMsg;
+import com.hp.dingtalk.pojo.message.bot.DingMarkdownMsg;
+import com.hp.dingtalk.pojo.message.bot.IDingBotMsg;
 import com.hp.dingtalk.service.IDingBotMsgCallBackHandler;
 import com.hp.dingtalk.utils.DingMarkdown;
 

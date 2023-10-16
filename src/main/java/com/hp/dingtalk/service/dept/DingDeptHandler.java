@@ -1,17 +1,18 @@
 package com.hp.dingtalk.service.dept;
 
-import com.dingtalk.api.request.OapiV2DepartmentListsubRequest;
-import com.dingtalk.api.response.OapiV2DepartmentListsubResponse;
+import com.dingtalk.api.request.*;
+import com.dingtalk.api.response.*;
 import com.hp.dingtalk.component.application.IDingApp;
 import com.hp.dingtalk.constant.Language;
 import com.hp.dingtalk.service.AbstractDingOldApi;
 import com.hp.dingtalk.service.IDingDeptHandler;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static com.hp.dingtalk.constant.DingUrlConstant.GET_DEPT_LIST;
+import static com.hp.dingtalk.constant.DingUrlConstant.Department.*;
 
 /**
  * 钉钉部门
@@ -26,20 +27,68 @@ public class DingDeptHandler extends AbstractDingOldApi implements IDingDeptHand
     }
 
     @Override
+    public OapiV2DepartmentGetResponse.DeptGetResponse getByDeptId(@NonNull Long deptId, @NonNull Language language) {
+        OapiV2DepartmentGetRequest request = new OapiV2DepartmentGetRequest();
+        request.setDeptId(deptId);
+        request.setLanguage(language.name());
+        final OapiV2DepartmentGetResponse response = execute(
+                GET_DEPT_DETAIL,
+                request,
+                () -> "获取部门详情"
+        );
+        return response.getResult();
+    }
+
+    @Override
+    public OapiV2DepartmentListsubidResponse.DeptListSubIdResponse getDeptIdList(@NonNull Long deptId) {
+        OapiV2DepartmentListsubidRequest request = new OapiV2DepartmentListsubidRequest();
+        request.setDeptId(deptId);
+        OapiV2DepartmentListsubidResponse response = execute(
+                GET_SUB_DEPT_ID_LIST,
+                request,
+                () -> "获取子部门ID列表"
+        );
+        return response.getResult();
+    }
+
+    @Override
     public List<OapiV2DepartmentListsubResponse.DeptBaseResponse> getDeptList() {
         return this.getDeptList(null, Language.zh_CN);
     }
 
     @Override
-    public List<OapiV2DepartmentListsubResponse.DeptBaseResponse> getDeptList(Long deptId, Language language) {
+    public List<OapiV2DepartmentListsubResponse.DeptBaseResponse> getDeptList(Long deptId, @NotNull Language language) {
         OapiV2DepartmentListsubRequest request = new OapiV2DepartmentListsubRequest();
         request.setDeptId(deptId);
         request.setLanguage(language.name());
         final OapiV2DepartmentListsubResponse response = execute(
-                GET_DEPT_LIST,
+                GET_SUB_DEPT_LIST,
                 request,
                 () -> "获取部门列表"
         );
+        return response.getResult();
+    }
+
+    @Override
+    public OapiV2DepartmentListparentbydeptResponse.DeptListParentByDeptIdResponse getParentDeptListByDeptId(@NonNull Long deptId) {
+        OapiV2DepartmentListparentbydeptRequest request = new OapiV2DepartmentListparentbydeptRequest();
+        request.setDeptId(deptId);
+        OapiV2DepartmentListparentbydeptResponse response = execute(
+                GET_PARENT_DEPT_LIST_BY_DEPT_ID,
+                request,
+                () -> "获取指定部门的所有父部门列表"
+        );
+        return response.getResult();
+    }
+
+    @Override
+    public OapiV2DepartmentListparentbyuserResponse.DeptListParentByUserResponse getParentDeptListByUserId(@NonNull String userId) {
+        OapiV2DepartmentListparentbyuserRequest request = new OapiV2DepartmentListparentbyuserRequest();
+        request.setUserid(userId);
+        OapiV2DepartmentListparentbyuserResponse response = execute(
+                GET_PARENT_DEPT_LIST_BY_USER_ID,
+                request,
+                () -> "获取指定用户的所有父部门列表");
         return response.getResult();
     }
 }

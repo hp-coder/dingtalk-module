@@ -15,7 +15,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 
-import static com.hp.dingtalk.constant.DingUrlConstant.*;
+import static com.hp.dingtalk.constant.DingUrlConstant.OA.*;
 
 /**
  * @author hp
@@ -82,8 +82,8 @@ public class DingOAHandler extends AbstractDingOldApi implements IDingOAHandler 
     public OapiProcessinstanceListidsResponse.PageResult getProcessInstanceIds(@NonNull String processCode, @NonNull LocalDate start, LocalDate end, @NonNull Long size, @NonNull Long cursor, List<String> userIds) {
         Preconditions.checkArgument(0 < size && size <= 20, "分页参数，每页大小，最多传20");
         end = end == null ? LocalDate.now() : end;
-        Preconditions.checkArgument(end.minusDays(120L).compareTo(start) <= 0, "时间范围不能超过120天");
-        Preconditions.checkArgument(LocalDate.now().minusDays(365L).compareTo(start) <= 0, "start时间距当前时间不能超过365天");
+        Preconditions.checkArgument(!end.minusDays(120L).isAfter(start), "时间范围不能超过120天");
+        Preconditions.checkArgument(!LocalDate.now().minusDays(365L).isAfter(start), "start时间距当前时间不能超过365天");
         OapiProcessinstanceListidsRequest request = new OapiProcessinstanceListidsRequest();
         request.setProcessCode(processCode);
         request.setStartTime(start.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant().toEpochMilli());

@@ -10,6 +10,7 @@ import com.hp.dingtalk.service.IDingMediaHandler;
 import com.taobao.api.FileItem;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
@@ -26,17 +27,16 @@ public class DingMediaHandler extends AbstractDingOldApi implements IDingMediaHa
     }
 
     @Override
-    public OapiMediaUploadResponse upload(MediaRequest request) throws IOException {
+    public OapiMediaUploadResponse upload(@NotNull MediaRequest request) throws IOException {
         final FileItem fileItem = request.toFileItem();
         Preconditions.checkArgument(fileItem.isValid(), "文件不合法");
         OapiMediaUploadRequest req = new OapiMediaUploadRequest();
         req.setType(request.getMediaType().name());
         req.setMedia(fileItem);
-        final OapiMediaUploadResponse response = execute(
+        return execute(
                 MEDIA_UPLOAD,
                 req,
                 () -> "上传媒体文件"
         );
-        return response;
     }
 }

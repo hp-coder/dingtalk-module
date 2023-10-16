@@ -11,11 +11,10 @@ import java.util.Optional;
  */
 @Getter
 @AllArgsConstructor
-public enum OAEventResult implements BaseEnum<OAEventResult, String> {
+public enum OaEventResult implements BaseEnum<OaEventResult, String> {
     /**
      * 审批终止时没这个值
      */
-    /***/
     AGREE("agree", "正常结束时result为agree"),
     REFUSE("refuse", "拒绝时result为refuse"),
     REDIRECT("redirect","表示审批任务转交。")
@@ -23,7 +22,7 @@ public enum OAEventResult implements BaseEnum<OAEventResult, String> {
     private final String code;
     private final String name;
 
-    public static Optional<OAEventResult> of(String code) {
-        return Optional.ofNullable(BaseEnum.parseByCode(OAEventResult.class, code));
+    public static Optional<OaEventResult> of(String code) {
+        return Optional.ofNullable(BaseEnum.parseByCode(OaEventResult.class, code));
     }
 }

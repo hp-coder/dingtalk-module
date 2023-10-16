@@ -3,8 +3,8 @@ package com.hp.dingtalk.controller;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
 import com.google.gson.GsonBuilder;
-import com.hp.dingtalk.component.configuration.IDingMiniH5EventCallbackConfig;
-import com.hp.dingtalk.constant.DingMiniH5EventType;
+import com.hp.dingtalk.component.configuration.DingMiniH5EventCallbackConfig;
+import com.hp.dingtalk.constant.minih5event.DingMiniH5Event;
 import com.hp.dingtalk.pojo.callback.DingMiniH5EventCallbackRequest;
 import com.hp.dingtalk.pojo.callback.event.DingMiniH5CallbackEvents;
 import com.hp.dingtalk.utils.DingCallbackCrypto;
@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 public class DingMiniH5EventController extends AbstractDingMiniH5EventController {
 
     public DingMiniH5EventController(
-            IDingMiniH5EventCallbackConfig callbackConfiguration,
+            DingMiniH5EventCallbackConfig callbackConfiguration,
             ApplicationEventPublisher eventPublisher
     ) {
         super(callbackConfiguration, eventPublisher);
@@ -54,7 +54,7 @@ public class DingMiniH5EventController extends AbstractDingMiniH5EventController
         log.debug(payload.toString());
         Stopwatch stopwatch = Stopwatch.createStarted();
         try {
-            /**
+            /*
              * DingCallbackCrypto第三个参数 说明：
              * 1、开发者后台配置的订阅事件为应用级事件推送，此时OWNER_KEY为应用的APP_KEY。
              * 2、调用订阅事件接口订阅的事件为企业级事件推送，
@@ -65,12 +65,12 @@ public class DingMiniH5EventController extends AbstractDingMiniH5EventController
             // 由于请求体跟事件类型相关, 不固定, 所以转Map取事件类型
             final Map<String, Object> decryptedMap = new GsonBuilder().create().fromJson(decryptMsg, Map.class);
             final String eventType = (String) decryptedMap.get("EventType");
-            final Optional<DingMiniH5EventType> eventOptional = DingMiniH5EventType.of(eventType);
+            final Optional<DingMiniH5Event> eventOptional = DingMiniH5Event.of(eventType);
             Preconditions.checkArgument(eventOptional.isPresent(), "该插件模块暂不支持处理该类钉钉事件:" + eventType);
-            final DingMiniH5EventType miniH5EventType = eventOptional.get();
-            if (Objects.equals(DingMiniH5EventType.CHECK_URL, miniH5EventType)) {
+            final DingMiniH5Event miniH5EventType = eventOptional.get();
+            if (Objects.equals(DingMiniH5Event.CheckEvent.CHECK_URL, miniH5EventType)) {
                 // 测试回调url的正确性
-                log.info("测试回调url的正确性");
+                log.info(miniH5EventType.getName());
             } else {
                 // 添加其他已注册的
                 log.info("发生了:{}({})事件, 开始广播事件", miniH5EventType.getCode(), miniH5EventType.getName());

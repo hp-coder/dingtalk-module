@@ -11,6 +11,6 @@ public enum Language {
     /**
      * 英文
      */
-    en_US;
-
+    en_US,
+    ;
 }

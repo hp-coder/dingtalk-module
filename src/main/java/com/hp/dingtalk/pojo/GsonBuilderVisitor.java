@@ -5,7 +5,13 @@ import com.google.gson.GsonBuilder;
 /**
  * @author hp
  */
+@FunctionalInterface
 public interface GsonBuilderVisitor {
 
-    void visit(GsonBuilder builder);
+    /**
+     * Customize gson builder accordingly.
+     *
+     * @param builder GsonBuilder
+     */
+    void customize(GsonBuilder builder);
 }

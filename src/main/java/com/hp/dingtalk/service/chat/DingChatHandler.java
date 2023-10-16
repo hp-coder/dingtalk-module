@@ -34,7 +34,7 @@ public class DingChatHandler extends AbstractDingNewApi implements IDingChatHand
                         return client.chatIdToOpenConversationIdWithOptions(chatId, chatIdToOpenConversationIdHeaders, new RuntimeOptions());
                     } catch (Exception e) {
                         log.error("根据chatId获取getOpenConversationId", e);
-                        throw new DingApiException("根据chatId获取getOpenConversationId");
+                        throw new DingApiException("根据chatId获取getOpenConversationId", e);
                     }
                 },
                 () -> "根据chatId获取getOpenConversationId"

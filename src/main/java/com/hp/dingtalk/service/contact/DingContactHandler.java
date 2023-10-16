@@ -10,6 +10,7 @@ import com.hp.dingtalk.component.exception.DingApiException;
 import com.hp.dingtalk.service.AbstractDingNewApi;
 import com.hp.dingtalk.service.IDingContactHandler;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * @author hp 2023/3/23
@@ -22,7 +23,7 @@ public class DingContactHandler extends AbstractDingNewApi implements IDingConta
     }
 
     @Override
-    public GetUserResponseBody personalContactInfo(String userToken, String unionId) {
+    public GetUserResponseBody personalContactInfo(@NotNull String userToken, @NotNull String unionId) {
         GetUserHeaders getUserHeaders = new GetUserHeaders();
         getUserHeaders.xAcsDingtalkAccessToken = userToken;
         final GetUserResponse response = execute(

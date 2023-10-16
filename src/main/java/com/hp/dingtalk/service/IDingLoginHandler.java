@@ -8,10 +8,14 @@ import lombok.NonNull;
  */
 public interface IDingLoginHandler {
 
-    enum GrantType{
-        /**如果使用授权码换token，传authorization_code*/
+    enum GrantType {
+        /**
+         * 如果使用授权码换token，传authorization_code
+         */
         authorization_code,
-        /**如果使用刷新token换用户token，传refresh_token*/
+        /**
+         * 如果使用刷新token换用户token，传refresh_token
+         */
         refresh_token
     }
 
@@ -22,5 +26,5 @@ public interface IDingLoginHandler {
      * @return userToken
      * @throws Exception 客户端实例化异常
      */
-    GetUserTokenResponseBody getUserToken( @NonNull String authCode, @NonNull GrantType grantType) throws Exception;
+    GetUserTokenResponseBody getUserToken(@NonNull String authCode, @NonNull GrantType grantType) throws Exception;
 }

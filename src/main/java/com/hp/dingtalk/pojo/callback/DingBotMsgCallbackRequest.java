@@ -2,12 +2,13 @@ package com.hp.dingtalk.pojo.callback;
 
 import com.google.gson.Gson;
 import com.hp.common.base.annotations.FieldDesc;
+import com.hp.common.base.model.Request;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Value;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 通过配置机器人的消息链接,
@@ -18,7 +19,7 @@ import java.util.Objects;
  * @author HP
  */
 @Data
-public class DingBotMsgCallbackRequest {
+public class DingBotMsgCallbackRequest implements Request {
 
     @FieldDesc("会话ID")
     private String conversationId;
@@ -89,88 +90,83 @@ public class DingBotMsgCallbackRequest {
     }
 
     private Object getContent() {
-        return null;
+        throw new IllegalStateException("the original getContent() shouldn't be called");
     }
 
-    @Getter
-    @Setter
+    @Value
     public static class Text {
         @FieldDesc("文字内容")
-        private String content;
+        String content;
+
+        public Text(String content) {
+            this.content = Optional.ofNullable(content).map(String::trim).orElse(null);
+        }
     }
 
-    @Getter
-    @Setter
+    @Value
     public static class Audio {
         @FieldDesc("语音的时长，单位是毫秒。")
-        private Integer duration;
+        Integer duration;
         @FieldDesc("语音文件的下载码，用于换取下载语音的二进制文件。")
-        private String downloadCode;
+        String downloadCode;
         @FieldDesc("语音识别后的文本")
-        private String recognition;
+        String recognition;
     }
 
-    @Getter
-    @Setter
+    @Value
     public static class Picture {
         @FieldDesc("图片文件的下载码，用于换取下载图片的二进制文件。")
-        private String downloadCode;
+        String downloadCode;
     }
 
-    @Getter
-    @Setter
+    @Value
     public static class Video {
         @FieldDesc("视频的时长，单位是毫秒")
-        private Integer duration;
+        Integer duration;
         @FieldDesc("视频文件的下载码，用于换取下载视频的二进制文件。")
-        private String downloadCode;
+        String downloadCode;
         @FieldDesc("视频文件类型。")
-        private String videoType;
+        String videoType;
     }
 
-    @Getter
-    @Setter
+    @Value
     public static class File {
         @FieldDesc("文件的下载码，用于换取下载文件的二进制文件。")
-        private String downloadCode;
+        String downloadCode;
         @FieldDesc("文件名。")
-        private String fileName;
+        String fileName;
     }
 
-    @Getter
-    @Setter
+    @Value
     public static class RichText {
-        private List<RichTextContent> richText;
+        List<RichTextContent> richText;
     }
 
-    @Getter
-    @Setter
+    @Value
     public static class RichTextContent {
-        //text：文本消息
-        private RichTextContentText text;
-        //picture：图片消息
-        private RichTextContentPicture picture;
+        @FieldDesc("文本消息")
+        RichTextContentText text;
+        @FieldDesc("图片消息")
+        RichTextContentPicture picture;
     }
 
-    @Getter
-    @Setter
+    @Value
     public static class RichTextContentText {
-        private String text;
+        String text;
     }
 
-    @Getter
-    @Setter
+    @Value
     public static class RichTextContentPicture {
-        private String downloadCode;
-        private String type;
+        @FieldDesc("文件的下载码，用于换取下载文件的二进制文件。")
+        String downloadCode;
+        String type;
     }
 
-    @Getter
-    @Setter
+    @Value
     public static class AtUser {
         @FieldDesc("加密的发送者ID。")
-        private String dingtalkId;
+        String dingtalkId;
         @FieldDesc(" 企业内部群有的发送者在企业内的userid。")
-        private String staffId;
+        String staffId;
     }
 }

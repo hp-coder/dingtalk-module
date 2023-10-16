@@ -2,6 +2,7 @@ package com.hp.dingtalk.service;
 
 import com.dingtalk.api.response.OapiMediaUploadResponse;
 import com.hp.dingtalk.pojo.file.MediaRequest;
+import lombok.NonNull;
 
 import java.io.IOException;
 
@@ -10,5 +11,5 @@ import java.io.IOException;
  */
 public interface IDingMediaHandler {
 
-    OapiMediaUploadResponse upload(MediaRequest mediaRequest) throws IOException;
+    OapiMediaUploadResponse upload(@NonNull MediaRequest mediaRequest) throws IOException;
 }

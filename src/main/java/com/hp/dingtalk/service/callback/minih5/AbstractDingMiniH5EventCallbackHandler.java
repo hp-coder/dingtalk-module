@@ -2,7 +2,7 @@ package com.hp.dingtalk.service.callback.minih5;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Stopwatch;
-import com.hp.dingtalk.constant.DingMiniH5EventType;
+import com.hp.dingtalk.constant.minih5event.DingMiniH5Event;
 import com.hp.dingtalk.pojo.GsonBuilderVisitor;
 import com.hp.dingtalk.pojo.callback.eventbody.IDingMiniH5EventBody;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +28,8 @@ public abstract class AbstractDingMiniH5EventCallbackHandler<T extends IDingMini
 
     @Override
     public boolean support(DingMiniH5EventDecryptedPayload payload) {
+        Preconditions.checkNotNull(payload);
+        Preconditions.checkNotNull(payload.getEventType());
         final boolean supportEvent = supportEvent(payload.getEventType());
         final Class<T> clazz = getFirstTypeArguments();
         body = payload.getPayload(clazz, gsonBuilderVisitor);
@@ -45,7 +47,7 @@ public abstract class AbstractDingMiniH5EventCallbackHandler<T extends IDingMini
 
     @Override
     public boolean process(DingMiniH5EventDecryptedPayload payload) {
-        final DingMiniH5EventType eventType = payload.getEventType();
+        final DingMiniH5Event eventType = payload.getEventType();
         log.info("客户端{}接收到钉钉事件:{}({})", this.getClass().getSimpleName(), eventType.getCode(), eventType.getName());
         if (!support(payload)) {
             log.error("不支持处理该类型钉钉事件:{}({})", eventType.getCode(), eventType.getName());
@@ -67,7 +69,7 @@ public abstract class AbstractDingMiniH5EventCallbackHandler<T extends IDingMini
         return false;
     }
 
-    protected abstract boolean supportEvent(DingMiniH5EventType eventType);
+    protected abstract boolean supportEvent(DingMiniH5Event eventType);
 
     protected abstract boolean supportOther(T body);
 

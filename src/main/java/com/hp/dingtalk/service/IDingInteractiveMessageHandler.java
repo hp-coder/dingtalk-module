@@ -1,8 +1,7 @@
 package com.hp.dingtalk.service;
 
 import com.hp.dingtalk.pojo.message.interactive.IDingInteractiveMsg;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.NonNull;
 
 import java.util.List;
 
@@ -17,7 +16,6 @@ import java.util.List;
  * @author hp
  */
 public interface IDingInteractiveMessageHandler {
-    Logger logger = LoggerFactory.getLogger(IDingInteractiveMessageHandler.class);
 
     /**
      * 发送互动卡片至单聊
@@ -28,7 +26,7 @@ public interface IDingInteractiveMessageHandler {
      * @param interactiveMsg 卡片消息：包含必要配置信息：卡片id，callbackUrl等
      * @return outTrackId for additional usage
      */
-    String sendInteractiveMsgToIndividual(List<String> userIds, IDingInteractiveMsg interactiveMsg);
+    String sendInteractiveMsgToIndividual(@NonNull List<String> userIds,@NonNull IDingInteractiveMsg interactiveMsg);
 
     /**
      * 发送互动卡片至群聊
@@ -49,5 +47,5 @@ public interface IDingInteractiveMessageHandler {
      * @param interactiveMsg     卡片消息：包含必要配置信息：卡片id，callbackUrl等
      * @return 互动卡片唯一id（outTrackId）
      */
-    String updateInteractiveMsg(String openConversationId, IDingInteractiveMsg interactiveMsg);
+    String updateInteractiveMsg(@NonNull String openConversationId,@NonNull IDingInteractiveMsg interactiveMsg);
 }

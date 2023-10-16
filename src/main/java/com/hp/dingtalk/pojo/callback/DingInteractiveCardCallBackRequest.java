@@ -2,6 +2,7 @@ package com.hp.dingtalk.pojo.callback;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.hp.common.base.model.Request;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class DingInteractiveCardCallBackRequest {
+public class DingInteractiveCardCallBackRequest implements Request {
 
     private String outTrackId;
     private String corpId;
@@ -47,12 +48,9 @@ public class DingInteractiveCardCallBackRequest {
 
     @Setter
     public static class CardPrivateData {
+        @Getter
         private List<String> actionIds;
         private Object params;
-
-        public List<String> getActionIds() {
-            return actionIds;
-        }
 
         public <T> T getParams(Class<T> tClass) {
             final Gson gson = new Gson();

@@ -11,7 +11,7 @@ import java.util.Optional;
  */
 @Getter
 @AllArgsConstructor
-public enum OAEventType implements BaseEnum<OAEventType, String> {
+public enum OaEventType implements BaseEnum<OaEventType, String> {
     /***/
     START("start","开始(审批实例开始或审批任务开始)"),
     FINISH("finish","审批正常结束（同意或拒绝）/ 审批任务转交finish表示审批任务转交。"),
@@ -20,7 +20,7 @@ public enum OAEventType implements BaseEnum<OAEventType, String> {
     private final String code;
     private final String name;
 
-    public static Optional<OAEventType> of(String code) {
-        return Optional.ofNullable(BaseEnum.parseByCode(OAEventType.class, code));
+    public static Optional<OaEventType> of(String code) {
+        return Optional.ofNullable(BaseEnum.parseByCode(OaEventType.class, code));
     }
 }
