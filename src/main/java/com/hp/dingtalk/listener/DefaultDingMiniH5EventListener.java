@@ -1,6 +1,5 @@
 package com.hp.dingtalk.listener;
 
-import com.google.common.base.Stopwatch;
 import com.hp.dingtalk.constant.minih5event.DingMiniH5Event;
 import com.hp.dingtalk.service.callback.minih5.IDingMiniH5EventCallbackHandler;
 import lombok.Value;
@@ -13,7 +12,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.hp.dingtalk.pojo.callback.event.DingMiniH5CallbackEvents.DingMiniH5EventDecryptedPayload;
@@ -63,19 +61,7 @@ public class DefaultDingMiniH5EventListener {
                         final List<Task> tasks = executorWithLevel.handlers.stream()
                                 .map(i -> new Task(payload, i))
                                 .collect(Collectors.toList());
-                        if (log.isDebugEnabled()) {
-                            final Stopwatch stopwatch = Stopwatch.createStarted();
-                            defaultDingTalkExecutor.invokeAll(tasks);
-                            stopwatch.stop();
-                            log.debug(
-                                    "钉钉微应用事件:{}({}) 处理器执行耗时:{}ms",
-                                    eventType.getCode(),
-                                    eventType.getName(),
-                                    stopwatch.elapsed(TimeUnit.MILLISECONDS)
-                            );
-                        } else {
-                            defaultDingTalkExecutor.invokeAll(tasks);
-                        }
+                        tasks.forEach(defaultDingTalkExecutor::submit);
                     } catch (Exception e) {
                         log.error("执行对钉钉微应用事件:{}({})异常", eventType.getCode(), eventType.getName(), e);
                     }
