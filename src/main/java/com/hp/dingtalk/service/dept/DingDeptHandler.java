@@ -4,7 +4,7 @@ import com.dingtalk.api.request.*;
 import com.dingtalk.api.response.*;
 import com.hp.dingtalk.component.application.IDingApp;
 import com.hp.dingtalk.constant.Language;
-import com.hp.dingtalk.service.AbstractDingOldApi;
+import com.hp.dingtalk.service.AbstractDingApiHandler;
 import com.hp.dingtalk.service.IDingDeptHandler;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +20,7 @@ import static com.hp.dingtalk.constant.DingUrlConstant.Department.*;
  * @author hp
  */
 @Slf4j
-public class DingDeptHandler extends AbstractDingOldApi implements IDingDeptHandler {
+public class DingDeptHandler extends AbstractDingApiHandler implements IDingDeptHandler {
 
     public DingDeptHandler(@NonNull IDingApp app) {
         super(app);

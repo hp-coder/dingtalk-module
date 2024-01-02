@@ -9,7 +9,7 @@ import com.dingtalk.api.response.OapiExtcontactListResponse;
 import com.dingtalk.api.response.OapiExtcontactListlabelgroupsResponse;
 import com.google.common.base.Preconditions;
 import com.hp.dingtalk.component.application.IDingMiniH5;
-import com.hp.dingtalk.service.AbstractDingOldApi;
+import com.hp.dingtalk.service.AbstractDingApiHandler;
 import com.hp.dingtalk.service.IDingExtContactHandler;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import static com.hp.dingtalk.constant.DingUrlConstant.ExternalContact.*;
  * @author hp
  */
 @Slf4j
-public class DingExtContactHandler extends AbstractDingOldApi implements IDingExtContactHandler {
+public class DingExtContactHandler extends AbstractDingApiHandler implements IDingExtContactHandler {
     public DingExtContactHandler(@NonNull IDingMiniH5 app) {
         super(app);
     }

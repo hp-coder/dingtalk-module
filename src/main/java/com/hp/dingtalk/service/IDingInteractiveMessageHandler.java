@@ -3,6 +3,7 @@ package com.hp.dingtalk.service;
 import com.hp.dingtalk.pojo.message.interactive.IDingInteractiveMsg;
 import lombok.NonNull;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -47,5 +48,5 @@ public interface IDingInteractiveMessageHandler {
      * @param interactiveMsg     卡片消息：包含必要配置信息：卡片id，callbackUrl等
      * @return 互动卡片唯一id（outTrackId）
      */
-    String updateInteractiveMsg(@NonNull String openConversationId,@NonNull IDingInteractiveMsg interactiveMsg);
+    String updateInteractiveMsg(@Nullable String openConversationId, @NonNull IDingInteractiveMsg interactiveMsg);
 }

@@ -1,12 +1,19 @@
 package com.hp.dingtalk.service.oa;
 
+import com.aliyun.dingtalkworkflow_1_0.Client;
+import com.aliyun.dingtalkworkflow_1_0.models.QuerySchemaByProcessCodeHeaders;
+import com.aliyun.dingtalkworkflow_1_0.models.QuerySchemaByProcessCodeRequest;
+import com.aliyun.dingtalkworkflow_1_0.models.QuerySchemaByProcessCodeResponse;
+import com.aliyun.dingtalkworkflow_1_0.models.QuerySchemaByProcessCodeResponseBody;
+import com.aliyun.teautil.models.RuntimeOptions;
 import com.dingtalk.api.request.*;
 import com.dingtalk.api.response.*;
 import com.google.common.base.Preconditions;
+import com.hp.dingtalk.component.SDK;
 import com.hp.dingtalk.component.application.IDingMiniH5;
+import com.hp.dingtalk.component.exception.DingApiException;
 import com.hp.dingtalk.pojo.oa.CreateProcessInstanceRequest;
-import com.hp.dingtalk.service.AbstractDingOldApi;
-import com.hp.dingtalk.service.IDingOAHandler;
+import com.hp.dingtalk.service.AbstractDingApiHandler;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -21,7 +28,7 @@ import static com.hp.dingtalk.constant.DingUrlConstant.OA.*;
  * @author hp
  */
 @Slf4j
-public class DingOAHandler extends AbstractDingOldApi implements IDingOAHandler {
+public class DingOAHandler extends AbstractDingApiHandler implements IDingOAHandler {
 
     public DingOAHandler(IDingMiniH5 app) {
         super(app);
@@ -109,5 +116,26 @@ public class DingOAHandler extends AbstractDingOldApi implements IDingOAHandler 
                 () -> "获取审批实例"
         );
         return response.getProcessInstance();
+    }
+
+    @Override
+    public QuerySchemaByProcessCodeResponseBody.QuerySchemaByProcessCodeResponseBodyResult getProcessTemplateSchema(String processCode) {
+        QuerySchemaByProcessCodeHeaders headers = new QuerySchemaByProcessCodeHeaders();
+        headers.xAcsDingtalkAccessToken = getAccessToken(SDK.Version.NEW);
+        QuerySchemaByProcessCodeRequest request = new QuerySchemaByProcessCodeRequest()
+                .setProcessCode(processCode);
+        final QuerySchemaByProcessCodeResponse response = execute(
+                Client.class,
+                client -> {
+                    try {
+                        return client.querySchemaByProcessCodeWithOptions(request, headers, new RuntimeOptions());
+                    } catch (Exception e) {
+                        log.error("获取OA审批表单schema失败", e);
+                        throw new DingApiException("获取OA审批表单schema失败");
+                    }
+                },
+                () -> "获取OA审批表单schema"
+        );
+        return response.getBody().getResult();
     }
 }

@@ -15,10 +15,6 @@ public interface DingImageMsg extends IDingBotMsg {
         @SerializedName("photoURL")
         String photoUrl;
 
-        /**
-         *
-         * @param photoUrl
-         */
         public SampleImageMsg(String photoUrl) {
             Preconditions.checkArgument(StrUtil.isNotEmpty(photoUrl));
             this.photoUrl = photoUrl;

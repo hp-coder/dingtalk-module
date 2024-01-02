@@ -9,7 +9,7 @@ import com.hp.dingtalk.component.application.IDingApp;
 import com.hp.dingtalk.component.exception.DingApiException;
 import com.hp.dingtalk.constant.DeptUserOrder;
 import com.hp.dingtalk.constant.Language;
-import com.hp.dingtalk.service.AbstractDingOldApi;
+import com.hp.dingtalk.service.AbstractDingApiHandler;
 import com.hp.dingtalk.service.IDingUserHandler;
 import com.hp.dingtalk.utils.DingUtils;
 import com.taobao.api.ApiException;
@@ -24,7 +24,7 @@ import static com.hp.dingtalk.constant.DingUrlConstant.User.*;
  * @author hp
  */
 @Slf4j
-public class DingUserHandler extends AbstractDingOldApi implements IDingUserHandler {
+public class DingUserHandler extends AbstractDingApiHandler implements IDingUserHandler {
     public static final Pattern PHONE_PATTERN = Pattern.compile(RegexPool.MOBILE);
 
     public DingUserHandler(@NonNull IDingApp app) {

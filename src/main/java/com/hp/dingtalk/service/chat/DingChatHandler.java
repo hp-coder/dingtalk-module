@@ -4,9 +4,10 @@ import com.aliyun.dingtalkim_1_0.Client;
 import com.aliyun.dingtalkim_1_0.models.ChatIdToOpenConversationIdHeaders;
 import com.aliyun.dingtalkim_1_0.models.ChatIdToOpenConversationIdResponse;
 import com.aliyun.teautil.models.RuntimeOptions;
+import com.hp.dingtalk.component.SDK;
 import com.hp.dingtalk.component.application.IDingApp;
 import com.hp.dingtalk.component.exception.DingApiException;
-import com.hp.dingtalk.service.AbstractDingNewApi;
+import com.hp.dingtalk.service.AbstractDingApiHandler;
 import com.hp.dingtalk.service.IDingChatHandler;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author hp
  */
 @Slf4j
-public class DingChatHandler extends AbstractDingNewApi implements IDingChatHandler {
+public class DingChatHandler extends AbstractDingApiHandler implements IDingChatHandler {
 
     public DingChatHandler(IDingApp app) {
         super(app);
@@ -26,7 +27,7 @@ public class DingChatHandler extends AbstractDingNewApi implements IDingChatHand
     @Override
     public String getOpenConversationIdByChatId(@NonNull String chatId) {
         ChatIdToOpenConversationIdHeaders chatIdToOpenConversationIdHeaders = new ChatIdToOpenConversationIdHeaders();
-        chatIdToOpenConversationIdHeaders.xAcsDingtalkAccessToken = accessToken();
+        chatIdToOpenConversationIdHeaders.xAcsDingtalkAccessToken = getAccessToken(SDK.Version.NEW);
         final ChatIdToOpenConversationIdResponse response = execute(
                 Client.class,
                 client -> {

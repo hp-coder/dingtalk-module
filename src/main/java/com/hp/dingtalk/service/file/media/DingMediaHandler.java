@@ -5,7 +5,7 @@ import com.dingtalk.api.response.OapiMediaUploadResponse;
 import com.google.common.base.Preconditions;
 import com.hp.dingtalk.component.application.IDingApp;
 import com.hp.dingtalk.pojo.file.MediaRequest;
-import com.hp.dingtalk.service.AbstractDingOldApi;
+import com.hp.dingtalk.service.AbstractDingApiHandler;
 import com.hp.dingtalk.service.IDingMediaHandler;
 import com.taobao.api.FileItem;
 import lombok.NonNull;
@@ -20,7 +20,7 @@ import static com.hp.dingtalk.constant.DingUrlConstant.MEDIA_UPLOAD;
  * @author hp 2023/3/15
  */
 @Slf4j
-public class DingMediaHandler extends AbstractDingOldApi implements IDingMediaHandler {
+public class DingMediaHandler extends AbstractDingApiHandler implements IDingMediaHandler {
 
     public DingMediaHandler(@NonNull IDingApp app) {
         super(app);

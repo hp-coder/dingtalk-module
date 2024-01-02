@@ -5,7 +5,7 @@ import com.dingtalk.api.request.OapiRoleSimplelistRequest;
 import com.dingtalk.api.response.OapiRoleListResponse;
 import com.dingtalk.api.response.OapiRoleSimplelistResponse;
 import com.hp.dingtalk.component.application.IDingApp;
-import com.hp.dingtalk.service.AbstractDingOldApi;
+import com.hp.dingtalk.service.AbstractDingApiHandler;
 import com.hp.dingtalk.service.IDingRoleHandler;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +23,7 @@ import static com.hp.dingtalk.constant.DingUrlConstant.Role.GET_USERS_BY_ROLE_ID
  * @author hp
  */
 @Slf4j
-public class DingRoleHandler extends AbstractDingOldApi implements IDingRoleHandler {
+public class DingRoleHandler extends AbstractDingApiHandler implements IDingRoleHandler {
 
     public DingRoleHandler(@NonNull IDingApp app) {
         super(app);

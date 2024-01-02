@@ -48,6 +48,7 @@ public abstract class AbstractDingState<DATA> implements IDingState<DATA> {
         this.context.getApplicationContext().publishEvent(new IDingStateEvents.CompleteEvent(this.context));
     }
 
+    @Override
     public IDingState<DATA> jumpAfterEntry(DATA input) {
         return null;
     }

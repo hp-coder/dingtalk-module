@@ -30,19 +30,17 @@ public abstract class AbstractDingMiniH5EventCallbackHandler<T extends IDingMini
     public boolean support(DingMiniH5EventDecryptedPayload payload) {
         Preconditions.checkNotNull(payload);
         Preconditions.checkNotNull(payload.getEventType());
-        final boolean supportEvent = supportEvent(payload.getEventType());
         final Class<T> clazz = getFirstTypeArguments();
         body = payload.getPayload(clazz, gsonBuilderVisitor);
         Preconditions.checkNotNull(body, "IDingMiniH5EventBody: the body is null");
-        final boolean supportOther = supportOther(body);
-        return supportEvent && supportOther;
+        return doSupport(body);
     }
 
+    @SuppressWarnings("unchecked")
     protected Class<T> getFirstTypeArguments() {
         final ParameterizedType genericSuperclass = (ParameterizedType) this.getClass().getGenericSuperclass();
         final Type[] actualTypeArguments = genericSuperclass.getActualTypeArguments();
-        final Class<T> clazz = (Class<T>) actualTypeArguments[0];
-        return clazz;
+        return (Class<T>) actualTypeArguments[0];
     }
 
     @Override
@@ -56,12 +54,12 @@ public abstract class AbstractDingMiniH5EventCallbackHandler<T extends IDingMini
         try {
             if (log.isDebugEnabled()) {
                 final Stopwatch stopwatch = Stopwatch.createStarted();
-                final boolean bool = doProcess(payload);
+                final boolean bool = doProcess(body);
                 stopwatch.stop();
                 log.debug("客户端业务处理钉钉事件:{}({})耗时:{}ms", eventType.getCode(), eventType.getName(), stopwatch.elapsed(TimeUnit.MILLISECONDS));
                 return bool;
             } else {
-                return doProcess(payload);
+                return doProcess(body);
             }
         } catch (Exception e) {
             log.error("处理钉钉事件:{}({})失败 \n", eventType.getCode(), eventType.getName(), e);
@@ -69,9 +67,20 @@ public abstract class AbstractDingMiniH5EventCallbackHandler<T extends IDingMini
         return false;
     }
 
-    protected abstract boolean supportEvent(DingMiniH5Event eventType);
+    /**
+     * Implementations should check if the handler supports
+     * processing the event type and the template id.
+     *
+     * @param body event payload
+     * @return whether the handler supports processing this kind of event
+     */
+    protected abstract boolean doSupport(T body);
 
-    protected abstract boolean supportOther(T body);
-
-    protected abstract boolean doProcess(DingMiniH5EventDecryptedPayload payload);
+    /**
+     * Process event accordingly
+     *
+     * @param body event payload
+     * @return successfully processed or not
+     */
+    protected abstract boolean doProcess(T body);
 }

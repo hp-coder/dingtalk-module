@@ -7,11 +7,12 @@ import com.aliyun.dingtalkrobot_1_0.models.BatchSendOTOHeaders;
 import com.aliyun.dingtalkrobot_1_0.models.BatchSendOTORequest;
 import com.aliyun.dingtalkrobot_1_0.models.BatchSendOTOResponse;
 import com.aliyun.teautil.models.RuntimeOptions;
+import com.hp.dingtalk.component.SDK;
 import com.hp.dingtalk.component.application.IDingBot;
 import com.hp.dingtalk.component.exception.DingApiException;
 import com.hp.dingtalk.pojo.message.bot.IDingBotMsg;
 import com.hp.dingtalk.pojo.message.interactive.IDingInteractiveMsg;
-import com.hp.dingtalk.service.AbstractDingNewApi;
+import com.hp.dingtalk.service.AbstractDingApiHandler;
 import com.hp.dingtalk.service.IDingBotMessageHandler;
 import com.hp.dingtalk.service.IDingInteractiveMessageHandler;
 import com.hp.dingtalk.service.user.DingUserHandler;
@@ -19,6 +20,7 @@ import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -27,7 +29,7 @@ import java.util.stream.Collectors;
  * @author hp
  */
 @Slf4j
-public class DingBotMessageHandler extends AbstractDingNewApi implements IDingBotMessageHandler, IDingInteractiveMessageHandler {
+public class DingBotMessageHandler extends AbstractDingApiHandler implements IDingBotMessageHandler, IDingInteractiveMessageHandler {
 
     public DingBotMessageHandler(IDingBot app) {
         super(app);
@@ -36,7 +38,7 @@ public class DingBotMessageHandler extends AbstractDingNewApi implements IDingBo
     @Override
     public BatchSendOTOResponse sendToUserByUserIds(@NonNull List<String> userIds, @NonNull IDingBotMsg msg) {
         BatchSendOTOHeaders headers = new BatchSendOTOHeaders();
-        headers.xAcsDingtalkAccessToken = accessToken();
+        headers.xAcsDingtalkAccessToken = getAccessToken(SDK.Version.NEW);
         BatchSendOTORequest request = new BatchSendOTORequest()
                 .setRobotCode(app.getAppKey())
                 .setUserIds(userIds)
@@ -71,7 +73,7 @@ public class DingBotMessageHandler extends AbstractDingNewApi implements IDingBo
     @Override
     public String sendInteractiveMsgToIndividual(@NotNull List<String> userIds, @NotNull IDingInteractiveMsg interactiveMsg) {
         SendInteractiveCardHeaders sendInteractiveCardHeaders = new SendInteractiveCardHeaders();
-        sendInteractiveCardHeaders.xAcsDingtalkAccessToken = accessToken();
+        sendInteractiveCardHeaders.xAcsDingtalkAccessToken = getAccessToken(SDK.Version.NEW);
         SendInteractiveCardRequest.SendInteractiveCardRequestCardData cardData = new SendInteractiveCardRequest.SendInteractiveCardRequestCardData();
         cardData.setCardParamMap(interactiveMsg.getMsg());
         SendInteractiveCardRequest sendInteractiveCardRequest = new SendInteractiveCardRequest()
@@ -102,7 +104,7 @@ public class DingBotMessageHandler extends AbstractDingNewApi implements IDingBo
     @Override
     public String sendInteractiveMsgToGroup(List<String> userIds, String openConversationId, IDingInteractiveMsg interactiveMsg) {
         SendInteractiveCardHeaders sendInteractiveCardHeaders = new SendInteractiveCardHeaders();
-        sendInteractiveCardHeaders.xAcsDingtalkAccessToken = accessToken();
+        sendInteractiveCardHeaders.xAcsDingtalkAccessToken = getAccessToken(SDK.Version.NEW);
         SendInteractiveCardRequest.SendInteractiveCardRequestCardData cardData = new SendInteractiveCardRequest.SendInteractiveCardRequestCardData();
         cardData.setCardParamMap(interactiveMsg.getMsg());
         SendInteractiveCardRequest sendInteractiveCardRequest = new SendInteractiveCardRequest()
@@ -133,9 +135,9 @@ public class DingBotMessageHandler extends AbstractDingNewApi implements IDingBo
     }
 
     @Override
-    public String updateInteractiveMsg(@NotNull String openConversationId, @NotNull IDingInteractiveMsg interactiveMsg) {
+    public String updateInteractiveMsg(@NotNull @Nullable String openConversationId, @NotNull IDingInteractiveMsg interactiveMsg) {
         UpdateInteractiveCardHeaders updateInteractiveCardHeaders = new UpdateInteractiveCardHeaders();
-        updateInteractiveCardHeaders.xAcsDingtalkAccessToken = accessToken();
+        updateInteractiveCardHeaders.xAcsDingtalkAccessToken = getAccessToken(SDK.Version.NEW);
         UpdateInteractiveCardRequest.UpdateInteractiveCardRequestCardOptions cardOptions = new UpdateInteractiveCardRequest.UpdateInteractiveCardRequestCardOptions()
                 .setUpdateCardDataByKey(true)
                 .setUpdatePrivateDataByKey(true);

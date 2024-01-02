@@ -13,7 +13,7 @@ import com.dingtalk.api.response.OapiMessageCorpconversationStatusBarUpdateRespo
 import com.google.common.base.Preconditions;
 import com.hp.dingtalk.component.application.IDingMiniH5;
 import com.hp.dingtalk.pojo.message.worknotify.IDingWorkNotifyMsg;
-import com.hp.dingtalk.service.AbstractDingOldApi;
+import com.hp.dingtalk.service.AbstractDingApiHandler;
 import com.hp.dingtalk.service.IDingWorkNotifyMessageHandler;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ import static com.hp.dingtalk.constant.DingUrlConstant.WorkNotify.*;
  * @author hp
  */
 @Slf4j
-public class DingWorkNotifyMessageHandler extends AbstractDingOldApi implements IDingWorkNotifyMessageHandler {
+public class DingWorkNotifyMessageHandler extends AbstractDingApiHandler implements IDingWorkNotifyMessageHandler {
 
     public DingWorkNotifyMessageHandler(IDingMiniH5 app) {
         super(app);

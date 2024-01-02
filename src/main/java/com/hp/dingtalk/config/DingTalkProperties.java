@@ -18,6 +18,6 @@ public class DingTalkProperties implements SmartInitializingSingleton {
 
     @Override
     public void afterSingletonsInstantiated() {
-        log.info(new GsonBuilder().create().toJson(this));
+        log.debug(new GsonBuilder().create().toJson(this));
     }
 }

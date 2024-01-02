@@ -6,7 +6,7 @@ import com.aliyun.dingtalkoauth2_1_0.models.GetUserTokenResponse;
 import com.aliyun.dingtalkoauth2_1_0.models.GetUserTokenResponseBody;
 import com.hp.dingtalk.component.application.IDingMiniH5;
 import com.hp.dingtalk.component.exception.DingApiException;
-import com.hp.dingtalk.service.AbstractDingNewApi;
+import com.hp.dingtalk.service.AbstractDingApiHandler;
 import com.hp.dingtalk.service.IDingLoginHandler;
 import lombok.NonNull;
 import lombok.SneakyThrows;
@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
  * @author hp 2023/3/23
  */
 @Slf4j
-public class DingLoginHandler extends AbstractDingNewApi implements IDingLoginHandler {
+public class DingLoginHandler extends AbstractDingApiHandler implements IDingLoginHandler {
     public DingLoginHandler(IDingMiniH5 app) {
         super(app);
     }

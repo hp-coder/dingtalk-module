@@ -7,7 +7,7 @@ import com.aliyun.dingtalkcontact_1_0.models.GetUserResponseBody;
 import com.aliyun.teautil.models.RuntimeOptions;
 import com.hp.dingtalk.component.application.IDingApp;
 import com.hp.dingtalk.component.exception.DingApiException;
-import com.hp.dingtalk.service.AbstractDingNewApi;
+import com.hp.dingtalk.service.AbstractDingApiHandler;
 import com.hp.dingtalk.service.IDingContactHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * @author hp 2023/3/23
  */
 @Slf4j
-public class DingContactHandler extends AbstractDingNewApi implements IDingContactHandler {
+public class DingContactHandler extends AbstractDingApiHandler implements IDingContactHandler {
 
     public DingContactHandler(IDingApp app) {
         super(app);

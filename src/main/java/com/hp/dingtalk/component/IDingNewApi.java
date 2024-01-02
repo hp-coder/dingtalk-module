@@ -10,7 +10,7 @@ public interface IDingNewApi extends IDingApi {
     SDK.Version NEW = SDK.Version.NEW;
 
     @MethodDesc("新版SDK的client配置")
-    default Config clientConfig() {
+    default Config getConfig() {
         Config config = new Config();
         config.protocol = "https";
         config.regionId = "central";

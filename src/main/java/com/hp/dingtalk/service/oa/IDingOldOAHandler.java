@@ -1,23 +1,18 @@
-package com.hp.dingtalk.service;
+package com.hp.dingtalk.service.oa;
 
 import com.dingtalk.api.response.OapiProcessTemplateManageGetResponse;
 import com.dingtalk.api.response.OapiProcessinstanceGetResponse;
 import com.dingtalk.api.response.OapiProcessinstanceListidsResponse;
-import com.hp.dingtalk.component.IDingApi;
 import com.hp.dingtalk.pojo.oa.CreateProcessInstanceRequest;
 import lombok.NonNull;
 
 import java.time.LocalDate;
 import java.util.List;
 
-
 /**
- * 钉钉OA审批相关
- *
  * @author hp
  */
-public interface IDingOAHandler extends IDingApi {
-
+public interface IDingOldOAHandler {
     String createProcessInstance(@NonNull CreateProcessInstanceRequest request);
 
     /**

@@ -25,6 +25,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,6 +50,15 @@ public class DingAccessTokenFactory implements IDingToken, IDingOldApi, IDingNew
         log.debug("Getting accessToken with:{},usage: new sdk APIs", dingApp.getAppName());
         final DingAccessTokenFactory bean = SingletonHolder.INSTANCE;
         return bean.getAccessToken(dingApp).orElse(null);
+    }
+
+    public static String accessToken(IDingApp dingApp, SDK.Version version) {
+        log.debug("Getting accessToken with:{},usage: new sdk APIs", dingApp.getAppName());
+        final DingAccessTokenFactory bean = SingletonHolder.INSTANCE;
+        if (Objects.equals(version, SDK.Version.NEW)) {
+            return bean.getAccessToken(dingApp).orElseThrow(() -> new DingApiException("获取新版AccessToken失败"));
+        }
+        return bean.getAccess_token(dingApp).orElseThrow(() -> new DingApiException("获取新版AccessToken失败"));
     }
 
     public static String access_token(IDingApp dingApp) {
@@ -92,7 +102,7 @@ public class DingAccessTokenFactory implements IDingToken, IDingOldApi, IDingNew
         if (token.isPresent()) {
             return token;
         }
-        com.aliyun.dingtalkoauth2_1_0.Client client = new com.aliyun.dingtalkoauth2_1_0.Client(clientConfig());
+        com.aliyun.dingtalkoauth2_1_0.Client client = new com.aliyun.dingtalkoauth2_1_0.Client(getConfig());
         GetAccessTokenRequest getAccessTokenRequest = new GetAccessTokenRequest()
                 .setAppKey(appKey)
                 .setAppSecret(appSecret);

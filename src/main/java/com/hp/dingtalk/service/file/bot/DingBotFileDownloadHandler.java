@@ -3,9 +3,10 @@ package com.hp.dingtalk.service.file.bot;
 import com.aliyun.dingtalkrobot_1_0.Client;
 import com.aliyun.dingtalkrobot_1_0.models.RobotMessageFileDownloadResponse;
 import com.aliyun.teautil.models.RuntimeOptions;
+import com.hp.dingtalk.component.SDK;
 import com.hp.dingtalk.component.application.IDingBot;
 import com.hp.dingtalk.component.exception.DingApiException;
-import com.hp.dingtalk.service.AbstractDingNewApi;
+import com.hp.dingtalk.service.AbstractDingApiHandler;
 import com.hp.dingtalk.service.IDingBotFileDownloadHandler;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,7 @@ import lombok.extern.slf4j.Slf4j;
  * @author hp 2023/3/22
  */
 @Slf4j
-public class DingBotFileDownloadHandler extends AbstractDingNewApi implements IDingBotFileDownloadHandler {
+public class DingBotFileDownloadHandler extends AbstractDingApiHandler implements IDingBotFileDownloadHandler {
     public DingBotFileDownloadHandler(IDingBot app) {
         super(app);
     }
@@ -23,7 +24,7 @@ public class DingBotFileDownloadHandler extends AbstractDingNewApi implements ID
     public String downloadUrl(@NonNull String downloadCode) {
         com.aliyun.dingtalkrobot_1_0.models.RobotMessageFileDownloadHeaders headers =
                 new com.aliyun.dingtalkrobot_1_0.models.RobotMessageFileDownloadHeaders();
-        headers.xAcsDingtalkAccessToken = accessToken();
+        headers.xAcsDingtalkAccessToken = getAccessToken(SDK.Version.NEW);
         com.aliyun.dingtalkrobot_1_0.models.RobotMessageFileDownloadRequest request =
                 new com.aliyun.dingtalkrobot_1_0.models.RobotMessageFileDownloadRequest()
                         .setDownloadCode(downloadCode)

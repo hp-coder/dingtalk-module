@@ -7,6 +7,8 @@ import com.hp.dingtalk.pojo.callback.eventbody.IDingMiniH5EventBody;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Objects;
+
 /**
  * OA审批事件payload
  *
@@ -53,4 +55,13 @@ public class DingMiniH5OaEventBody implements IDingMiniH5EventBody {
     @FieldDesc("审批任务结束时, remark表示操作时写的评论内容。")
     private String remark;
 
+    public boolean approved(){
+        final boolean agreed = Objects.equals(OaEventResult.AGREE,  getResult());
+        final boolean finished = Objects.equals(OaEventType.FINISH,  getType());
+        return agreed && finished;
+    }
+
+    public boolean disapproved(){
+        return !approved();
+    }
 }

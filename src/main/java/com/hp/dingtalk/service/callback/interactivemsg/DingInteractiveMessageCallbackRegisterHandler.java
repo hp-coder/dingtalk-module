@@ -3,7 +3,7 @@ package com.hp.dingtalk.service.callback.interactivemsg;
 import com.dingtalk.api.request.OapiImChatScencegroupInteractivecardCallbackRegisterRequest;
 import com.hp.dingtalk.component.application.IDingBot;
 import com.hp.dingtalk.pojo.message.interactive.callback.IDingInteractiveCardCallBack;
-import com.hp.dingtalk.service.AbstractDingOldApi;
+import com.hp.dingtalk.service.AbstractDingApiHandler;
 import com.hp.dingtalk.service.IDingInteractiveMessageCallbackRegisterHandler;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import static com.hp.dingtalk.constant.DingUrlConstant.REGISTER_CALLBACK;
  * @author hp
  */
 @Slf4j
-public class DingInteractiveMessageCallbackRegisterHandler extends AbstractDingOldApi implements IDingInteractiveMessageCallbackRegisterHandler {
+public class DingInteractiveMessageCallbackRegisterHandler extends AbstractDingApiHandler implements IDingInteractiveMessageCallbackRegisterHandler {
     public DingInteractiveMessageCallbackRegisterHandler(@NonNull IDingBot app) {
         super(app);
     }
