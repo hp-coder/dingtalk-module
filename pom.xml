@@ -21,8 +21,8 @@
     </developers>
 
     <properties>
-        <!--com.hp.com.hp.dingtalk-->
-        <dingtalk.version>1.5.58</dingtalk.version>
+        <!--latest version at 20230517-->
+        <dingtalk.version>2.0.14</dingtalk.version>
         <dingtalk.old.version>2.0.0</dingtalk.old.version>
         <!--from common-starter module-->
         <common-base.version>1.0.0-sp2-SNAPSHOT</common-base.version>
